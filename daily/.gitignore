@@ -2,6 +2,7 @@
 ## Folders                  ##
 ##############################
 target
+logs
 .svn
 .idea
 
