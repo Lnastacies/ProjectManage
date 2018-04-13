@@ -1,8 +1,11 @@
 package com.adtec.daily.controller.user;
 
 import com.adtec.daily.bean.common.Msg;
+import com.adtec.daily.bean.project.TDepartment;
+import com.adtec.daily.bean.project.TProject;
 import com.adtec.daily.bean.user.TRolePrivilege;
 import com.adtec.daily.bean.user.TUser;
+import com.adtec.daily.service.project.TDepartmentService;
 import com.adtec.daily.service.project.TProjectService;
 import com.adtec.daily.service.user.TRolePrivilegeService;
 import com.adtec.daily.service.user.TUserService;
@@ -31,6 +34,9 @@ public class TUserController {
     TUserService tUserService;
     @Autowired
     TRolePrivilegeService tRolePrivilegeService;
+    @Autowired
+    TDepartmentService tDepartmentService;
+
 
     /**
      * 检查用户名是否可用
@@ -163,6 +169,23 @@ public class TUserController {
     }
 
     /**
+     * 根据id查询用户，并分页
+     *
+     * @param pn
+     * @param userName
+     * @return
+     */
+    @RequestMapping("/user/getUserInfoByUserName")
+    @ResponseBody
+    public Msg getUserWithJson(@RequestParam(value = "pn", defaultValue = "1") Integer pn,@RequestParam String userName) {
+
+        PageHelper.startPage(pn, 5);
+        List<TUser> pros = tUserService.getUserInfoByUserName(userName);
+        PageInfo page = new PageInfo(pros, 5);
+        return Msg.success().add("pageInfo", page);
+    }
+
+    /**
      * 用户登录
      *
      * @param user
@@ -170,7 +193,7 @@ public class TUserController {
      */
     @RequestMapping(value ="/userLogin", method = RequestMethod.POST)
     @ResponseBody
-    public Msg getLoginUser( HttpServletRequest request , TUser user , String userName,String password,@RequestParam(value = "password") String pp) {
+    public Msg getLoginUser( HttpServletRequest request , TUser user ,@RequestParam(value = "password") String pp) {
         List<TUser> list = tUserService.getLoginUser(user);
         if (list != null && list.size() > 0) {
             TUser resultUser = list.get(0);
@@ -182,6 +205,11 @@ public class TUserController {
             }
             resultUser.setPrivilegeList(privilegeList);
             request.getSession().setAttribute("user",resultUser);
+            String userId = resultUser.getUserId();
+            TProject project = tProjectService.selectByUserId(userId);
+            request.getSession().setAttribute("project",project);
+            TDepartment department = tDepartmentService.selectByUserId(userId);
+            request.getSession().setAttribute("department",department);
             return Msg.success();
         }
         return Msg.fail();
@@ -201,6 +229,8 @@ public class TUserController {
             return Msg.fail();
         }else{
             request.getSession().removeAttribute("user");
+            request.getSession().removeAttribute("project");
+            request.getSession().removeAttribute("department");
             return Msg.success();
         }
     }

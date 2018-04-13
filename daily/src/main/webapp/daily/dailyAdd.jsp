@@ -26,7 +26,7 @@
     <!-- 日报添加的模态框 -->
     <div class="modal fade" id="proAddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
-            <div class="modal-content" style="z-index: 19896; width: 800px; height: 395px; top: 10px; left: -107px;">
+            <div class="modal-content" style="z-index: 19896; width: 800px; height: 490px; top: 10px; left: -107px;">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="myModalLabel">日报添加</h4>
@@ -113,8 +113,6 @@
                     <th>日报内容</th>
                     <th>完成百分比</th>
                     <th>计划完成时间</th>
-                    <th>工作存在问题</th>
-                    <th>下周工作计划</th>
                     <th>创建日期</th>
                 </tr>
                 </thead>
@@ -166,23 +164,40 @@
         //清空table表格
         $("#pros_table tbody").empty();
         var pros = result.extend.pageInfo.list;
+
         $.each(pros, function (index, item) {
-            var workType = $("<td></td>").append(item.workType);
+            var workTypeStr = "";
+            if (item.workType == "01") {
+                workTypeStr = "需求分析";
+            } else if (item.workType == "02") {
+                workTypeStr = "设计";
+            } else if (item.workType == "03") {
+                workTypeStr = "开发";
+            } else if (item.workType == "04") {
+                workTypeStr = "测试";
+            } else if (item.workType == "05") {
+                workTypeStr = "版本发布";
+            } else if (item.workType == "06") {
+                workTypeStr = "运维支持";
+            } else if (item.workType == "07") {
+                workTypeStr = "会议";
+            } else if (item.workType == "08") {
+                workTypeStr = "其他";
+            }
+            var workType = $("<td></td>").append(workTypeStr);
             var dailyContent = $("<td></td>").append(item.dailyContent);
             var dailyPercent = $("<td></td>").append(item.dailyPercent);
             var doneDate = $("<td></td>").append(item.doneDate == null ? "" : new Date(item.doneDate).Format("yyyy-MM-dd"));
-            var problem = $("<td></td>").append(item.problem);
-            var nextWorkPlan = $("<td></td>").append(item.nextWorkPlan);
             var createTime = $("<td></td>").append(item.createTime == null ? "" : new Date(item.createTime).Format("yyyy-MM-dd"));
 
             var editBtn = $("<button></button>").addClass("btn btn-primary btn-sm edit_btn")
                 .append($("<span></span>").addClass("glyphicon glyphicon-pencil")).append("编辑");
             //为编辑按钮添加一个自定义的属性，来表示当前项目dailyId
-            editBtn.attr("edit-id", item.dailyId);
+            editBtn.attr("edit-id", item.dailyDetailId);
             var delBtn = $("<button></button>").addClass("btn btn-danger btn-sm delete_btn")
                 .append($("<span></span>").addClass("glyphicon glyphicon-trash")).append("删除");
             //为删除按钮添加一个自定义的属性来表示当前删除的项目dailyId
-            delBtn.attr("del-id", item.dailyId);
+            delBtn.attr("del-id", item.dailyDetailId);
             var btnTd = $("<td></td>").append(editBtn).append(" ").append(delBtn);
             //append方法执行完成以后还是返回原来的元素
             $("<tr class='layui-colla-item'></tr>")
@@ -190,8 +205,6 @@
                 .append(dailyContent)
                 .append(dailyPercent)
                 .append(doneDate)
-                .append(problem)
-                .append(nextWorkPlan)
                 .append(createTime)
                 .append(btnTd)
                 .appendTo("#pros_table tbody");
@@ -304,7 +317,7 @@
             success:function(result){
                 if(result.code == 100){
                     $("#proAddModal").modal('hide');
-                    to_page(totalRecord);
+                    to_page(1);
                 }else{
 
                 }
@@ -320,12 +333,12 @@
     //单个删除
     $(document).on("click", ".delete_btn", function () {
         //1、弹出是否确认删除对话框
-        var dailyContent = $(this).parents("tr").find("td:eq(2)").text();
-        var proId = $(this).attr("del-id");
+        var dailyContent = $(this).parents("tr").find("td:eq(1)").text();
+        var dailyDetailId = $(this).attr("del-id");
         layer.confirm('确定删除【' + dailyContent + '】吗？', {icon: 3, title: '确认信息'}, function (index) {
             //确认，发送ajax请求删除即可
             $.ajax({
-                url: "${APP_PATH}/dailyDetail/deleteDailyDetail" + proId,
+                url: "${APP_PATH}/dailyDetail/deleteDailyDetail/" + dailyDetailId,
                 type: "DELETE",
                 success: function (result) {
                     layer.msg(result.msg);

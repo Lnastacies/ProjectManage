@@ -2,17 +2,16 @@ package com.adtec.daily.controller.daily;
 
 import com.adtec.daily.bean.common.Msg;
 import com.adtec.daily.bean.daily.TDailyDetail;
-import com.adtec.daily.util.DateUtil;
 import com.adtec.daily.service.daily.TDailyDetailService;
+import com.adtec.daily.service.daily.impl.TDailyServiceImpl;
+import com.adtec.daily.util.DateUtil;
+import com.adtec.daily.service.daily.impl.TDailyDetailServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Date;
@@ -26,6 +25,9 @@ public class TDailyDetailController {
 
     @Autowired
     TDailyDetailService tDailyDetailService;
+
+    @Autowired
+    TDailyServiceImpl tDailyServiceImpl;
 
     /**
      * 查询日报列表信息
@@ -68,13 +70,21 @@ public class TDailyDetailController {
             }
         }
         tDailyDetailService.saveDailyDetail(tDailyDetail);
+        //添加日报内容信息时进行更新下班时间t_daily.off_duty_time
+
         return Msg.success();
     }
 
-    @RequestMapping(value = "/dailyDetail/deleteDailyDetail", method = RequestMethod.POST)
+    /**
+     * 删除日报内容信息
+     *
+     * @param ids
+     * @return
+     */
     @ResponseBody
-    public Msg deleteDailyDetail() {
-
+    @RequestMapping(value = "/dailyDetail/deleteDailyDetail/{ids}", method = RequestMethod.DELETE)
+    public Msg deleteDailyDetail(@PathVariable("ids") String ids) {
+        tDailyDetailService.deleteDailyDetail(ids);
         return Msg.success();
     }
 }

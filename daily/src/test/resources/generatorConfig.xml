@@ -28,7 +28,7 @@
             targetPackage     指定生成的model生成所在的包名
             targetProject     指定在该项目下所在的路径
         -->
-        <javaModelGenerator targetPackage="com.adtec.busi.db.entity" targetProject="src/test/java">
+        <javaModelGenerator targetPackage="com.adtec.daily.bean" targetProject="src/test/java">
             <!-- 是否对model添加 构造函数
             <property name="constructorBased" value="true"/>
             -->
@@ -40,18 +40,18 @@
             <property name="immutable" value="false"/>
 
             <!-- 给Model添加一个父类 -->
-            <property name="rootClass" value="com.adtec.core.po.BasePo"/>
+            <!--<property name="rootClass" value="com.adtec.core.po.BasePo"/>-->
 
             <!-- 是否对类CHAR类型的列的数据进行trim操作 -->
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
 
         <!--Mapper映射文件生成所在的目录 为每一个数据库的表生成对应的SqlMap文件 -->
-        <sqlMapGenerator targetPackage="db.mapper" targetProject="src/main/resources">
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/test/resources">
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
 
-        <javaClientGenerator targetPackage="com.adtec.busi.db.mapper" targetProject="src/test/java" type="MIXEDMAPPER">
+        <javaClientGenerator targetPackage="com.adtec.daily.db.mapper" targetProject="src/test/java" type="MIXEDMAPPER">
             <property name="enableSubPackages" value=""/>
             <!--    定义Maper.java 源代码中的ByExample() 方法的可视性，可选的值有：
                     public;
@@ -77,8 +77,6 @@
                 type="MIXEDMAPPER",生成基于注解的Java Model 和相应的Mapper对象
                 type="XMLMAPPER",生成SQLMap XML文件和独立的Mapper接口
         -->
-
-        <table tableName="T_CLIENT_INFO">
 
             <!-- optional   , only for mybatis3 runtime
                  自动生成的键值（identity,或者序列值）
@@ -130,8 +128,7 @@
                  <columnOverride column="" javaType=""	jdbcType=""	typeHandler=""	delimitedColumnName="" />
             -->
 
-        </table>
-        <table tableName="t_user" />
+        <table tableName="t_user" domainObjectName="TUser" enableInsert="true"/>
 
     </context>
 </generatorConfiguration>

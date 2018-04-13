@@ -4,12 +4,13 @@ import com.adtec.daily.bean.common.Msg;
 import com.adtec.daily.bean.daily.TDaily;
 import com.adtec.daily.bean.daily.TDailyExample;
 import com.adtec.daily.bean.daily.TOverWork;
+import com.adtec.daily.bean.project.TDepartment;
 import com.adtec.daily.bean.project.TProject;
-import com.adtec.daily.bean.project.TProjectExample;
 import com.adtec.daily.bean.user.TUser;
 import com.adtec.daily.bean.user.TUserExample;
 import com.adtec.daily.service.daily.TDailyService;
 import com.adtec.daily.service.daily.TOverWorkService;
+import com.adtec.daily.service.project.TCompanyService;
 import com.adtec.daily.service.project.TProjectService;
 import com.adtec.daily.service.user.TUserService;
 import com.adtec.daily.util.DateUtil;
@@ -54,6 +55,9 @@ public class TDailyController {
 
     @Autowired
     TOverWorkService tOverWorkService;
+
+    @Autowired
+    TCompanyService tCompanyService;
 
     /**
      * 查询日报列表信息
@@ -119,13 +123,10 @@ public class TDailyController {
                 tDailyService.saveDaily(tDaily);
 
                 //查询项目的加班开始时间
-                TProjectExample example2 = new TProjectExample();
-                TProjectExample.Criteria cri2 = example2.createCriteria();
-                cri2.andIdEqualTo(Integer.valueOf(tDaily.getProjectName()));
-                List<TProject> tProjectList = tProjectService.getAll(example2);
-                if (tProjectList.size() > 0) {
+                TProject tProject = tProjectService.getProject(Integer.valueOf(tDaily.getProjectName()));
+                if (tProject != null && !"".equals(tProject.getOverworkStartTime())) {
                     //开始加班时间
-                    Date overWorkStartTime = tProjectList.get(0).getOverworkStartTime();
+                    Date overWorkStartTime = tProject.getOverworkStartTime();
                     //判断是否属于加班
                     if (offDutyDate.getTime() > overWorkStartTime.getTime()) {
                         //属于加班，计算获取加班时长
@@ -193,10 +194,10 @@ public class TDailyController {
         List<TUser> users = new ArrayList<>();
         TUser user = (TUser)request.getSession().getAttribute("user");
         users.add(user);
-        List<Map<String, Object>> reportList = tDailyService.weeklyExport(users,start,end);
+        List<Map<String, Object>> reportList = tDailyService.caitcWeeklyExport(users,start,end);
         Map<String, Object> sheetMap = new HashMap<>();
         sheetMap.put("sheets", reportList);
-        String fileName = "先进数通_工作周报_"+start+"_"+end;
+        String fileName = "工作周报_"+user.getUserName()+"_"+start.replaceAll("-","")+"_"+end.replaceAll("-","");
         TemplateParseUtil templateParseUtil = new TemplateParseUtil();
         templateParseUtil.downloadExcel(response, sheetMap, TemplateParseUtil.Type.CaitcWeekly,fileName);
         logger.info("导出日报结束");
@@ -213,22 +214,22 @@ public class TDailyController {
     public void projectWeeklyExport(HttpServletRequest request, HttpServletResponse response) throws IOException {
         logger.info("导出项目周报开始");
         String startDate = request.getParameter("dailyStartDateStr");
-        startDate = startDate.substring(0,4)+"年"+startDate.substring(4,6)+"月"+startDate.substring(6)+"日";
         String endDate = request.getParameter("dailyEndDateStr");
-        endDate = endDate.substring(0,4)+"年"+endDate.substring(4,6)+"月"+endDate.substring(6)+"日";
         logger.info("开始日期:"+startDate+",结束日期:"+endDate);
-        List<String> users = new ArrayList<>();
-        users.add("王林柱");
-        users.add("郭凡");
-        users.add("赫鑫");
-        users.add("胡浪");
-        users.add("张琪");
-        List<Map<String, Object>> reportList = new ArrayList<>();
+        //1.查询当前用户所属项目下的所有用户
+        TProject project = (TProject)request.getSession().getAttribute("project");
+        TDepartment department = (TDepartment)request.getSession().getAttribute("department");
+        //TCompany company =  tCompanyService.selectByDeptId(department.getDeptId());
+        //TUser user = (TUser)request.getSession().getAttribute("user");
+        List<TUser> users = tUserService.getAllUserByProjectIdAndCompanyId(project.getId(),0);
+        List<TDaily> thisWeekList = tDailyService.caitcProjectWeeklyExport(users,startDate,endDate);
         Map<String, Object> sheetMap = new HashMap<>();
-        sheetMap.put("sheets", reportList);
-        String fileName = "先进数通_工作周报_20180205_20180205";
+        sheetMap.put("startDate", startDate);
+        sheetMap.put("endDate", endDate);
+        sheetMap.put("thisWeekList", thisWeekList);
+        String fileName = "工作周报-家族信托项目_"+startDate.replaceAll("-","")+"_"+endDate.replaceAll("-","");;
         TemplateParseUtil templateParseUtil = new TemplateParseUtil();
-        templateParseUtil.downloadExcel(response, sheetMap, TemplateParseUtil.Type.CaitcWeekly,fileName);
-        logger.info("导出日报结束");
+        templateParseUtil.downloadExcel(response, sheetMap, TemplateParseUtil.Type.CaitcProjectWeekly,fileName);
+        logger.info("导出项目周报结束");
     }
 }

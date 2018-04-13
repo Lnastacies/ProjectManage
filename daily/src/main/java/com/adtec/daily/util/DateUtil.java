@@ -19,7 +19,7 @@ public class DateUtil {
      * @return
      */
     public static String getWeek(Date date){
-        SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE",Locale.CHINESE);
         String week = sdf.format(date);
         return week;
     }
@@ -80,7 +80,20 @@ public class DateUtil {
         int month = aCalendar.get(Calendar.MONTH) + 1;//月份
         int day = aCalendar.getActualMaximum(Calendar.DATE);
         for (int i = 1; i <= day; i++) {
-            String aDate = String.valueOf(year)+"-"+month+"-"+i;
+            String monthStr = "";
+            String dayStr = "";
+            if(month<10){
+                monthStr = "0" + month;
+            }else{
+                monthStr = String.valueOf(month);
+            }
+            if(i<10){
+                dayStr = "0" + i;
+            }else{
+                dayStr = String.valueOf(i);
+            }
+
+            String aDate = String.valueOf(year)+"-"+monthStr+"-"+dayStr;
             list.add(aDate);
         }
         return list;

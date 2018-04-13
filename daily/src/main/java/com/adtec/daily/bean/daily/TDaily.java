@@ -43,6 +43,8 @@ public class TDaily {
 
     private String nextWorkPlan;
 
+    private Integer planDailyPercent;
+
     private String workType;
 
     private String workTypeShow;
@@ -361,5 +363,13 @@ public class TDaily {
 
     public void setExecutionJoint(String executionJoint) {
         this.executionJoint = executionJoint;
+    }
+
+    public Integer getPlanDailyPercent() {
+        return planDailyPercent;
+    }
+
+    public void setPlanDailyPercent(Integer planDailyPercent) {
+        this.planDailyPercent = planDailyPercent;
     }
 }

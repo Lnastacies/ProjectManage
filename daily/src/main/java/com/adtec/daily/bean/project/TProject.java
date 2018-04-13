@@ -41,6 +41,20 @@ public class TProject {
 
     private String remark3;
 
+    // 项目负责人名称
+    private String userName;
+
+    // 用户编号
+    private String userId;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -191,5 +205,13 @@ public class TProject {
 
     public void setOverworkStartTimeStr(String overworkStartTimeStr) {
         this.overworkStartTimeStr = overworkStartTimeStr;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

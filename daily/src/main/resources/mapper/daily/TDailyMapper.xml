@@ -86,7 +86,7 @@
             t1.create_time, t1.create_user_id, t1.update_time, t1.update_user_id
     </sql>
     <sql id="WithDailyDetail_Column_List">
-        t1.daily_date, t1.user_id, t1.user_name, t1.project_id, t1.off_duty_time, t2.project_code, t2.project_name,
+        t1.daily_date, t1.user_id, t1.user_name, t2.project_id, t1.off_duty_time, t4.project_code, t4.project_name,
         t3.daily_no, t3.daily_content, t3.daily_percent, t3.done_date, t3.problem,
         t3.next_work_plan, t3.work_type, t3.execution
     </sql>
@@ -366,7 +366,8 @@
         SELECT
         <include refid="WithDailyDetail_Column_List"/>
         FROM t_daily t1
-        LEFT JOIN t_project t2 on t2.id = t1.project_id
+        LEFT JOIN t_user_project t2 on t2.user_id = t1.user_id
+        LEFT JOIN t_project t4 on t4.id = t2.project_id
         LEFT JOIN t_daily_detail t3 on t3.daily_id = t1.daily_id
         WHERE
         t1.user_id = #{userId,jdbcType=VARCHAR}
@@ -376,7 +377,7 @@
         <if test="endDate != null">
           AND t1.daily_date&lt;=#{endDate,jdbcType=VARCHAR}
         </if>
-        ORDER BY t1.daily_date DESC
+        ORDER BY t1.daily_date ASC
     </select>
 
 </mapper>

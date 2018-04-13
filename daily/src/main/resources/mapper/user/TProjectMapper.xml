@@ -18,6 +18,9 @@
         <result column="remark1" property="remark1" jdbcType="VARCHAR"/>
         <result column="remark2" property="remark2" jdbcType="VARCHAR"/>
         <result column="remark3" property="remark3" jdbcType="VARCHAR"/>
+
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="user_id" property="userId" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Example_Where_Clause">
         <where>
@@ -368,22 +371,79 @@
         where id = #{id,jdbcType=INTEGER}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.adtec.daily.bean.project.TProject">
-    update t_project
-    set project_code = #{projectCode,jdbcType=VARCHAR},
-      project_name = #{projectName,jdbcType=VARCHAR},
-      project_user_id = #{projectUserId,jdbcType=VARCHAR},
-      service_object_id = #{serviceObjectId,jdbcType=VARCHAR},
-      daily_module_id = #{dailyModuleId,jdbcType=VARCHAR},
-      work_start_time = #{workStartTime,jdbcType=TIME},
-      work_end_time = #{workEndTime,jdbcType=TIME},
-      overwork_start_time = #{overworkStartTime,jdbcType=TIME},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      create_user_id = #{createUserId,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      update_user_id = #{updateUserId,jdbcType=VARCHAR},
-      remark1 = #{remark1,jdbcType=VARCHAR},
-      remark2 = #{remark2,jdbcType=VARCHAR},
-      remark3 = #{remark3,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+        update t_project
+        set project_code = #{projectCode,jdbcType=VARCHAR},
+        project_name = #{projectName,jdbcType=VARCHAR},
+        project_user_id = #{projectUserId,jdbcType=VARCHAR},
+        service_object_id = #{serviceObjectId,jdbcType=VARCHAR},
+        daily_module_id = #{dailyModuleId,jdbcType=VARCHAR},
+        work_start_time = #{workStartTime,jdbcType=TIME},
+        work_end_time = #{workEndTime,jdbcType=TIME},
+        overwork_start_time = #{overworkStartTime,jdbcType=TIME},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        create_user_id = #{createUserId,jdbcType=VARCHAR},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        update_user_id = #{updateUserId,jdbcType=VARCHAR},
+        remark1 = #{remark1,jdbcType=VARCHAR},
+        remark2 = #{remark2,jdbcType=VARCHAR},
+        remark3 = #{remark3,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="selectAllProject" resultMap="BaseResultMap">
+        SELECT t1.id, t1.project_code, t1.project_name,
+        t1.project_user_id, t1.service_object_id, t1.daily_module_id,
+        t1.work_start_time, t1.work_end_time, t1.overwork_start_time,
+        t1.create_time, t1.create_user_id, t1.update_time,
+        t1.update_user_id, t1.remark1, t1.remark2,
+        t1.remark3,t2.user_name
+        FROM t_project t1
+        LEFT JOIN t_user t2 on t2.user_id = t1.project_user_id
+        WHERE 1=1
+        <![CDATA[
+              order by t1.create_time asc
+            ]]>
+    </select>
+
+    <select id="selectInfoByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select t1.id, t1.project_code, t1.project_name,
+        t1.project_user_id, t1.service_object_id, t1.daily_module_id,
+        t1.work_start_time, t1.work_end_time, t1.overwork_start_time,
+        t1.create_time, t1.create_user_id, t1.update_time,
+        t1.update_user_id, t1.remark1, t1.remark2,
+        t1.remark3,t2.user_name
+        FROM t_project t1
+        LEFT JOIN t_user t2 on t2.user_id = t1.project_user_id
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select t1.id, t1.project_code, t1.project_name,
+        t1.project_user_id, t1.service_object_id, t1.daily_module_id,
+        t1.work_start_time, t1.work_end_time, t1.overwork_start_time,
+        t1.create_time, t1.create_user_id, t1.update_time,
+        t1.update_user_id, t1.remark1, t1.remark2,
+        t1.remark3
+        FROM t_user_project t2
+        LEFT JOIN t_project t1 on t1.id = t2.project_id
+        WHERE user_id = #{userId,jdbcType=VARCHAR}
+    </select>
+
+    <!--根据员工查看项目信息-->
+    <select id="selectProjectByUser" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT t1.id, t1.project_code, t1.project_name,
+        t1.project_user_id, t1.service_object_id, t1.daily_module_id,
+        t1.work_start_time, t1.work_end_time, t1.overwork_start_time,
+        t1.create_time, t1.create_user_id, t1.update_time,
+        t1.update_user_id, t1.remark1, t1.remark2,
+        t1.remark3,t2.user_name
+        FROM t_project t1
+        LEFT JOIN t_user t2 on t2.user_id = t1.project_user_id
+        LEFT JOIN t_user_project tup ON tup.project_id = t1.id
+        WHERE 1=1
+        AND tup.user_id = #{userId,jdbcType=VARCHAR}
+        <![CDATA[
+              order by t1.create_time asc
+            ]]>
+    </select>
 </mapper>

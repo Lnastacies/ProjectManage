@@ -47,33 +47,18 @@
                         <label class="col-sm-2 control-label">性别</label>
                         <div class="col-sm-10">
                             <label class="radio-inline">
-                                <input type="radio" name="sex" id="gender1_update_input" value="1" checked="checked"> 男
+                                <input type="radio" name="gender" id="gender1_update_input" value="1" checked="checked"> 男
                             </label>
                             <label class="radio-inline">
-                                <input type="radio" name="sex" id="gender2_update_input" value="0"> 女
+                                <input type="radio" name="gender" id="gender2_update_input" value="0"> 女
                             </label>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">邮箱</label>
                         <div class="col-sm-10">
-                            <input type="text" name="email" class="form-control" id="email_update_input" placeholder="email@adtect.com.cn">
+                            <input type="text" name="email" class="form-control" id="email_update_input" placeholder="email@adtec.com.cn">
                             <span class="help-block"></span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">项目</label>
-                        <div class="col-sm-6">
-                            <select id="proSelectUpdate" class="form-control" name="projectId">
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">部门</label>
-                        <div class="col-sm-4">
-                            <!-- 部门提交部门id即可 -->
-                            <select id="deptSelectUpdate" class="form-control" name="deptId">
-                            </select>
                         </div>
                     </div>
                     <div class="form-group">
@@ -138,33 +123,18 @@
                         <label class="col-sm-2 control-label">性别</label>
                         <div class="col-sm-10">
                             <label class="radio-inline">
-                                <input type="radio" name="sex" id="gender1_add_input" value="1" checked="checked"> 男
+                                <input type="radio" name="gender" id="gender1_add_input" value="1" checked="checked"> 男
                             </label>
                             <label class="radio-inline">
-                                <input type="radio" name="sex" id="gender2_add_input" value="0"> 女
+                                <input type="radio" name="gender" id="gender2_add_input" value="0"> 女
                             </label>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">邮箱</label>
                         <div class="col-sm-10">
-                            <input type="text" name="email" class="form-control" id="email_add_input" placeholder="email@adtect.com.cn">
+                            <input type="text" name="email" class="form-control" id="email_add_input" placeholder="email@adtec.com.cn">
                             <span class="help-block"></span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">项目</label>
-                        <div class="col-sm-6">
-                            <select id="proSelectAdd" class="form-control" name="projectId">
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">部门</label>
-                        <div class="col-sm-4">
-                            <!-- 部门提交部门id即可 -->
-                            <select id="deptSelectAdd" class="form-control" name="deptId">
-                            </select>
                         </div>
                     </div>
                     <div class="form-group">
@@ -201,7 +171,7 @@
 
 
 <!-- 搭建显示页面 -->
-<div class="container">
+<div style="width: 1100px;">
     <!-- 标题 -->
     <div class="row">
         <div class="col-md-12">
@@ -210,9 +180,8 @@
     </div>
     <!-- 按钮 -->
     <div class="row">
-        <div class="col-md-4 col-md-offset-8">
+        <div class="col-md-1">
             <button class="btn btn-primary" id="user_add_modal_btn" privilege-id="2">新增</button>
-            <button class="btn btn-danger" id="user_delete_all_btn" privilege-id="4">删除</button>
         </div>
     </div>
     <!-- 显示表格数据 -->
@@ -221,14 +190,9 @@
             <table class="table table-hover" id="users_table">
                 <thead>
                 <tr>
-                    <th>
-                        <input type="checkbox" id="check_all"/>
-                    </th>
                     <th>姓名</th>
                     <th>性别</th>
                     <th>邮箱</th>
-                    <th>项目</th>
-                    <th>部门</th>
                     <th>角色</th>
                     <th>手机号</th>
                     <th>密码</th>
@@ -261,9 +225,6 @@
     if(privilegeList.indexOf(2)== -1){
         $("#user_add_modal_btn").hide();
     }
-    if(privilegeList.indexOf(4)== -1){
-        $("#user_delete_all_btn").hide();
-    }
     var totalRecord,currentPage;
     //1、页面加载完成以后，直接去发送ajax请求,要到分页数据
     $(function(){
@@ -293,11 +254,8 @@
         $("#users_table tbody").empty();
         var users = result.extend.pageInfo.list;
         $.each(users,function(index,item){
-            var checkBoxTd = $("<td><input type='checkbox' class='check_item'/></td>");
             var userName = $("<td></td>").append(item.userName);
-            var projectName = $("<td></td>").append(item.projectName);
-            var sex = $("<td></td>").append(item.sex=='1'?"男":"女");
-            var deptName = $("<td></td>").append(item.deptName);
+            var gender = $("<td></td>").append(item.gender=='1'?"男":"女");
             var password = $("<td></td>").append(item.password);
             var email = $("<td></td>").append(item.email);
             var mobile = $("<td></td>").append(item.mobile);
@@ -340,12 +298,10 @@
             var btnTd = $("<td></td>").append(editBtn).append(" ").append(delBtn);
             //var delBtn =
             //append方法执行完成以后还是返回原来的元素
-            $("<tr></tr>").append(checkBoxTd)
+            $("<tr></tr>")
                 .append(userName)
-                .append(sex)
+                .append(gender)
                 .append(email)
-                .append(projectName)
-                .append(deptName)
                 .append(roleName)
                 .append(mobile)
                 .append(password)
@@ -439,8 +395,6 @@
         reset_form("#userAddModal form");
         //s$("")[0].reset();
         //发送ajax请求，查出部门信息，显示在下拉列表中
-        getDepts("#userAddModal #deptSelectAdd");
-        getPros("#userAddModal #proSelectAdd");
         getRoles("#userAddModal #roleSelectAdd")
         //弹出模态框
         $("#userAddModal").modal({
@@ -448,40 +402,6 @@
         });
     });
 
-    //查出所有的部门信息并显示在下拉列表中
-    function getDepts(ele){
-        //清空之前下拉列表的值
-        $(ele).empty();
-        $.ajax({
-            url:"${APP_PATH}/user/getDepartment",
-            type:"GET",
-            async: false,
-            success:function(result){
-                $.each(result.extend.depts,function(){
-                    var optionEle = $("<option></option>").append(this.deptName).attr("value",this.deptId);
-                    optionEle.appendTo(ele);
-                });
-            }
-        });
-    }
-
-    //查出所有的项目信息并显示在下拉列表中
-    function getPros(ele){
-        //清空之前下拉列表的值
-        $(ele).empty();
-        $.ajax({
-            url:"${APP_PATH}/pros",
-            type:"GET",
-            async: false,
-            success:function(result){
-                //显示项目信息在下拉列表中
-                $.each(result.extend.pageInfo.list,function(){
-                    var optionEle = $("<option></option>").append(this.projectName).attr("value",this.id);
-                    optionEle.appendTo(ele);
-                });
-            }
-        });
-    }
 
     //查出所有的角色信息并显示在下拉列表中
     function getRoles(ele){
@@ -492,7 +412,7 @@
             type:"GET",
             async: false,
             success:function(result){
-                //显示项目信息在下拉列表中
+                //显示角色信息在下拉列表中
                 $.each(result.extend.pageInfo.list,function(){
                     var optionEle = $("<option></option>").append(this.roleName).attr("value",this.roleId);
                     optionEle.appendTo(ele);
@@ -633,10 +553,6 @@
         $('#userUpdateModal form').find("*").removeClass("has-error has-success");
         $('#userUpdateModal form').find(".help-block").text("");
 
-        //1、查出部门信息，并显示部门列表
-        getDepts("#userUpdateModal #deptSelectUpdate");
-        //1、查出项目信息，并显示项目列表
-        getPros("#userUpdateModal #proSelectUpdate");
         //1、查出角色信息，并显示项目列表
         getRoles("#userUpdateModal #roleSelectUpdate");
         //2、查出用户信息，显示用户信息
@@ -658,11 +574,9 @@
                 var userData = result.extend.user;
                 $("#userName_update_input").val(userData.userName);
                 $("#email_update_input").val(userData.email);
-                $("#userUpdateModal input[name=sex]").val([userData.sex]);
+                $("#userUpdateModal input[name=gender]").val([userData.gender]);
                 $("#userUpdateModal input[name=mobile]").val([userData.mobile]);
                 $("#userUpdateModal input[name=password]").val([userData.password]);
-                $("#userUpdateModal #deptSelectUpdate").val([userData.deptId]);
-                $("#userUpdateModal #proSelectUpdate").val([userData.projectId]);
                 $("#userUpdateModal #roleSelectUpdate").val([userData.roleId]);
             }
         });
@@ -752,65 +666,21 @@
     //单个删除
     $(document).on("click",".delete_btn",function(){
         //1、弹出是否确认删除对话框
-        var userName = $(this).parents("tr").find("td:eq(1)").text();
+        var userName = $(this).parents("tr").find("td:eq(0)").text();
         var userId = $(this).attr("del-id");
         //alert($(this).parents("tr").find("td:eq(1)").text());
-        if(confirm("确认删除【"+userName+"】吗？")){
+        layer.confirm("确认删除【"+userName+"】吗？", {icon: 3, title: '确认信息'}, function (index){
             //确认，发送ajax请求删除即可
             $.ajax({
                 url:"${APP_PATH}/user/"+userId,
                 type:"DELETE",
                 success:function(result){
-                    alert(result.msg);
+                    layer.msg(result.msg);
                     //回到本页
                     to_page(currentPage);
                 }
             });
-        }
-    });
-
-    //完成全选/全不选功能
-    $("#check_all").click(function(){
-        //attr获取checked是undefined;
-        //我们这些dom原生的属性；attr获取自定义属性的值；
-        //prop修改和读取dom原生属性的值
-        $(".check_item").prop("checked",$(this).prop("checked"));
-    });
-
-    //check_item
-    $(document).on("click",".check_item",function(){
-        //判断当前选择中的元素是否5个
-        var flag = $(".check_item:checked").length==$(".check_item").length;
-        $("#check_all").prop("checked",flag);
-    });
-
-    //点击全部删除，就批量删除
-    $("#user_delete_all_btn").click(function(){
-        //
-        var userNames = "";
-        var del_idstr = "";
-        $.each($(".check_item:checked"),function(){
-            //this
-            userNames += $(this).parents("tr").find("td:eq(1)").text()+",";
-            //组装员工id字符串
-            del_idstr += $(this).parents("tr").find("td:eq(9)").text()+"-";
-        });
-        //去除userNames多余的,
-            userNames = userNames.substring(0, userNames.length-1);
-        //去除删除的id多余的-
-        del_idstr = del_idstr.substring(0, del_idstr.length-1);
-        if(confirm("确认删除【"+userNames+"】吗？")){
-            //发送ajax请求删除
-            $.ajax({
-                url:"${APP_PATH}/user/"+del_idstr,
-                type:"DELETE",
-                success:function(result){
-                    alert(result.msg);
-                    //回到当前页面
-                    to_page(currentPage);
-                }
-            });
-        }
+        })
     });
 </script>
 </body>

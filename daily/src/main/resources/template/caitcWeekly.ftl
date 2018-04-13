@@ -200,7 +200,7 @@
             </Row>
             <Row>
                 <Cell ss:StyleID="s16"><Data ss:Type="String">时间</Data></Cell>
-                <Cell ss:MergeAcross="2" ss:StyleID="m2125914369928"><Data ss:Type="String">${sheet.startDate?if_exists}至 ${sheet.endDate?if_exists}</Data></Cell>
+                <Cell ss:MergeAcross="2" ss:StyleID="m2125914369928"><Data ss:Type="String">${sheet.startDate?if_exists} 至 ${sheet.endDate?if_exists}</Data></Cell>
             </Row>
             <Row>
                 <Cell ss:MergeAcross="3" ss:StyleID="m2125914369948"><Data ss:Type="String">1、本周工作完成情况</Data></Cell>

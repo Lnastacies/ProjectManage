@@ -372,7 +372,7 @@
     </update>
     <!--联合表根据ID查询具体需求信息-->
     <select id="selectByUserId" parameterType="com.adtec.daily.bean.user.TUser" resultMap="BaseResultMap">
-        SELECT t1.user_id, t1.user_name, t1.project_id, t1.dept_id,t1.role_id, t1.password, t1.sex, t1.email, t1.mobile, t1.create_time,
+        SELECT t1.user_id, t1.user_name,t1.role_id, t1.password, t1.gender, t1.email, t1.mobile, t1.create_time,
         t1.create_user_id, t1.update_time, t1.update_user_id, t1.remark1, t1.remark2, t1.remark3,
         t4.role_name
         FROM t_user t1
@@ -384,7 +384,7 @@
     </select>
 
     <select id="selectAllUser" resultMap="BaseResultMap">
-        SELECT t1.user_id, t1.user_name, t1.project_id, t1.dept_id,t1.role_id, t1.password, t1.sex, t1.email, t1.mobile, t1.create_time,
+        SELECT t1.user_id, t1.user_name,t1.role_id, t1.password, t1.gender, t1.email, t1.mobile, t1.create_time,
         t1.create_user_id, t1.update_time, t1.update_user_id, t1.remark1, t1.remark2, t1.remark3,
         t4.role_name
         FROM t_user t1
@@ -393,5 +393,28 @@
         <![CDATA[
               order by t1.create_time asc
             ]]>
+    </select>
+
+    <!--根据日期及用户id查询日报明细列表-->
+    <select id="selectAllUserByProjectIdAndCompanyId" parameterType="map" resultMap="BaseResultMap">
+        SELECT
+		 t1.user_id,t1.user_name,t1.identity_no,t1.email,t1.gender,t1.password,t1.mobile,t3.project_code projectCode, t3.project_name projectName,
+		 t4.dept_name deptName,t7.company_name companyName,t8.role_name
+        FROM t_user t1
+        LEFT JOIN t_user_project t2 on t2.user_id = t1.user_id
+        LEFT JOIN t_project t3 on t3.id = t2.project_id
+        LEFT JOIN t_user_department t6 on t6.user_id = t1.user_id
+        LEFT JOIN t_department t4 on t4.dept_id = t6.dept_id
+        LEFT JOIN t_department_company t5 on t5.dept_id = t4.dept_id
+        LEFT JOIN t_company t7 on t7.company_id = t5.company_id
+        LEFT JOIN  t_role t8 ON t8.role_id = t1.role_id
+        WHERE 1=1
+        <if test="projectId != 0">
+            AND t2.project_id = #{projectId,jdbcType=INTEGER}
+        </if>
+        <if test="companyId != 0">
+            AND t7.company_id = #{companyId,jdbcType=INTEGER}
+        </if>
+        ORDER BY t1.user_id ASC
     </select>
 </mapper>

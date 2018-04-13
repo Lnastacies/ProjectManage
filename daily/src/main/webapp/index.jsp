@@ -15,6 +15,8 @@
     <script type="text/javascript"
             src="${APP_PATH }/static/js/jquery-1.12.4.min.js"></script>
     <link rel="stylesheet" href="static/layui/css/layui.css">
+    <script type="text/javascript"
+            src="${APP_PATH }/static/js/jquery-1.12.4.min.js"></script>
 </head>
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
@@ -35,11 +37,14 @@
         </ul>
     </div>
 
-    <div class="layui-side layui-bg-black " >
+    <div class="layui-side layui-bg-black">
         <div class="layui-side-scroll">
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree " lay-filter="menu">
                 <!--<li class="layui-nav-item layui-nav-itemed">-->
+                <li id="S000" name="daily/home.jsp" class="layui-nav-item">
+                    <a  class="" href="javascript:;" >首页</a>
+                </li>
                 <li class="layui-nav-item" id="userMana">
                     <a id="S001" class="" href="javascript:;" >用户管理</a>
                     <dl class="layui-nav-child">
@@ -61,6 +66,10 @@
                         </dd>
                     </d1>
                 </li>
+
+                <li id="S999" name="daily/aboutWe.jsp" class="layui-nav-item">
+                    <a  class="" href="javascript:;" style="width:160px;height:45px;position:fixed;top:93%;overflow:hidden;">关于我们</a>
+                </li>
             </ul>
         </div>
     </div>
@@ -70,12 +79,8 @@
         <div style="padding: 15px;">
             <div class="layui-tab" lay-allowClose="true" lay-filter="tab-switch">
                 <ul class="layui-tab-title">
-                    <li class="layui-this">首页</li>
                 </ul>
                 <div class="layui-tab-content">
-                    <div class="layui-tab-item layui-show">
-
-
                     </div>
                 </div>
             </div>
@@ -107,19 +112,32 @@
 
          */
 
+        //进来之后默认跳转到首页
+        element.tabAdd('tab-switch', {
+            title: "首页"
+            ,
+            content: '<iframe src=' + "daily/home.jsp" + ' width="100%" style="min-height: 500px;" frameborder="0" scrolling="auto" onload="setIframeHeight(this)"></iframe>' // 选项卡内容，支持传入html
+            ,
+            id: "S000" //选项卡标题的lay-id属性值
+        });
+        element.tabChange('tab-switch', "S000"); //切换到新增的tab上
 
         //监听左侧菜单点击
         element.on('nav(menu)', function (elem) {
-            addTab(elem[0].innerText, elem[0].attributes[1].nodeValue, elem[0].id);
+            if(elem[0].id!="exit") {
+                addTab(elem[0].innerText, elem[0].attributes[1].nodeValue, elem[0].id);
+            }
         });
         //监听tab选项卡切换
         element.on('tab(tab-switch)', function (data) {
             if (data.elem.context.attributes != undefined) {
                 var id = data.elem.context.attributes[0].nodeValue;
+                $("#S999").removeClass( "layui-this");
+                $("#S000").removeClass( "layui-this");
                 layui.each($(".layui-nav-child"), function () {
                     $(this).find("dd").removeClass("layui-this");
                 });
-                $("#" + id).attr("class", "layui-this");
+                $("#" + id).addClass( "layui-this");
             }
         });
         //注销返回登录界面

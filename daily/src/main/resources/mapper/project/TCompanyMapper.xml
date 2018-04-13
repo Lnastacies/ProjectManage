@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.adtec.daily.dao.TCompanyMapper" >
+<mapper namespace="com.adtec.daily.dao.project.TCompanyMapper" >
   <resultMap id="BaseResultMap" type="com.adtec.daily.bean.project.TCompany" >
     <id column="company_id" property="companyId" jdbcType="INTEGER" />
     <result column="company_name" property="companyName" jdbcType="VARCHAR" />
@@ -273,4 +273,15 @@
       remark3 = #{remark3,jdbcType=VARCHAR}
     where company_id = #{companyId,jdbcType=INTEGER}
   </update>
+
+  <select id="selectByDeptId" parameterType="map" resultMap="BaseResultMap">
+    select t1.company_id, t1.company_name, t2.dept_id deptId,t3.dept_name deptName,
+    t1.create_time, t1.create_user_id, t1.update_time,
+    t1.update_user_id, t1.remark1, t1.remark2,
+    t1.remark3
+    FROM t_department_company t2
+    LEFT JOIN  t_company t1 on t1.company_id = t2.company_id
+    LEFT JOIN  t_department t3 on t3.dept_id = t2.dept_id
+    where t2.dept_id = #{userId,jdbcType=INTEGER}
+  </select>
 </mapper>

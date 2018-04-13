@@ -1,8 +1,12 @@
 package com.adtec.daily.controller.daily;
 
 import com.adtec.daily.bean.daily.TOverWork;
+import com.adtec.daily.bean.project.TCompany;
+import com.adtec.daily.bean.project.TDepartment;
+import com.adtec.daily.bean.project.TProject;
 import com.adtec.daily.bean.user.TUser;
 import com.adtec.daily.service.daily.TOverWorkService;
+import com.adtec.daily.service.project.TCompanyService;
 import com.adtec.daily.service.user.TUserService;
 import com.adtec.daily.util.DateUtil;
 import com.adtec.daily.util.TemplateParseUtil;
@@ -35,6 +39,9 @@ public class TOverWorkController {
     @Autowired
     TOverWorkService tOverWorkService;
 
+    @Autowired
+    TCompanyService tCompanyService;
+
     /**
      * 导出加班补贴表
      * @param request
@@ -60,9 +67,11 @@ public class TOverWorkController {
         String endDate = dateList.get(dateList.size()-1);//月末日期
 
         //2.查询当前用户所属项目下的所有用户
-        TUser user = (TUser)request.getSession().getAttribute("user");
-        user = tUserService.getUser(user.getUserId());
-        List<TUser> users = tUserService.getAllUserByProjectId(user);
+        TProject project = (TProject)request.getSession().getAttribute("project");
+        TDepartment department = (TDepartment)request.getSession().getAttribute("department");
+        TCompany company =  tCompanyService.selectByDeptId(department.getDeptId());
+        //TUser user = (TUser)request.getSession().getAttribute("user");
+        List<TUser> users = tUserService.getAllUserByProjectIdAndCompanyId(project.getId(),company.getCompanyId());
 
         //3.查询每个用户的加班情况
         BigDecimal sumOverWork = BigDecimal.ZERO;
@@ -99,14 +108,14 @@ public class TOverWorkController {
         }
 
         Map<String, Object> sheetMap = new HashMap<>();
-        sheetMap.put("companyName", "先进数通");
+        sheetMap.put("companyName", company.getCompanyName());
         sheetMap.put("sumOverWork", sumOverWork);
         sheetMap.put("dateList", dateList);
         sheetMap.put("overWorkList", overWorkList);
         sheetMap.put("overWorkDetailList", overWorkDetailList);
-        //String fileName = user.getDeptName()+ "_项目补贴表（"+monthStr.substring(0,4)+"年"+monthStr.substring(5,7)+"月_new）_"+user.getProjectCode()+"_" + users.get(0).getUserName();
+        String fileName = department.getDeptName()+ "_项目补贴表（"+monthStr.substring(0,4)+"年"+monthStr.substring(5,7)+"月_new）_"+project.getProjectCode()+"_" + users.get(0).getUserName();
         TemplateParseUtil templateParseUtil = new TemplateParseUtil();
-        //templateParseUtil.downloadExcel(response, sheetMap, TemplateParseUtil.Type.OverWork,fileName);
+        templateParseUtil.downloadExcel(response, sheetMap, TemplateParseUtil.Type.OverWork,fileName);
         logger.info("导出加班补贴表结束");
     }
 }

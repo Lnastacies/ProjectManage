@@ -26,7 +26,8 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
                 <h4 class="modal-title" id="myModalLabel">日报添加</h4>
             </div>
             <div class="modal-body">
@@ -34,13 +35,14 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">日报日期</label>
                         <div class="col-sm-4">
-                            <input type="text" name="dailyDateStr" class="form-control" placeholder="请选择日期" id="dailyDateStr">
+                            <input type="text" name="dailyDateStr" class="form-control" placeholder="请选择日期"
+                                   id="dailyDateStr">
                             <span class="help-block"></span>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">项目组</label>
-                        <div class="col-sm-4">
+                        <div class="col-sm-6">
                             <!-- 部门提交部门id即可 -->
                             <select class="form-control" name="projectName">
                             </select>
@@ -55,61 +57,34 @@
         </div>
     </div>
 </div>
-<%--导出加班补贴表--%>
-<div class="modal fade" id="overWorkAddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <form class="form-horizontal" id="overWorkExport" method="get" enctype="multipart/form-data" action="${APP_PATH}/overWork/overWorkExport">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myOverWorkAddModal">导出加班补贴表</h4>
-                </div>
-                <div class="modal-body">
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">月份</label>
-                            <div class="col-sm-4">
-                                <input type="text" name="monthStr" class="form-control" placeholder="请选择月份" id="monthStr">
-                                <span class="help-block"></span>
-                            </div>
-                        </div>
 
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary" id="overWork_save_btn">确定</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 <!-- 搭建显示页面 -->
 <div style="width: 1100px;">
     <!-- 按钮 -->
-    <div class="row">
+    <div class="row" style="margin-left: -65px;">
         <div class="form-group">
-                <div class="col-md-1">
-                    <button class="btn btn-primary" id="add_daily_btn">新增</button>
-                </div>
-                <div class="col-md-1">
-                    <button class="btn btn-primary" id="overWorkExport_btn">导出加班补贴表</button>
-                </div>
             <form id="weeklyExport" method="get" enctype="multipart/form-data" action="${APP_PATH}/daily/weeklyExport">
-                <div class="col-md-1" style="width: 130px; margin: 7px -42px 21px 58px">
+                <div class="col-md-1" style="width: 130px; margin: 7px -42px 21px 58px; float: left">
                     <label class="control-label">日报日期：</label>
                 </div>
                 <div class="col-md-2">
-                    <input type="text" name="dailyStartDateStr" class="form-control" placeholder="日报开始日期" id="dailyStartDateStr">
+                    <input type="text" name="dailyStartDateStr" class="form-control" placeholder="日报开始日期"
+                           id="dailyStartDateStr">
                 </div>
-                <div class="col-md-2" style="margin: 9px -166px -28px -12px">
+                <div class="col-md-2" style="margin: 9px -166px -28px -12px; float: left">
                     <span>-</span>
                 </div>
-                <div class="col-md-2">
-                    <input type="text" name="dailyEndDateStr" class="form-control" placeholder="日报结束日期" id="dailyEndDateStr">
+                <div class="col-md-2"style="float: left">
+                    <input type="text" name="dailyEndDateStr" class="form-control" placeholder="日报结束日期"
+                           id="dailyEndDateStr">
                 </div>
-                <div class="col-md-1">
+                <div class="col-md-1"style="float: left">
                     <button class="btn btn-warning" id="weeklyExport_btn">导出周报</button>
                 </div>
             </form>
+            <div class="col-md-1"style="float: left">
+            <button class="btn btn-primary" id="add_daily_btn">新增</button>
+        </div>
         </div>
     </div>
     <!-- 显示表格数据 -->
@@ -122,7 +97,6 @@
                     <th>星期</th>
                     <th>项目组</th>
                     <th>创建日期</th>
-                    <th>下班时间</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -142,7 +116,7 @@
     </div>
 </div>
 <script type="text/javascript">
-    layui.use('laydate', function(){
+    layui.use('laydate', function () {
         var laydate = layui.laydate;
         //常规用法
         laydate.render({
@@ -153,10 +127,6 @@
         });
         laydate.render({
             elem: '#dailyEndDateStr'
-        });
-        laydate.render({
-            elem: '#monthStr',
-            type: 'month'
         });
     });
     layer = layui.layer //弹层
@@ -172,7 +142,7 @@
     function to_page(pn) {
         $.ajax({
             url: "${APP_PATH}/getDailyList",
-            data: {"userId":userId, "pn":pn},
+            data: {"userId": userId, "pn": pn},
             type: "POST",
             success: function (result) {
                 //1、解析并显示项目数据
@@ -194,8 +164,7 @@
             var week = $("<td></td>").append(item.week);
             var projectName = $("<td></td>").append(item.projectName);
             var createTime = $("<td></td>").append(item.createTime == null ? "" : new Date(item.createTime).Format("yyyy-MM-dd"));
-            var offDutyTime = $("<td></td>").append(item.offDutyTime == null ? "" : new Date(item.offDutyTime).Format("hh:mm:ss"));
-            var detailBtn = $("<button onclick=\"goDailyDetail('"+item.dailyId+"')\"></button>").addClass("btn btn-primary btn-sm edit_btn")
+            var detailBtn = $("<button onclick=\"goDailyDetail('" + item.dailyId + "')\"></button>").addClass("btn btn-primary btn-sm edit_btn")
                 .append($("<span></span>").addClass("glyphicon glyphicon-pencil")).append("详情列表");
             //为详情按钮添加一个自定义的属性，来表示当前项目dailyId
             detailBtn.attr("detail-id", item.dailyId);
@@ -208,7 +177,6 @@
                 .append(projectName)
                 .append(createTime)
                 .append(createTime)
-                .append(offDutyTime)
                 .append(btnTd)
                 .appendTo("#pros_table tbody");
         });
@@ -305,16 +273,16 @@
 
     //点击详情跳转到日报详情页面
     function goDailyDetail(dailyId) {
-        window.location.href="/daily/dailyAdd.jsp?dailyId=" + dailyId;
+        window.location.href = "/daily/dailyAdd.jsp?dailyId=" + dailyId;
     }
 
     //点击新增按钮弹出模态框。
-    $("#add_daily_btn").click(function(){
+    $("#add_daily_btn").click(function () {
         reset_form("#proAddModal form");
         //发送ajax请求，查出部门信息，显示在下拉列表中
         getProjectNameList("#proAddModal select");
         $("#proAddModal").modal({
-            backdrop:"static"
+            backdrop: "static"
         });
     });
 
@@ -323,9 +291,9 @@
         //清空之前下拉列表的值
         $(ele).empty();
         $.ajax({
-            url:"${APP_PATH}/TProject/getProjectNameList",
-            type:"GET",
-            success:function (result) {
+            url: "${APP_PATH}/TProject/getProjectNameList",
+            type: "GET",
+            success: function (result) {
                 $.each(result.extend.pros, function () {
                     var optionEle = $("<option></option>").append(this.projectName).attr("value", this.id);
                     optionEle.appendTo(ele);
@@ -336,18 +304,19 @@
 
     //点击保存，添加日报列表信息
     $("#daily_save_btn").click(function () {
+
         $.ajax({
-            url:"${APP_PATH}/daily/saveDaily/"+userId,
-            type:"POST",
-            data:$("#proAddModal form").serialize(),
-            success:function (result) {
+            url: "${APP_PATH}/daily/saveDaily/" + userId,
+            type: "POST",
+            data: $("#proAddModal form").serialize(),
+            success: function (result) {
                 if (result.code == 100) {
                     $("#proAddModal").modal('hide');
-                    to_page(totalRecord);
-                } else if(result.code == 110){
+                    to_page(1);
+                } else if (result.code == 110) {
                     layer.open({
-                        titel:'确信息',
-                        content:'当天日报已存在'
+                        titel: '确信息',
+                        content: '当天日报已存在'
                     });
                 }
             }
@@ -355,25 +324,12 @@
     });
 
     //周报导出
-    $("#weeklyExport_btn").click(function(){
-        if($("#dailyStartDateStr").val()==""||$("#dailyEndDateStr").val()==""){
+    $("#weeklyExport_btn").click(function () {
+        if ($("#dailyStartDateStr").val() == "" || $("#dailyEndDateStr").val() == "") {
             layer.alert('请选择日报日期！');
             return false;
         }
         $('#weeklyExport').submit();
-    });
-    //加班补贴表
-    $("#overWorkExport_btn").click(function(){
-        reset_form("#overWorkAddModal form");
-        $("#overWorkAddModal").modal({
-            backdrop:"static"
-        });
-    });
-    //点击保存，导出加班补贴表
-    $("#overWork_save_btn").click(function () {
-        $('#overWorkExport').submit();
-        reset_form("#overWorkAddModal form");
-        $("#overWorkAddModal").modal('hide');
     });
 </script>
 </body>

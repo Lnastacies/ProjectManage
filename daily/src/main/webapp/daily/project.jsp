@@ -49,10 +49,10 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">项目负责人</label>
+                        <label class="col-sm-2 control-label">项目经理</label>
                         <div class="col-sm-10">
-                            <input type="text" name="projectUserId" class="form-control"
-                                   id="projectUserId_update_input">
+                            <input type="text"  class="form-control"
+                                   id="projectUserId_update_input" readonly>
                         </div>
                     </div>
                     <div class="form-group">
@@ -111,7 +111,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">项目负责人</label>
+                        <label class="col-sm-2 control-label">项目经理</label>
                         <div class="col-sm-10">
                             <input type="text" name="projectUserId" class="form-control" id="projectUserId_add_input">
                             <span class="help-block"></span>
@@ -150,19 +150,80 @@
     </div>
 </div>
 
+<%--导出加班补贴表--%>
+<div class="modal fade" id="overWorkAddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form class="form-horizontal" id="overWorkExport" method="get" enctype="multipart/form-data" action="${APP_PATH}/overWork/overWorkExport">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myOverWorkAddModal">导出加班补贴表</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">月份</label>
+                        <div class="col-sm-4">
+                            <input type="text" name="monthStr" class="form-control" placeholder="请选择月份" id="monthStr">
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
 
-<!-- 搭建显示页面 -->
-<div class="container">
-    <!-- 标题 -->
-    <div class="row">
-        <div class="col-md-12">
-            <%--<h1>SSM-CRUD</h1>--%>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="overWork_save_btn">确定</button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
+
+<%--导出项目周报表--%>
+<div class="modal fade" id="projectWeekModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form class="form-horizontal" id="projectWeekExport" method="get" enctype="multipart/form-data" action="${APP_PATH}/daily/projectWeeklyExport">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myProjectWeekModal">导出项目周报表</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">日报日期</label>
+                        <div class="col-md-2">
+                            <input type="text" name="dailyStartDateStr" class="form-control" style="width: 120px" placeholder="日报开始日期"
+                                   id="dailyStartDateStr">
+                        </div>
+                        <div class="col-md-2" style="margin: 9px 0 50px 50px; float: left">
+                            <span>-</span>
+                        </div>
+                        <div class="col-md-2"style="margin-left:-70px;float: left">
+                            <input type="text" name="dailyEndDateStr" class="form-control" style="width: 120px" placeholder="日报结束日期"
+                                   id="dailyEndDateStr">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="projectWeek_save_btn">确定</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- 搭建显示页面 -->
+<div style="width: 1100px;">
     <!-- 按钮 -->
     <div class="row">
-        <div class="col-md-4 col-md-offset-8">
+        <div class="col-md-1">
             <button class="btn btn-primary" id="pro_add_modal_btn">新增</button>
+        </div>
+        <div class="col-md-1">
+            <button class="btn btn-warning" id="overWorkExport_btn">导出加班补贴表</button>
+        </div>
+        <div class="col-md-1" style="margin-left: 80px">
+            <button class="btn btn-warning" id="projectWeekExport_btn">导出项目周报表</button>
         </div>
     </div>
     <!-- 显示表格数据 -->
@@ -171,12 +232,9 @@
             <table class="table table-hover" id="pros_table">
                 <thead>
                 <tr>
-                    <th>
-                        <input type="checkbox" id="check_all"/>
-                    </th>
                     <th>项目编号</th>
                     <th>项目名称</th>
-                    <th>项目负责人</th>
+                    <th>项目经理</th>
                     <th>上班时间</th>
                     <th>下班时间</th>
                     <th>加班开始时间</th>
@@ -208,7 +266,7 @@
         //去首页
         to_page(1);
     });
-
+    var userId = "${user.userId}";
     //执行一个laydate实例
     layui.use('laydate', function () {
         var laydate = layui.laydate;
@@ -237,13 +295,22 @@
             elem: '#overWorkStartTimeStr_update_input',
             type: 'time'
         });
+        laydate.render({
+            elem: '#monthStr',
+            type: 'month'
+        });
+        laydate.render({
+            elem: '#dailyStartDateStr'
+        });
+        laydate.render({
+            elem: '#dailyEndDateStr'
+        });
     });
-
     //分页查询处理
     function to_page(pn) {
         $.ajax({
-            url: "${APP_PATH}/pros",
-            data: "pn=" + pn,
+            url: "${APP_PATH}/project/getProjectByUser",
+            data: "pn=" + pn + "&userId=" + userId,
             type: "GET",
             success: function (result) {
                 //1、解析并显示项目数据
@@ -261,10 +328,9 @@
         $("#pros_table tbody").empty();
         var pros = result.extend.pageInfo.list;
         $.each(pros, function (index, item) {
-            var checkBoxTd = $("<td><input type='checkbox' class='check_item'/></td>");
             var projectCode = $("<td></td>").append(item.projectCode);
             var projectName = $("<td></td>").append(item.projectName);
-            var projectUserId = $("<td></td>").append(item.projectUserId);
+            var projectUserId = $("<td></td>").append(item.userName);
             var workStartTime = $("<td></td>").append(item.workStartTime == null ? "" : new Date(item.workStartTime).Format("hh:mm:ss"));
             var workEndTime = $("<td></td>").append(item.workEndTime == null ? "" : new Date(item.workEndTime).Format("hh:mm:ss"));
             var overworkStartTime = $("<td></td>").append(item.overworkStartTime == null ? "" : new Date(item.overworkStartTime).Format("hh:mm:ss"));
@@ -278,9 +344,13 @@
                 .append($("<span></span>").addClass("glyphicon glyphicon-trash")).append("删除");
             //为删除按钮添加一个自定义的属性来表示当前删除的项目id
             delBtn.attr("del-id", item.id);
-            var btnTd = $("<td></td>").append(editBtn).append(" ").append(delBtn);
+            var detailBtn = $("<button></button>").addClass("btn btn-info btn-sm detail_btn")
+                .append($("<span></span>").addClass("glyphicon glyphicon-pencil")).append("项目详情");
+            //为详情按钮添加一个自定义的属性来表示当前项目id
+            detailBtn.attr("detail-id", item.id);
+            var btnTd = $("<td></td>").append(editBtn).append(" ").append(delBtn).append(" ").append(detailBtn);
             //append方法执行完成以后还是返回原来的元素
-            $("<tr></tr>").append(checkBoxTd)
+            $("<tr></tr>")
                 .append(projectCode)
                 .append(projectName)
                 .append(projectUserId)
@@ -455,6 +525,7 @@
         });
     });
 
+    //获取项目信息
     function getProject(id) {
         $.ajax({
             url: "${APP_PATH}/pro/" + id,
@@ -464,7 +535,7 @@
                 var proId = proData.id;
                 $("#projectCode_update_input").val(proData.projectCode)
                 $("#projectName_update_input").val(proData.projectName);
-                $("#projectUserId_update_input").val(proData.projectUserId);
+                $("#projectUserId_update_input").val(proData.userName);
                 $("#workStartTimeStr_update_input").val(proData.workStartTime == null ? "" : new Date(proData.workStartTime).Format("hh:mm:ss"));
                 $("#workEndTimeStr_update_input").val(proData.workEndTime == null ? "" : new Date(proData.workEndTime).Format("hh:mm:ss"));
                 $("#overWorkStartTimeStr_update_input").val(proData.overworkStartTime == null ? "" : new Date(proData.overworkStartTime).Format("hh:mm:ss"));
@@ -492,7 +563,7 @@
     //单个删除
     $(document).on("click", ".delete_btn", function () {
         //1、弹出是否确认删除对话框
-        var projectName = $(this).parents("tr").find("td:eq(2)").text();
+        var projectName = $(this).parents("tr").find("td:eq(1)").text();
         var proId = $(this).attr("del-id");
         layer.confirm('确定删除【' + projectName + '】吗？', {icon: 3, title: '确认信息'}, function (index) {
             //确认，发送ajax请求删除即可
@@ -522,7 +593,47 @@
         var flag = $(".check_item:checked").length == $(".check_item").length;
         $("#check_all").prop("checked", flag);
     });
+    //加班补贴表
+    $("#overWorkExport_btn").click(function(){
+        reset_form("#overWorkAddModal form");
+        $("#overWorkAddModal").modal({
+            backdrop:"static"
+        });
+    });
+    //点击保存，导出加班补贴表
+    $("#overWork_save_btn").click(function () {
+        if($("#monthStr").val()==""){
+            layer.alert('请选择月份！');
+            return false;
+        }
+        $('#overWorkExport').submit();
+        reset_form("#overWorkAddModal form");
+        $("#overWorkAddModal").modal('hide');
+    });
+    //项目周报表
+    $("#projectWeekExport_btn").click(function(){
+        reset_form("#projectWeekModal form");
+        $("#projectWeekModal").modal({
+            backdrop:"static"
+        });
+    });
+    //点击保存，导出加班补贴表
+    $("#projectWeek_save_btn").click(function () {
+        if ($("#dailyStartDateStr").val() == "" || $("#dailyEndDateStr").val() == "") {
+            layer.alert('请选择日报日期！');
+            return false;
+        }
+        $('#projectWeekExport').submit();
+        reset_form("#projectWeekModal form");
+        $("#projectWeekModal").modal('hide');
+    });
 
+    //点击详情，跳转到项目详情页面
+    $(document).on("click", ".detail_btn", function () {
+        var id = this.getAttribute("detail-id");
+        window.location.href = "/daily/projectDetail.jsp?projectId=" + id;
+
+    });
 </script>
 </body>
 </html>

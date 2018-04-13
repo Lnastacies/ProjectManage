@@ -28,4 +28,14 @@ public interface TProjectMapper {
     int updateByPrimaryKeySelective(TProject record);
 
     int updateByPrimaryKey(TProject record);
+
+    List<TProject> selectAllProject();
+
+    TProject selectInfoByPrimaryKey(Integer id);
+
+    TProject selectByUserId(String userId);
+
+    // 根据员工查看项目信息
+    List<TProject> selectProjectByUser(String userId);
+
 }

@@ -47,10 +47,10 @@
                         <label class="col-sm-2 control-label">性别</label>
                         <div class="col-sm-10">
                             <label class="radio-inline">
-                                <input type="radio" name="sex" id="gender1_update_input" value="1" checked="checked"> 男
+                                <input type="radio" name="gender" id="gender1_update_input" value="1" checked="checked"> 男
                             </label>
                             <label class="radio-inline">
-                                <input type="radio" name="sex" id="gender2_update_input" value="0"> 女
+                                <input type="radio" name="gender" id="gender2_update_input" value="0"> 女
                             </label>
                         </div>
                     </div>
@@ -119,59 +119,33 @@
                         <div >
                             <form class="form-horizontal">
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">姓名</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" name="userName" class="form-control" id="userName_input" readonly="readonly">
-                                        <span class="help-block"></span>
+                                    <label class="col-sm-2 control-label">姓名:</label>
+                                    <div class="col-sm-10" style="padding-top: 7px">
+                                        <span  name="userName"  id="userName_input" ></span>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">性别</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" name="sex" class="form-control" id="sex_input" readonly="readonly">
-                                        <span class="help-block"></span>
+                                    <label class="col-sm-2 control-label">性别:</label>
+                                    <div class="col-sm-10" style="padding-top: 7px">
+                                        <span  name="gender"  id="gender_input" ></span>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">邮箱</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" name="email" class="form-control" id="email_input" readonly="readonly">
-                                        <span class="help-block"></span>
+                                    <label class="col-sm-2 control-label">邮箱:</label>
+                                    <div class="col-sm-10" style="padding-top: 7px">
+                                        <span  name="email" id="email_input" >
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">项目</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" name="project" class="form-control" id="project_input" readonly="readonly">
-                                        <span class="help-block"></span>
+                                    <label class="col-sm-2 control-label">角色:</label>
+                                    <div class="col-sm-10" style="padding-top: 7px">
+                                        <span name="role" id="role_input" ></span>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">部门</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" name="dep" class="form-control" id="dep_input" readonly="readonly">
-                                        <span class="help-block"></span>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">角色</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" name="role" class="form-control" id="role_input" readonly="readonly">
-                                        <span class="help-block"></span>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">手机号</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" name="mobile" class="form-control" id="mobile_input" readonly="readonly">
-                                        <span class="help-block"></span>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label">密码</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" name="password" class="form-control" id="password_input" readonly="readonly">
-                                        <span class="help-block"></span>
+                                    <label class="col-sm-2 control-label">手机号:</label>
+                                    <div class="col-sm-10" style="padding-top: 7px">
+                                        <span name="mobile"  id="mobile_input" ></span>
                                     </div>
                                 </div>
                             </form>
@@ -195,14 +169,11 @@
             type:"GET",
             success:function(result){
                 var userData = result.extend.user;
-                $("#userName_input").val(userData.userName);
-                $("#email_input").val(userData.email);
-                $(".modal-dialog input[name=sex]").val([userData.sex=='1'?"男":"女"]);
-                $(".modal-dialog input[name=mobile]").val([userData.mobile]);
-                $(".modal-dialog input[name=password]").val([userData.password]);
-                $(".modal-dialog #dep_input").val([userData.deptName]);
-                $(".modal-dialog #project_input").val([userData.projectName]);
-                $(".modal-dialog #role_input").val([userData.roleName]);
+                $("#userName_input").html(userData.userName);
+                $("#email_input").text(userData.email);
+                $("#gender_input").text([userData.gender=='1'?"男":"女"]);
+                $("#mobile_input").html([userData.mobile]);
+                $("#role_input").html([userData.roleName]);
             }
         });
     }

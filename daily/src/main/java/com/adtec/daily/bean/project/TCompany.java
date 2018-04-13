@@ -21,6 +21,26 @@ public class TCompany {
 
     private String remark3;
 
+    private int deptId;
+
+    private String deptName;
+
+    public int getDeptId() {
+        return deptId;
+    }
+
+    public void setDeptId(int deptId) {
+        this.deptId = deptId;
+    }
+
+    public String getDeptName() {
+        return deptName;
+    }
+
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
+    }
+
     public Integer getCompanyId() {
         return companyId;
     }

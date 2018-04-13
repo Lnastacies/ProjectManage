@@ -1,4 +1,4 @@
-package com.adtec.daily.dao;
+package com.adtec.daily.dao.user;
 
 import com.adtec.daily.bean.user.TUserProject;
 import com.adtec.daily.bean.user.TUserProjectExample;

@@ -32,4 +32,6 @@ public interface TUserMapper {
     TUser selectByUserId(String userId);
 
     List<TUser> selectAllUser();
+
+    List<TUser> selectAllUserByProjectIdAndCompanyId(@Param("projectId") int projectId,@Param("companyId") int companyId);
 }

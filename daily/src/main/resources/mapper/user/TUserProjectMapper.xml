@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.adtec.daily.dao.daily.TOverWorkMapper" >
-  <resultMap id="BaseResultMap" type="com.adtec.daily.bean.daily.TOverWork" >
+<mapper namespace="com.adtec.daily.dao.user.TUserProjectMapper" >
+  <resultMap id="BaseResultMap" type="com.adtec.daily.bean.user.TUserProject" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="VARCHAR" />
-    <result column="work_date" property="workDate" jdbcType="DATE" />
-    <result column="over_work" property="overWork" jdbcType="DECIMAL" />
+    <result column="project_id" property="projectId" jdbcType="INTEGER" />
+    <result column="approach_time" property="approachTime" jdbcType="TIMESTAMP" />
+    <result column="departure_time" property="departureTime" jdbcType="TIMESTAMP" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="create_user_id" property="createUserId" jdbcType="VARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
@@ -73,16 +74,16 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, user_id, work_date, over_work, create_time, create_user_id, update_time, update_user_id, 
-    remark1, remark2, remark3
+    id, user_id, project_id, approach_time, departure_time, create_time, create_user_id, 
+    update_time, update_user_id, remark1, remark2, remark3
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.adtec.daily.bean.daily.TOverWorkExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.adtec.daily.bean.user.TUserProjectExample" >
     select
     <if test="distinct" >
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from t_over_work
+    from t_user_project
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -93,31 +94,33 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from t_over_work
+    from t_user_project
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from t_over_work
+    delete from t_user_project
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.adtec.daily.bean.daily.TOverWorkExample" >
-    delete from t_over_work
+  <delete id="deleteByExample" parameterType="com.adtec.daily.bean.user.TUserProjectExample" >
+    delete from t_user_project
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.adtec.daily.bean.daily.TOverWork" >
-    insert into t_over_work (id, user_id, work_date, 
-      over_work, create_time, create_user_id, 
-      update_time, update_user_id, remark1, 
-      remark2, remark3)
-    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, #{workDate,jdbcType=DATE}, 
-      #{overWork,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=VARCHAR}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=VARCHAR}, #{remark1,jdbcType=VARCHAR}, 
-      #{remark2,jdbcType=VARCHAR}, #{remark3,jdbcType=VARCHAR})
+  <insert id="insert" parameterType="com.adtec.daily.bean.user.TUserProject" >
+    insert into t_user_project (id, user_id, project_id, 
+      approach_time, departure_time, create_time, 
+      create_user_id, update_time, update_user_id, 
+      remark1, remark2, remark3
+      )
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, #{projectId,jdbcType=INTEGER}, 
+      #{approachTime,jdbcType=TIMESTAMP}, #{departureTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{createUserId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=VARCHAR}, 
+      #{remark1,jdbcType=VARCHAR}, #{remark2,jdbcType=VARCHAR}, #{remark3,jdbcType=VARCHAR}
+      )
   </insert>
-  <insert id="insertSelective" parameterType="com.adtec.daily.bean.daily.TOverWork" >
-    insert into t_over_work
+  <insert id="insertSelective" parameterType="com.adtec.daily.bean.user.TUserProject" >
+    insert into t_user_project
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -125,11 +128,14 @@
       <if test="userId != null" >
         user_id,
       </if>
-      <if test="workDate != null" >
-        work_date,
+      <if test="projectId != null" >
+        project_id,
       </if>
-      <if test="overWork != null" >
-        over_work,
+      <if test="approachTime != null" >
+        approach_time,
+      </if>
+      <if test="departureTime != null" >
+        departure_time,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -160,11 +166,14 @@
       <if test="userId != null" >
         #{userId,jdbcType=VARCHAR},
       </if>
-      <if test="workDate != null" >
-        #{workDate,jdbcType=DATE},
+      <if test="projectId != null" >
+        #{projectId,jdbcType=INTEGER},
       </if>
-      <if test="overWork != null" >
-        #{overWork,jdbcType=DECIMAL},
+      <if test="approachTime != null" >
+        #{approachTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="departureTime != null" >
+        #{departureTime,jdbcType=TIMESTAMP},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -189,14 +198,14 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.adtec.daily.bean.daily.TOverWorkExample" resultType="java.lang.Integer" >
-    select count(*) from t_over_work
+  <select id="countByExample" parameterType="com.adtec.daily.bean.user.TUserProjectExample" resultType="java.lang.Integer" >
+    select count(*) from t_user_project
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update t_over_work
+    update t_user_project
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
@@ -204,11 +213,14 @@
       <if test="record.userId != null" >
         user_id = #{record.userId,jdbcType=VARCHAR},
       </if>
-      <if test="record.workDate != null" >
-        work_date = #{record.workDate,jdbcType=DATE},
+      <if test="record.projectId != null" >
+        project_id = #{record.projectId,jdbcType=INTEGER},
       </if>
-      <if test="record.overWork != null" >
-        over_work = #{record.overWork,jdbcType=DECIMAL},
+      <if test="record.approachTime != null" >
+        approach_time = #{record.approachTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.departureTime != null" >
+        departure_time = #{record.departureTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -237,11 +249,12 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update t_over_work
+    update t_user_project
     set id = #{record.id,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=VARCHAR},
-      work_date = #{record.workDate,jdbcType=DATE},
-      over_work = #{record.overWork,jdbcType=DECIMAL},
+      project_id = #{record.projectId,jdbcType=INTEGER},
+      approach_time = #{record.approachTime,jdbcType=TIMESTAMP},
+      departure_time = #{record.departureTime,jdbcType=TIMESTAMP},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       create_user_id = #{record.createUserId,jdbcType=VARCHAR},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
@@ -253,17 +266,20 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.adtec.daily.bean.daily.TOverWork" >
-    update t_over_work
+  <update id="updateByPrimaryKeySelective" parameterType="com.adtec.daily.bean.user.TUserProject" >
+    update t_user_project
     <set >
       <if test="userId != null" >
         user_id = #{userId,jdbcType=VARCHAR},
       </if>
-      <if test="workDate != null" >
-        work_date = #{workDate,jdbcType=DATE},
+      <if test="projectId != null" >
+        project_id = #{projectId,jdbcType=INTEGER},
       </if>
-      <if test="overWork != null" >
-        over_work = #{overWork,jdbcType=DECIMAL},
+      <if test="approachTime != null" >
+        approach_time = #{approachTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="departureTime != null" >
+        departure_time = #{departureTime,jdbcType=TIMESTAMP},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -289,11 +305,12 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.adtec.daily.bean.daily.TOverWork" >
-    update t_over_work
+  <update id="updateByPrimaryKey" parameterType="com.adtec.daily.bean.user.TUserProject" >
+    update t_user_project
     set user_id = #{userId,jdbcType=VARCHAR},
-      work_date = #{workDate,jdbcType=DATE},
-      over_work = #{overWork,jdbcType=DECIMAL},
+      project_id = #{projectId,jdbcType=INTEGER},
+      approach_time = #{approachTime,jdbcType=TIMESTAMP},
+      departure_time = #{departureTime,jdbcType=TIMESTAMP},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       create_user_id = #{createUserId,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
@@ -303,48 +320,4 @@
       remark3 = #{remark3,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
-
-  <!--根据用户id及上班日期查询加班明细列表-->
-  <select id="selectOverWorkDetailListByUserIdAndWorkDate" parameterType="map" resultMap="BaseResultMap">
-    SELECT
-    t1.work_date, t1.user_id, t1.over_work, t2.user_name userName, t2.identity_no identityNo,
-    t3.project_code projectCode, t3.project_name projectName,t4.dept_name deptName
-    FROM t_over_work t1
-    LEFT JOIN t_user t2 on t2.user_id = t1.user_id
-    LEFT JOIN t_user_project t5 on t5.user_id = t2.user_id
-    LEFT JOIN t_project t3 on t3.id = t5.project_id
-    LEFT JOIN t_user_department t6 on t6.user_id = t2.user_id
-    LEFT JOIN t_department t4 on t4.dept_id = t6.dept_id
-    WHERE
-    t1.user_id = #{userId,jdbcType=VARCHAR}
-    <if test="startDate != null">
-      AND t1.work_date>=#{startDate,jdbcType=VARCHAR}
-    </if>
-    <if test="endDate != null">
-      AND t1.work_date&lt;=#{endDate,jdbcType=VARCHAR}
-    </if>
-    ORDER BY t1.work_date DESC
-  </select>
-
-  <!--根据用户id及上班日期查询加班总时长-->
-  <select id="selectOverWorkByUserIdAndWorkDate" parameterType="map" resultMap="BaseResultMap">
-    SELECT
-    t1.user_id,t2.user_name userName,t2.identity_no identityNo,t4.dept_name deptName,
-    t3.project_code projectCode, t3.project_name projectName, sum(t1.over_work) sumOverWork
-    FROM t_over_work t1
-    LEFT JOIN t_user t2 on t2.user_id = t1.user_id
-    LEFT JOIN t_user_project t5 on t5.user_id = t2.user_id
-    LEFT JOIN t_project t3 on t3.id = t5.project_id
-    LEFT JOIN t_user_department t6 on t6.user_id = t2.user_id
-    LEFT JOIN t_department t4 on t4.dept_id = t6.dept_id
-    WHERE
-    t1.user_id = #{userId,jdbcType=VARCHAR}
-    <if test="startDate != null">
-      AND t1.work_date>=#{startDate,jdbcType=VARCHAR}
-    </if>
-    <if test="endDate != null">
-      AND t1.work_date&lt;=#{endDate,jdbcType=VARCHAR}
-    </if>
-    ORDER BY t1.work_date DESC
-  </select>
 </mapper>

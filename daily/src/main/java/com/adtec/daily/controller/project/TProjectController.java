@@ -3,7 +3,10 @@ package com.adtec.daily.controller.project;
 import com.adtec.daily.bean.common.Msg;
 import com.adtec.daily.bean.project.TProject;
 import com.adtec.daily.bean.project.TProjectExample;
+import com.adtec.daily.bean.user.TUser;
+import com.adtec.daily.bean.user.TUserProject;
 import com.adtec.daily.service.project.TProjectService;
+import com.adtec.daily.service.user.TUserService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,8 @@ public class TProjectController {
 
     @Autowired
     TProjectService tProjectService;
+    @Autowired
+    TUserService tUserService;
 
     /**
      * 项目更新方法
@@ -60,7 +65,7 @@ public class TProjectController {
      * @return
      */
     @ResponseBody
-    @RequestMapping("/checkProject")
+    @RequestMapping("/project/checkProject")
     public Msg checkProject(@RequestParam("projectCode") String projectCode) {
         //数据库项目名重复校验
         boolean b = tProjectService.checkProject(projectCode);
@@ -73,8 +78,6 @@ public class TProjectController {
 
     /**
      * 项目保存
-     * 1、支持JSR303校验
-     * 2、导入Hibernate-Validator
      *
      * @return
      */
@@ -99,48 +102,32 @@ public class TProjectController {
     }
 
     /**
-     * 导入jackson包。
+     * 管理员查询所有项目信息
      *
      * @param pn
      * @return
      */
-    @RequestMapping("/pros")
+    @RequestMapping("/project/getProjectInfo")
     @ResponseBody
     public Msg getProsWithJson(@RequestParam(value = "pn", defaultValue = "1") Integer pn) {
-        // 这不是一个分页查询
-        // 引入PageHelper分页插件
-        // 在查询之前只需要调用，传入页码，以及每页的大小
         PageHelper.startPage(pn, 5);
-        // startPage后面紧跟的这个查询就是一个分页查询
-        TProjectExample example = new TProjectExample();
-        example.setOrderByClause("create_time asc");
-        List<TProject> pros = tProjectService.getAll(example);
-        // 使用pageInfo包装查询后的结果，只需要将pageInfo交给页面就行了。
-        // 封装了详细的分页信息,包括有我们查询出来的数据，传入连续显示的页数
+        List<TProject> pros = tProjectService.getAll();
         PageInfo page = new PageInfo(pros, 5);
         return Msg.success().add("pageInfo", page);
     }
 
     /**
-     * 查询项目数据（分页查询）
+     * 员工查询所属项目信息
      *
      * @return
      */
-    // @RequestMapping("/emps")
-    public String getPros(@RequestParam(value = "pn", defaultValue = "1") Integer pn, Model model) {
-        // 这不是一个分页查询；
-        // 引入PageHelper分页插件
-        // 在查询之前只需要调用，传入页码，以及每页的大小
+    @RequestMapping("/project/getProjectByUser")
+    @ResponseBody
+    public Msg getProjectByUser(@RequestParam(value = "pn", defaultValue = "1") Integer pn, Model model, @RequestParam String userId) {
         PageHelper.startPage(pn, 5);
-        // startPage后面紧跟的这个查询就是一个分页查询
-        TProjectExample example = new TProjectExample();
-        example.setOrderByClause("create_time asc");
-        List<TProject> pros = tProjectService.getAll(example);
-        // 使用pageInfo包装查询后的结果，只需要将pageInfo交给页面就行了。
-        // 封装了详细的分页信息,包括有我们查询出来的数据，传入连续显示的页数
+        List<TProject> pros = tProjectService.getProjectByUser(userId);
         PageInfo page = new PageInfo(pros, 5);
-        model.addAttribute("pageInfo", page);
-        return "list";
+        return Msg.success().add("pageInfo", page);
     }
 
     /**
@@ -151,7 +138,76 @@ public class TProjectController {
     @RequestMapping("/TProject/getProjectNameList")
     @ResponseBody
     public Msg getPros() {
-        List<TProject> list = tProjectService.getAll(null);
+        List<TProject> list = tProjectService.getAll();
         return Msg.success().add("pros", list);
+    }
+
+    /**
+     * 根据项目id查询项目成员
+     *
+     * @param projectId
+     * @return
+     */
+    @RequestMapping("/project/getProjectUserByProjectId")
+    @ResponseBody
+    public Msg getProjectUserByProjectId(@RequestParam(value = "pn", defaultValue = "1") Integer pn, @RequestParam("projectId") int projectId) {
+        PageHelper.startPage(pn, 5);
+        int companyId =0;
+        List<TUser> pros = tUserService.getAllUserByProjectIdAndCompanyId(projectId,companyId);
+        PageInfo page = new PageInfo(pros, 5);
+        return Msg.success().add("pageInfo", page);
+    }
+
+    /**
+     *
+     * 删除项目成员
+     *
+     * @param userId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/projectUser/{id}", method = RequestMethod.DELETE)
+    public Msg updateUser(@PathVariable("id") String userId) {
+
+            tUserService.deleteByUserId(userId);
+
+        return Msg.success();
+    }
+
+    /**
+     *添加项目成员
+     *
+     * @param ids
+     * @param projectId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/project/projectUserSave", method = RequestMethod.GET)
+    public List<TUser> projectUserSave(String ids,int projectId) {
+
+            String[] save_ids = ids.split("-");
+            List<TUser> resultList = new ArrayList<TUser>();
+            //查出该项目下的成员
+            int companyId = 0;
+            List<TUser> list = tUserService.getAllUserByProjectIdAndCompanyId(projectId, companyId);
+            //组装id的集合
+            for (String userId : save_ids) {
+                for (TUser user : list) {
+                    //项目已经有成员，则不保存
+                    if (user.getUserId().equals(userId)) {
+                        resultList.add(user);
+                        return resultList;
+                    }
+                }
+            }
+            //项目中没有成员，则进行保存
+            for (String userId : save_ids) {
+                //添加成员
+                TUserProject tUserProject = new TUserProject();
+                tUserProject.setUserId(userId);
+                tUserProject.setProjectId(projectId);
+                tUserService.projectUserSave(tUserProject);
+            }
+        return resultList;
     }
 }

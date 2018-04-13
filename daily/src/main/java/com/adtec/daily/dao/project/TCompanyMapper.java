@@ -28,4 +28,6 @@ public interface TCompanyMapper {
     int updateByPrimaryKeySelective(TCompany record);
 
     int updateByPrimaryKey(TCompany record);
+
+    TCompany selectByDeptId(int deptId);
 }

@@ -40,6 +40,27 @@ public class TUser {
     //权限列表
     private List<String> privilegeList;
 
+    //项目id
+    private int projectId;
+
+    //项目编码
+    private String projectCode;
+
+    //项目名称
+    private String projectName;
+
+    //部门id
+    private int deptId;
+
+    //部门名称
+    private String deptName;
+
+    //公司id
+    private int companyId;
+
+    //公司名称
+    private String companyName;
+
     public String getRoleName() {
         return roleName;
     }
@@ -174,5 +195,61 @@ public class TUser {
 
     public void setRemark3(String remark3) {
         this.remark3 = remark3 == null ? null : remark3.trim();
+    }
+
+    public String getProjectCode() {
+        return projectCode;
+    }
+
+    public void setProjectCode(String projectCode) {
+        this.projectCode = projectCode;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public int getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
+    }
+
+    public int getDeptId() {
+        return deptId;
+    }
+
+    public void setDeptId(int deptId) {
+        this.deptId = deptId;
+    }
+
+    public String getDeptName() {
+        return deptName;
+    }
+
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
+    }
+
+    public int getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(int companyId) {
+        this.companyId = companyId;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 }
