@@ -23,7 +23,7 @@ public interface TDailyService {
      * @return
      * @throws Exception
      */
-    public List<TDaily> getDailyList(TDaily record);
+    List<TDaily> getDailyList(TDaily record);
 
     /**
      * 日报保存
@@ -59,7 +59,7 @@ public interface TDailyService {
      * @param users 用户信息
      * @param startDate 开始日期
      * @param endDate 结束日期
-     * @return reportList
+     * @return sheetMap
      * @throws Exception
      */
     public List<Map<String, Object>> caitcWeeklyExport(List<TUser> users,String startDate,String endDate);
@@ -73,7 +73,7 @@ public interface TDailyService {
      * @return thisWeekList
      * @throws Exception
      */
-    public List<TDaily> caitcProjectWeeklyExport(List<TUser> users,String startDate,String endDate);
+    public Map<String, Object> caitcProjectWeeklyExport(List<TUser> users,String startDate,String endDate);
 
     /**
      * 根据日报数据生成周报数据

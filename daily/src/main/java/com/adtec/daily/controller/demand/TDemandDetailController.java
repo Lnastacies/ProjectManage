@@ -2,6 +2,8 @@ package com.adtec.daily.controller.demand;
 
 import com.adtec.daily.bean.demand.TDemandDetail;
 import com.adtec.daily.service.demand.TDemandDetailService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +19,8 @@ import java.util.List;
 @Controller
 public class TDemandDetailController {
 
+    private Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
+
     @Autowired
     TDemandDetailService tDemandDetailService;
 
@@ -27,7 +31,7 @@ public class TDemandDetailController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/getDemandDetail/{demandId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/demandDetail/getDemandDetail/{demandId}", method = RequestMethod.GET)
     public String getDemandDetail(TDemandDetail tDemandDetail, HttpServletRequest request) {
         System.out.println("请求体中的值：" + request.getParameter("demandId"));
         tDemandDetail.setDemandIds("DT00001");

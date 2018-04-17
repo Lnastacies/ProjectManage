@@ -38,4 +38,7 @@ public interface TProjectMapper {
     // 根据员工查看项目信息
     List<TProject> selectProjectByUser(String userId);
 
+    // 根据添加的日报信息获取项目下班时间
+    TProject selectProjectByDailyId(String dailyId);
+
 }

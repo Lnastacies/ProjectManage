@@ -1,24 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>日报列表</title>
-    <%
-        pageContext.setAttribute("APP_PATH", request.getContextPath());
-    %>
-    <!-- web路径：
-    不以/开始的相对路径，找资源，以当前资源的路径为基准，经常容易出问题。
-    以/开始的相对路径，找资源，以服务器的路径为标准(http://localhost:3306)；需要加上项目名
-            http://localhost:3306/crud
-     -->
-    <script type="text/javascript" src="${APP_PATH}/static/js/jquery-1.12.4.min.js"></script>
-    <link href="${APP_PATH}/static/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="${APP_PATH}/static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
-    <script src="${APP_PATH}/static/js/common.js"></script>
-    <script src="${APP_PATH}/static/layui/layui.all.js"></script>
+    <jsp:include page="/html/default/pub.jsp" />
+    <link href="/js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/js/bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
 <!-- 搭建显示页面 -->
@@ -297,6 +286,7 @@
         $("#proAddModal").modal({
             backdrop:"static"
         });
+        $("#doneDate").val((new Date()).Format('yyyy-MM-dd'));
     });
 
     layui.use('laydate', function(){

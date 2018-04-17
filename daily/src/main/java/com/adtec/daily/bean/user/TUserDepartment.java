@@ -7,7 +7,7 @@ public class TUserDepartment {
 
     private String userId;
 
-    private String deptId;
+    private Integer deptId;
 
     private String userLevel;
 
@@ -41,12 +41,12 @@ public class TUserDepartment {
         this.userId = userId == null ? null : userId.trim();
     }
 
-    public String getDeptId() {
+    public Integer getDeptId() {
         return deptId;
     }
 
-    public void setDeptId(String deptId) {
-        this.deptId = deptId == null ? null : deptId.trim();
+    public void setDeptId(Integer deptId) {
+        this.deptId = deptId;
     }
 
     public String getUserLevel() {

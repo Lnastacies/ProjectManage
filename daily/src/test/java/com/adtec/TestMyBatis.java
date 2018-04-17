@@ -41,8 +41,5 @@ public class TestMyBatis {
         logger.info(JSON.toJSONString(tProject));
     }
 
-    @Test
-    public void test2(){
 
-    }
 }

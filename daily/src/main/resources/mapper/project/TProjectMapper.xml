@@ -19,8 +19,10 @@
         <result column="remark2" property="remark2" jdbcType="VARCHAR"/>
         <result column="remark3" property="remark3" jdbcType="VARCHAR"/>
 
+        <!--关联查询的属性-->
         <result column="user_name" property="userName" jdbcType="VARCHAR"/>
         <result column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <result column="daily_id" property="dailyId" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Example_Where_Clause">
         <where>
@@ -390,6 +392,7 @@
         where id = #{id,jdbcType=INTEGER}
     </update>
 
+    <!--关联查询-->
     <select id="selectAllProject" resultMap="BaseResultMap">
         SELECT t1.id, t1.project_code, t1.project_name,
         t1.project_user_id, t1.service_object_id, t1.daily_module_id,
@@ -402,7 +405,9 @@
         WHERE 1=1
         <![CDATA[
               order by t1.create_time asc
-            ]]>
+
+
+        ]]>
     </select>
 
     <select id="selectInfoByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
@@ -444,6 +449,17 @@
         AND tup.user_id = #{userId,jdbcType=VARCHAR}
         <![CDATA[
               order by t1.create_time asc
-            ]]>
+
+
+        ]]>
+    </select>
+
+    <!--根据添加的日报信息获取项目下班时间-->
+    <select id="selectProjectByDailyId" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT tp.id, tp.work_start_time, tp.work_end_time, tp.overwork_start_time, td.user_id, td.daily_date
+        FROM t_project tp
+	    LEFT JOIN t_daily td on tp.id = td.project_id
+        WHERE 1=1
+        AND td.daily_id = #{dailyId,jdbcType=VARCHAR}
     </select>
 </mapper>

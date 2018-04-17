@@ -245,62 +245,52 @@ public class TUserDepartmentExample {
             return (Criteria) this;
         }
 
-        public Criteria andDeptIdEqualTo(String value) {
+        public Criteria andDeptIdEqualTo(Integer value) {
             addCriterion("dept_id =", value, "deptId");
             return (Criteria) this;
         }
 
-        public Criteria andDeptIdNotEqualTo(String value) {
+        public Criteria andDeptIdNotEqualTo(Integer value) {
             addCriterion("dept_id <>", value, "deptId");
             return (Criteria) this;
         }
 
-        public Criteria andDeptIdGreaterThan(String value) {
+        public Criteria andDeptIdGreaterThan(Integer value) {
             addCriterion("dept_id >", value, "deptId");
             return (Criteria) this;
         }
 
-        public Criteria andDeptIdGreaterThanOrEqualTo(String value) {
+        public Criteria andDeptIdGreaterThanOrEqualTo(Integer value) {
             addCriterion("dept_id >=", value, "deptId");
             return (Criteria) this;
         }
 
-        public Criteria andDeptIdLessThan(String value) {
+        public Criteria andDeptIdLessThan(Integer value) {
             addCriterion("dept_id <", value, "deptId");
             return (Criteria) this;
         }
 
-        public Criteria andDeptIdLessThanOrEqualTo(String value) {
+        public Criteria andDeptIdLessThanOrEqualTo(Integer value) {
             addCriterion("dept_id <=", value, "deptId");
             return (Criteria) this;
         }
 
-        public Criteria andDeptIdLike(String value) {
-            addCriterion("dept_id like", value, "deptId");
-            return (Criteria) this;
-        }
-
-        public Criteria andDeptIdNotLike(String value) {
-            addCriterion("dept_id not like", value, "deptId");
-            return (Criteria) this;
-        }
-
-        public Criteria andDeptIdIn(List<String> values) {
+        public Criteria andDeptIdIn(List<Integer> values) {
             addCriterion("dept_id in", values, "deptId");
             return (Criteria) this;
         }
 
-        public Criteria andDeptIdNotIn(List<String> values) {
+        public Criteria andDeptIdNotIn(List<Integer> values) {
             addCriterion("dept_id not in", values, "deptId");
             return (Criteria) this;
         }
 
-        public Criteria andDeptIdBetween(String value1, String value2) {
+        public Criteria andDeptIdBetween(Integer value1, Integer value2) {
             addCriterion("dept_id between", value1, value2, "deptId");
             return (Criteria) this;
         }
 
-        public Criteria andDeptIdNotBetween(String value1, String value2) {
+        public Criteria andDeptIdNotBetween(Integer value1, Integer value2) {
             addCriterion("dept_id not between", value1, value2, "deptId");
             return (Criteria) this;
         }

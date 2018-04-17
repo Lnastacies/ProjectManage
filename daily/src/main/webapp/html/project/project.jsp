@@ -1,28 +1,12 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8" %>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>项目列表</title>
-    <%
-        pageContext.setAttribute("APP_PATH", request.getContextPath());
-    %>
-    <!-- web路径：
-    不以/开始的相对路径，找资源，以当前资源的路径为基准，经常容易出问题。
-    以/开始的相对路径，找资源，以服务器的路径为标准(http://localhost:3306)；需要加上项目名
-            http://localhost:3306/crud
-     -->
-    <script type="text/javascript"
-            src="${APP_PATH }/static/js/jquery-1.12.4.min.js"></script>
-    <link
-            href="${APP_PATH }/static/bootstrap-3.3.7-dist/css/bootstrap.min.css"
-            rel="stylesheet">
-    <script
-            src="${APP_PATH }/static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
-    <script src="${APP_PATH}/static/js/common.js"></script>
-    <script src="${APP_PATH}/static/layui/layui.all.js"></script>
+    <jsp:include page="/html/default/pub.jsp" />
+    <link href="/js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/js/bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
 <!-- 员工修改的模态框 -->
@@ -309,7 +293,7 @@
     //分页查询处理
     function to_page(pn) {
         $.ajax({
-            url: "${APP_PATH}/project/getProjectByUser",
+            url: "/project/getProjectByUser",
             data: "pn=" + pn + "&userId=" + userId,
             type: "GET",
             success: function (result) {
@@ -441,10 +425,7 @@
     //点击新增按钮弹出模态框。
     $("#pro_add_modal_btn").click(function () {
         //清除表单数据（表单完整重置（表单的数据，表单的样式））
-        reset_form("#proAddModal form");
-        //s$("")[0].reset();
-        //发送ajax请求，查出部门信息，显示在下拉列表中
-        //getDepts("#proAddModal select");
+        reset_form("#proAddModal form");;
         //弹出模态框
         $("#proAddModal").modal({
             backdrop: "static"
@@ -470,7 +451,7 @@
         //发送ajax请求校验用户名是否可用
         var projectCode = this.value;
         $.ajax({
-            url: "${APP_PATH}/checkProject",
+            url: "/project/checkProject",
             data: "projectCode=" + projectCode,
             type: "POST",
             success: function (result) {
@@ -494,7 +475,7 @@
         }
         //2、发送ajax请求保存员工
         $.ajax({
-            url: "${APP_PATH}/addProject",
+            url: "${APP_PATH}/project/addProject",
             type: "POST",
             data: $("#proAddModal form").serialize(),
             success: function (result) {
@@ -511,10 +492,6 @@
         });
     });
 
-    //1）、我们是按钮创建之前就绑定了click，所以绑定不上。
-    //2）、可以在创建按钮的时候绑定。
-    //3）、绑定点击.live()
-    //jquery新版没有live，使用on进行替代
     $(document).on("click", ".edit_btn", function () {
         //2、查出项目信息，显示项目信息
         getProject($(this).attr("edit-id"));
@@ -528,7 +505,7 @@
     //获取项目信息
     function getProject(id) {
         $.ajax({
-            url: "${APP_PATH}/pro/" + id,
+            url: "/project/getProjectById" + id,
             type: "GET",
             success: function (result) {
                 var proData = result.extend.id;
@@ -547,7 +524,7 @@
     $("#pro_update_btn").click(function () {
         //2、发送ajax请求保存更新的员工数据
         $.ajax({
-            url: "${APP_PATH}/pro/" + $(this).attr("edit-id"),
+            url: "/project/update/" + $(this).attr("edit-id"),
             type: "PUT",
             data: $("#proUpdateModal form").serialize(),
             success: function (result) {
@@ -568,7 +545,7 @@
         layer.confirm('确定删除【' + projectName + '】吗？', {icon: 3, title: '确认信息'}, function (index) {
             //确认，发送ajax请求删除即可
             $.ajax({
-                url: "${APP_PATH}/pro/" + proId,
+                url: "/pro/" + proId,
                 type: "DELETE",
                 success: function (result) {
                     layer.msg(result.msg);
@@ -581,9 +558,6 @@
 
     //完成全选/全不选功能
     $("#check_all").click(function () {
-        //attr获取checked是undefined;
-        //我们这些dom原生的属性；attr获取自定义属性的值；
-        //prop修改和读取dom原生属性的值
         $(".check_item").prop("checked", $(this).prop("checked"));
     });
 
@@ -599,6 +573,7 @@
         $("#overWorkAddModal").modal({
             backdrop:"static"
         });
+        $("#monthStr").val((new Date()).Format('yyyy-MM'));
     });
     //点击保存，导出加班补贴表
     $("#overWork_save_btn").click(function () {
@@ -631,8 +606,7 @@
     //点击详情，跳转到项目详情页面
     $(document).on("click", ".detail_btn", function () {
         var id = this.getAttribute("detail-id");
-        window.location.href = "/daily/projectDetail.jsp?projectId=" + id;
-
+        window.location.href = "/html/project/projectDetail.jsp?projectId=" + id;
     });
 </script>
 </body>

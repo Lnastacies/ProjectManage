@@ -30,4 +30,6 @@ public interface TDepartmentMapper {
     int updateByPrimaryKey(TDepartment record);
 
     TDepartment selectByUserId(String userId);
+
+    List<TDepartment> getDepartmentsByCompanyId(Integer companyId);
 }

@@ -1,24 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>日报列表</title>
-    <%
-        pageContext.setAttribute("APP_PATH", request.getContextPath());
-    %>
-    <!-- web路径：
-    不以/开始的相对路径，找资源，以当前资源的路径为基准，经常容易出问题。
-    以/开始的相对路径，找资源，以服务器的路径为标准(http://localhost:3306)；需要加上项目名
-            http://localhost:3306/crud
-     -->
-    <script type="text/javascript" src="${APP_PATH}/static/js/jquery-1.12.4.min.js"></script>
-    <link href="${APP_PATH}/static/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="${APP_PATH}/static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
-    <script src="${APP_PATH}/static/js/common.js"></script>
-    <script src="${APP_PATH}/static/layui/layui.all.js"></script>
+    <jsp:include page="/html/default/pub.jsp" />
+    <link href="/js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/js/bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
 <!-- 日报添加的模态框 -->
@@ -141,7 +130,7 @@
 
     function to_page(pn) {
         $.ajax({
-            url: "${APP_PATH}/getDailyList",
+            url: "${APP_PATH}/daily/getDailyList",
             data: {"userId": userId, "pn": pn},
             type: "POST",
             success: function (result) {
@@ -273,10 +262,10 @@
 
     //点击详情跳转到日报详情页面
     function goDailyDetail(dailyId) {
-        window.location.href = "/daily/dailyAdd.jsp?dailyId=" + dailyId;
+        window.location.href = "/html/daily/dailyAdd.jsp?dailyId=" + dailyId;
     }
 
-    //点击新增按钮弹出模态框。
+    //点击新增按钮弹出模态框
     $("#add_daily_btn").click(function () {
         reset_form("#proAddModal form");
         //发送ajax请求，查出部门信息，显示在下拉列表中
@@ -284,6 +273,7 @@
         $("#proAddModal").modal({
             backdrop: "static"
         });
+        $("#dailyDateStr").val((new Date()).Format('yyyy-MM-dd'));
     });
 
     //查询所有的项目信息并显示在下拉列表中
@@ -291,8 +281,9 @@
         //清空之前下拉列表的值
         $(ele).empty();
         $.ajax({
-            url: "${APP_PATH}/TProject/getProjectNameList",
-            type: "GET",
+            url: "${APP_PATH}/project/getProjectNameList",
+            data: {"userId": userId},
+            type: "POST",
             success: function (result) {
                 $.each(result.extend.pros, function () {
                     var optionEle = $("<option></option>").append(this.projectName).attr("value", this.id);
@@ -304,7 +295,6 @@
 
     //点击保存，添加日报列表信息
     $("#daily_save_btn").click(function () {
-
         $.ajax({
             url: "${APP_PATH}/daily/saveDaily/" + userId,
             type: "POST",

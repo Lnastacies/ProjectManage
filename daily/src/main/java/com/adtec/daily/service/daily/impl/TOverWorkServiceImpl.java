@@ -9,6 +9,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * @version V1.0
+ * @Description: 加班时间处理实现类
+ * @author: 胡浪
+ * @date: 2018/4/13
+ * @Copyright: 北京先进数通信息技术股份公司 http://www.adtec.com.cn
+ */
 @Service
 public class TOverWorkServiceImpl implements TOverWorkService{
 	@Autowired
@@ -27,6 +34,13 @@ public class TOverWorkServiceImpl implements TOverWorkService{
 	public void saveOverWork(TOverWork tOverWork) {
         tOverWorkMapper.insertSelective(tOverWork);
 	}
+
+    /**
+     * 更新加班数据
+     */
+    public void updateByDailyId(TOverWork tOverWork) {
+        tOverWorkMapper.updateByPrimaryKeySelective(tOverWork);
+    }
 
 	/**
 	 * 根据用户id及上班日期查询加班明细列表

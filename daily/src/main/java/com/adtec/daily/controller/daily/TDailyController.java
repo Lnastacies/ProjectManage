@@ -17,8 +17,8 @@ import com.adtec.daily.util.DateUtil;
 import com.adtec.daily.util.TemplateParseUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -38,11 +38,16 @@ import static com.adtec.daily.util.DateUtil.StrToDate;
 import static com.adtec.daily.util.DateUtil.getWeek;
 
 /**
- * 处理项目CRUD请求
+ * @version V1.0
+ * @Description: 日报信息类
+ * @author: 胡浪
+ * @date: 2018/4/8
+ * @Copyright: 北京先进数通信息技术股份公司 http://www.adtec.com.cn
  */
 @Controller
 public class TDailyController {
-    private static Logger logger = LoggerFactory.getLogger(TDailyController.class);
+
+    private Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
 
     @Autowired
     TDailyService tDailyService;
@@ -66,8 +71,9 @@ public class TDailyController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/getDailyList", method = RequestMethod.POST)
+    @RequestMapping(value = "/daily/getDailyList", method = RequestMethod.POST)
     public Msg getDailyList(TDaily tDaily, String userId) {
+
         PageHelper.startPage(tDaily.getPn(), 5);
         tDaily.setUserId(userId);
         List<TDaily> tdList = tDailyService.getDailyList(tDaily);
@@ -84,7 +90,6 @@ public class TDailyController {
 
     /**
      * 日报保存
-     * 同时判断是否超过了项目的加班开始时间，决定是否记录加班时间信息
      *
      * @param tDaily
      * @param result
@@ -142,6 +147,7 @@ public class TDailyController {
                         tOverWork.setOverWork(overWorkTime);
                         tOverWork.setCreateUserId(userId);
                         tOverWork.setCreateTime(new Date());
+                        tOverWork.setRemark1(tDaily.getDailyId());
                         tOverWorkService.saveOverWork(tOverWork);
                     }
                 }
@@ -222,11 +228,7 @@ public class TDailyController {
         //TCompany company =  tCompanyService.selectByDeptId(department.getDeptId());
         //TUser user = (TUser)request.getSession().getAttribute("user");
         List<TUser> users = tUserService.getAllUserByProjectIdAndCompanyId(project.getId(),0);
-        List<TDaily> thisWeekList = tDailyService.caitcProjectWeeklyExport(users,startDate,endDate);
-        Map<String, Object> sheetMap = new HashMap<>();
-        sheetMap.put("startDate", startDate);
-        sheetMap.put("endDate", endDate);
-        sheetMap.put("thisWeekList", thisWeekList);
+        Map<String, Object> sheetMap = tDailyService.caitcProjectWeeklyExport(users,startDate,endDate);
         String fileName = "工作周报-家族信托项目_"+startDate.replaceAll("-","")+"_"+endDate.replaceAll("-","");;
         TemplateParseUtil templateParseUtil = new TemplateParseUtil();
         templateParseUtil.downloadExcel(response, sheetMap, TemplateParseUtil.Type.CaitcProjectWeekly,fileName);

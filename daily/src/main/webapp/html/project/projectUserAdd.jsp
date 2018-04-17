@@ -1,44 +1,29 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+         pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>项目成员列表</title>
-    <%
-        pageContext.setAttribute("APP_PATH", request.getContextPath());
-    %>
-    <!-- web路径：
-    不以/开始的相对路径，找资源，以当前资源的路径为基准，经常容易出问题。
-    以/开始的相对路径，找资源，以服务器的路径为标准(http://localhost:3306)；需要加上项目名
-            http://localhost:3306/crud
-     -->
-    <script type="text/javascript"
-            src="${APP_PATH }/static/js/jquery-1.12.4.min.js"></script>
-    <link
-            href="${APP_PATH }/static/bootstrap-3.3.7-dist/css/bootstrap.min.css"
-            rel="stylesheet">
-    <script
-            src="${APP_PATH }/static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
-
-    <script src="${APP_PATH}/static/js/common.js"></script>
-    <script src="${APP_PATH}/static/layui/layui.all.js"></script>
+    <jsp:include page="/html/default/pub.jsp" />
+    <link href="/js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/js/bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
 <!-- 搭建显示页面 -->
 <div style="width: 1100px;">
     <!-- 标题 -->
     <div class="row">
-        <div class="col-md-12">
-            <p>项目编号：<span id="pro_code"></span>&nbsp;&nbsp;&nbsp;&nbsp;项目名称：<span id="pro_name"></span></p>
-        </div>
+
     </div>
     <!-- 按钮 -->
-    <div class="row">
-        <div class="col-md-4">
+    <div class="row" onkeyup="keyOnClick()">
+        <div class="col-md-10">
             <button class="btn btn-primary" onclick="history.go(-1)">返回</button>
-            <button class="btn btn-primary" id="proUser_add_btn" >新增</button>
+            &nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="user-name">
+            <button class="btn btn-warning" id="user_search_btn">搜索</button>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="btn btn-primary" id="user_save_btn">保存</button>
         </div>
     </div>
     <!-- 显示表格数据 -->
@@ -47,12 +32,11 @@
             <table class="table table-hover" id="users_table">
                 <thead>
                 <tr>
+                    <th>选择</th>
                     <th>姓名</th>
                     <th>性别</th>
                     <th>邮箱</th>
-                    <th>角色</th>
                     <th>手机号</th>
-                    <th>密码</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -75,25 +59,22 @@
 </div>
 <script type="text/javascript">
     var projectId = (window.location.search).split("=")[1];
-    $("#proUser_add_btn").attr("project-id", projectId);
-    console.info(projectId);
     layer = layui.layer //弹层
     var totalRecord, currentPage;
-    //1、页面加载完成以后，直接去发送ajax请求,要到分页数据
-    $(function () {
-        //去首页
-        to_page(1);
+
+    //点击搜索，查询用户列表
+    $(document).on("click", "#user_search_btn", function () {
+        var userName = $("#user-name").val();
+        to_page(1, userName);
     });
 
-    function to_page(pn) {
-        params = "projectId=" + projectId + "&pn=" + pn;
+    function to_page(pn, userName) {
+        params = "userName=" + userName + "&pn=" + pn;
         $.ajax({
-            url: "${APP_PATH}/project/getProjectUserByProjectId",
+            url: "${APP_PATH}/user/getUserInfoByUserName",
             data: params,
             type: "POST",
             success: function (result) {
-                $("#pro_code").html(result.extend.pageInfo.list[0].projectCode);
-                $("#pro_name").html(result.extend.pageInfo.list[0].projectName);
                 //1、解析并显示项目成员数据
                 build_users_table(result);
                 //2、解析并显示项目信息
@@ -104,45 +85,27 @@
         });
     }
 
-    function build_users_table(result){
+    function build_users_table(result) {
         //清空table表格
         $("#users_table tbody").empty();
         var users = result.extend.pageInfo.list;
-        $.each(users,function(index,item){
+        $.each(users, function (index, item) {
+            var checkBoxTd = $("<td><input type='checkbox' class='check_item'/></td>");
             var userName = $("<td></td>").append(item.userName);
-            var gender = $("<td></td>").append(item.gender=='1'?"男":"女");
-            var password = $("<td></td>").append(item.password);
+            var gender = $("<td></td>").append(item.gender == '1' ? "男" : "女");
             var email = $("<td></td>").append(item.email);
             var mobile = $("<td></td>").append(item.mobile);
-            var roleName = $("<td></td>").append(item.roleName);
             var userId = $("<td></td>").append(item.userId).hide();
 
-            var delBtn =  $("<button></button>").addClass("btn btn-danger btn-sm delete_btn")
-                .append($("<span></span>").addClass("glyphicon glyphicon-trash")).append("删除");
-            //为删除按钮添加一个自定义的属性来表示当前删除的用户id
-            delBtn.attr("user-id",item.userId);
-            //添加属性权限ID
-            // delBtn.attr("privilege-id",4);
-            //根据权限判断是否显示
-            // if(delBtn.attr("privilege-id") == '4'){
-            //     delBtn.hide();
-            // }
-            //根据权限列表判断是否显示
-            // if(privilegeList.indexOf(4)== -1){
-            //     delBtn.hide();
-            // }
-            var btnTd = $("<td></td>").append(" ").append(delBtn);
             //var delBtn =
             //append方法执行完成以后还是返回原来的元素
             $("<tr></tr>")
+                .append(checkBoxTd)
                 .append(userName)
                 .append(gender)
                 .append(email)
-                .append(roleName)
                 .append(mobile)
-                .append(password)
                 .append(userId)
-                .append(btnTd)
                 .appendTo("#users_table tbody");
         });
     }
@@ -172,12 +135,15 @@
         } else {
             //为元素添加点击翻页的事件
             firstPageLi.click(function () {
-                to_page(1);
+                console.info(result.extend.pageInfo.list[0].userName);
+                to_page(1, result.extend.pageInfo.list[0].userName);
             });
             prePageLi.click(function () {
-                to_page(result.extend.pageInfo.pageNum - 1);
+                console.info(result.extend.pageInfo.list[0].userName);
+                to_page(result.extend.pageInfo.pageNum - 1, result.extend.pageInfo.list[0].userName);
             });
         }
+
 
         var nextPageLi = $("<li></li>").append($("<a></a>").append("&raquo;"));
         var lastPageLi = $("<li></li>").append($("<a></a>").append("末页").attr("href", "#"));
@@ -186,23 +152,25 @@
             lastPageLi.addClass("disabled");
         } else {
             nextPageLi.click(function () {
-                to_page(result.extend.pageInfo.pageNum + 1);
+                to_page(result.extend.pageInfo.pageNum + 1, result.extend.pageInfo.list[0].userName);
             });
             lastPageLi.click(function () {
-                to_page(result.extend.pageInfo.pages);
+                to_page(result.extend.pageInfo.pages, result.extend.pageInfo.list[0].userName);
             });
         }
+
 
         //添加首页和前一页 的提示
         ul.append(firstPageLi).append(prePageLi);
         //1,2，3遍历给ul中添加页码提示
         $.each(result.extend.pageInfo.navigatepageNums, function (index, item) {
+
             var numLi = $("<li></li>").append($("<a></a>").append(item));
             if (result.extend.pageInfo.pageNum == item) {
                 numLi.addClass("active");
             }
             numLi.click(function () {
-                to_page(item);
+                to_page(item, result.extend.pageInfo.list[0].userName);
             });
             ul.append(numLi);
         });
@@ -222,31 +190,55 @@
         $(ele).find(".help-block").text("");
     }
 
-    //单个删除
-    $(document).on("click", ".delete_btn", function () {
-        //1、弹出是否确认删除对话框
-        var userName = $(this).parents("tr").find("td:eq(0)").text();
-        var userId = $(this).attr("user-id");
-        layer.confirm('确定删除【' + userName + '】吗？', {icon: 3, title: '确认信息'}, function (index) {
-            //确认，发送ajax请求删除即可
-            $.ajax({
-                url: "${APP_PATH}/projectUser/" + userId,
-                type: "DELETE",
-                success: function (result) {
-                    layer.msg(result.msg);
-                    //回到本页
-                    to_page(currentPage);
-                }
-            });
+    //保存
+    $(document).on("click", "#user_save_btn", function () {
+        //1、弹出是否确认保存对话框
+        var userNames = "";
+        var save_idstr = "";
+        $.each($(".check_item:checked"), function () {
+            //this
+            userNames += $(this).parents("tr").find("td:eq(1)").text() + ",";
+            //组装员工id字符串
+            save_idstr += $(this).parents("tr").find("td:eq(5)").text() + "-";
         });
+        //去除userNames多余的,
+        userNames = userNames.substring(0, userNames.length - 1);
+        //去除save_idstr多余的-
+        save_idstr = save_idstr.substring(0, save_idstr.length - 1);
+        if (userNames.length > 0) {
+            layer.confirm('确定添加吗？', {icon: 3, title: '确认信息'}, function (index) {
+                //确认，发送ajax请求删除即可
+                $.ajax({
+                    url: "${APP_PATH}/project/projectUserSave",
+                    type: "GET",
+                    data: "ids=" + save_idstr + "&projectId=" + projectId,
+                    success: function (result) {
+                        if (result.length > 0) {
+                            layer.msg(result[0].userName + " 邮箱:" + result[0].email + "已经在项目中！");
+                        } else {
+                            //回到项目详情页
+                            window.history.go(-1);
+                        }
+
+                    }
+                });
+            });
+        } else {
+            layer.msg("请选择用户！")
+        }
     });
 
-    //点击新增，跳转到项目成员新增页面
-    $(document).on("click", "#proUser_add_btn", function () {
-        var id = this.getAttribute("project-id");
-        window.location.href = "/daily/projectUserAdd.jsp?projectId=" + id;
+    //回车键触发搜索
+    function keyOnClick(e) {
+        //考虑浏览器兼容性
+        var theEvent = window.event || e;
+        var code = theEvent.keyCode || theEvent.which;
+        if (code == 13) {  //回车键的键值为13
+            var userName = $("#user-name").val();
+            to_page(1, userName);  //调用搜索方法
+        }
+    }
 
-    });
 </script>
 </body>
 </html>

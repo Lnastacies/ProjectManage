@@ -610,17 +610,17 @@
                 <Cell ss:StyleID="s24"><Data ss:Type="String">计划完成日期</Data></Cell>
                 <Cell ss:StyleID="s23"><Data ss:Type="String">完成进度</Data></Cell>
             </Row>
-            <#list thisWeekList as thisWeek>
-            <#if (thisWeek.workType)?? && thisWeek.workType == '01' >
+            <#list analysisList as thisWeek>
+            <#if (thisWeek.workType)?? && (thisWeek.dailyContent)??>
             <Row ss:AutoFitHeight="0" Height="${thisWeek.lineNumber * 14}">
                 <Cell ss:StyleID="s30"><Data ss:Type="Number">${thisWeek_index + 1}</Data></Cell>
                 <Cell ss:StyleID="s38"><Data ss:Type="String">${thisWeek.dailyContent?if_exists}</Data></Cell>
                 <Cell ss:StyleID="s32"><Data ss:Type="String">${thisWeek.progress?if_exists}</Data></Cell>
                 <Cell ss:StyleID="s30"><Data ss:Type="String">${thisWeek.deptName?if_exists}</Data></Cell>
                 <Cell ss:StyleID="s30"><Data ss:Type="String">${thisWeek.introducer?if_exists}</Data></Cell>
-                <Cell ss:StyleID="s30"><Data ss:Type="String">${thisWeek.manager?if_exists}</Data></Cell>
+                <Cell ss:StyleID="s30"><Data ss:Type="String">${thisWeek.userName?if_exists}</Data></Cell>
                 <Cell ss:StyleID="s33"><Data ss:Type="String"><#if thisWeek.doneDate??>${thisWeek.doneDate?string('yyyy-MM-dd')}</#if></Data></Cell>
-                <Cell ss:StyleID="s31"><Data ss:Type="String"><#if thisWeek.dailyPercent??>${thisWeek.dailyPercent?string('#')}</#if>%</Data></Cell>
+                <Cell ss:StyleID="s31"><Data ss:Type="String">${thisWeek.executionShow?if_exists}</Data></Cell>
             </Row>
             </#if>
             </#list>
@@ -654,7 +654,7 @@
                 <Cell ss:StyleID="s145"/>
                 <Cell ss:StyleID="s30"/>
             </Row>
-            <Row ss:Index="${thisWeekList?size}" ss:AutoFitHeight="0" ss:Height="16.5" ss:StyleID="s16">
+            <Row ss:Index="${analysisList?size+8}" ss:AutoFitHeight="0" ss:Height="16.5" ss:StyleID="s16">
                 <Cell ss:MergeAcross="7" ss:StyleID="m2232914590372"><Data ss:Type="String">下周工作计划</Data></Cell>
             </Row>
             <Row ss:AutoFitHeight="0" ss:Height="15" ss:StyleID="s16">
@@ -667,16 +667,16 @@
                 <Cell ss:StyleID="s23"><Data ss:Type="String">完成进度</Data></Cell>
                 <Cell ss:StyleID="s23"/>
             </Row>
-            <#list thisWeekList as thisWeek>
-            <#if (thisWeek.workType)?? && thisWeek.workType == '01' >
+            <#list analysisList as thisWeek>
+            <#if (thisWeek.workType)?? && (thisWeek.nextWorkPlan!='') >
             <Row ss:AutoFitHeight="0" Height="${thisWeek.planLineNumber * 14}">
                 <Cell ss:StyleID="s37"><Data ss:Type="Number">${thisWeek_index + 1}</Data></Cell>
                 <Cell ss:StyleID="s147"><Data ss:Type="String">${thisWeek.nextWorkPlan?if_exists}</Data></Cell>
                 <Cell ss:StyleID="s30"><Data ss:Type="String">${thisWeek.planDeptName?if_exists}</Data></Cell>
                 <Cell ss:StyleID="s30"><Data ss:Type="String">${thisWeek.planIntroducer?if_exists}</Data></Cell>
-                <Cell ss:StyleID="s30"><Data ss:Type="String">${thisWeek.planManager?if_exists}</Data></Cell>
-                <Cell ss:StyleID="s30"><Data ss:Type="String"><#if thisWeek.planDoneDate??>${thisWeek.planDoneDate?string('yyyy-MM-dd')}</#if></Data></Cell>
-                <Cell ss:StyleID="s30"><Data ss:Type="String"><#if thisWeek.planDailyPercent??>${thisWeek.planDailyPercent?string('#')}</#if>%</Data></Cell>
+                <Cell ss:StyleID="s30"><Data ss:Type="String">${thisWeek.userName?if_exists}</Data></Cell>
+                <Cell ss:StyleID="s30"><Data ss:Type="String"></Data></Cell>
+                <Cell ss:StyleID="s30"><Data ss:Type="String"></Data></Cell>
                 <Cell ss:StyleID="s30"/>
             </Row>
             </#if>
@@ -766,16 +766,16 @@
                 <Cell ss:StyleID="s24"><Data ss:Type="String">计划完成日期</Data></Cell>
                 <Cell ss:StyleID="s23"><Data ss:Type="String">完成进度</Data></Cell>
             </Row>
-            <#list thisWeekList as thisWeek>
-            <#if (thisWeek.workType)?? && thisWeek.workType == '02' >
+            <#list designList as thisWeek>
+            <#if (thisWeek.workType)?? && (thisWeek.dailyContent)?? >
             <Row ss:AutoFitHeight="0" ss:Height="${thisWeek.lineNumber * 14}">
                 <Cell ss:StyleID="s30"><Data ss:Type="Number">${thisWeek_index + 1}</Data></Cell>
                 <Cell ss:StyleID="s38"><Data ss:Type="String">${thisWeek.dailyContent?if_exists}</Data></Cell>
                 <Cell ss:StyleID="s32"><Data ss:Type="String">${thisWeek.progress?if_exists}</Data></Cell>
                 <Cell ss:StyleID="s38"><Data ss:Type="String">${thisWeek.problem?if_exists}</Data></Cell>
-                <Cell ss:StyleID="s30"><Data ss:Type="String">${thisWeek.manager?if_exists}</Data></Cell>
+                <Cell ss:StyleID="s30"><Data ss:Type="String">${thisWeek.userName?if_exists}</Data></Cell>
                 <Cell ss:StyleID="s153"><Data ss:Type="String"><#if thisWeek.doneDate??>${thisWeek.doneDate?string('yyyy-MM-dd')}</#if></Data></Cell>
-                <Cell ss:StyleID="s31"><Data ss:Type="String"><#if thisWeek.dailyPercent??>${thisWeek.dailyPercent?string('#')}</#if>%</Data></Cell>
+                <Cell ss:StyleID="s31"><Data ss:Type="String">${thisWeek.executionShow?if_exists}</Data></Cell>
             </Row>
             </#if>
             </#list>
@@ -806,7 +806,7 @@
                 <Cell ss:StyleID="s29"/>
                 <Cell ss:StyleID="s31"/>
             </Row>
-            <Row ss:Index="${thisWeekList?size}" ss:StyleID="s16">
+            <Row ss:Index="${designList?size+8}" ss:StyleID="s16">
                 <Cell ss:MergeAcross="4" ss:StyleID="s93"><Data ss:Type="String">下周工作计划</Data></Cell>
                 <Cell ss:StyleID="s27"/>
                 <Cell ss:StyleID="s25"/>
@@ -821,14 +821,14 @@
                 <Cell ss:StyleID="s27"/>
                 <Cell ss:StyleID="s28"/>
             </Row>
-            <#list thisWeekList as thisWeek>
-            <#if (thisWeek.workType)?? && thisWeek.workType == '02' >
+            <#list designList as thisWeek>
+            <#if (thisWeek.workType)?? && (thisWeek.nextWorkPlan!='') >
             <Row ss:AutoFitHeight="0" Height="${thisWeek.planLineNumber * 14}">
                 <Cell ss:StyleID="s149"><Data ss:Type="Number">${thisWeek_index + 1}</Data></Cell>
                 <Cell ss:StyleID="s38"><Data ss:Type="String">${thisWeek.nextWorkPlan?if_exists}</Data></Cell>
-                <Cell ss:StyleID="s149"><Data ss:Type="String">${thisWeek.planIntroducer?if_exists}</Data></Cell>
-                <Cell ss:StyleID="s152"><Data ss:Type="String"><#if thisWeek.planDoneDate??>${thisWeek.planDoneDate?string('yyyy-MM-dd')}</#if></Data></Cell>
-                <Cell ss:StyleID="s151"><Data ss:Type="String"><#if thisWeek.planDailyPercent??>${thisWeek.planDailyPercent?string('#')}</#if>%</Data></Cell>
+                <Cell ss:StyleID="s149"><Data ss:Type="String">${thisWeek.userName?if_exists}</Data></Cell>
+                <Cell ss:StyleID="s152"><Data ss:Type="String"></Data></Cell>
+                <Cell ss:StyleID="s151"><Data ss:Type="String"></Data></Cell>
             </Row>
             </#if>
             </#list>
@@ -898,16 +898,16 @@
                 <Cell ss:StyleID="s24"><Data ss:Type="String">计划完成日期</Data></Cell>
                 <Cell ss:StyleID="s23"><Data ss:Type="String">完成进度</Data></Cell>
             </Row>
-            <#list thisWeekList as thisWeek>
-                <#if (thisWeek.workType)?? && (thisWeek.workType == '03'||thisWeek.workType == '04')>
+            <#list devAndTestList as thisWeek>
+                <#if (thisWeek.workType)?? && (thisWeek.dailyContent)?? >
             <Row ss:AutoFitHeight="0" Height="${thisWeek.lineNumber * 14}">
                 <Cell ss:StyleID="s30"><Data ss:Type="Number">${thisWeek_index + 1}</Data></Cell>
                 <Cell ss:StyleID="s38"><Data ss:Type="String">${thisWeek.dailyContent?if_exists}</Data></Cell>
                 <Cell ss:StyleID="s32"><Data ss:Type="String">${thisWeek.progress?if_exists}</Data></Cell>
                 <Cell ss:StyleID="s38"><Data ss:Type="String">${thisWeek.problem?if_exists}</Data></Cell>
-                <Cell ss:StyleID="s30"><Data ss:Type="String">${thisWeek.manager?if_exists}</Data></Cell>
+                <Cell ss:StyleID="s30"><Data ss:Type="String">${thisWeek.userName?if_exists}</Data></Cell>
                 <Cell ss:StyleID="s33"><Data ss:Type="String"><#if thisWeek.doneDate??>${thisWeek.doneDate?string('yyyy-MM-dd')}</#if></Data></Cell>
-                <Cell ss:StyleID="s31"><Data ss:Type="String"><#if thisWeek.dailyPercent??>${thisWeek.dailyPercent?string('#')}</#if>%</Data></Cell>
+                <Cell ss:StyleID="s31"><Data ss:Type="String">${thisWeek.executionShow?if_exists}</Data></Cell>
             </Row>
                 </#if>
             </#list>
@@ -938,7 +938,7 @@
                 <Cell ss:StyleID="s29"/>
                 <Cell ss:StyleID="s31"/>
             </Row>
-            <Row ss:Index="${thisWeekList?size}" ss:StyleID="s16">
+            <Row ss:Index="${devAndTestList?size+8}" ss:StyleID="s16">
                 <Cell ss:MergeAcross="4" ss:StyleID="s93"><Data ss:Type="String">下周工作计划</Data></Cell>
                 <Cell ss:StyleID="s27"/>
                 <Cell ss:StyleID="s25"/>
@@ -953,14 +953,14 @@
                 <Cell ss:StyleID="s27"/>
                 <Cell ss:StyleID="s28"/>
             </Row>
-            <#list thisWeekList as thisWeek>
-                <#if (thisWeek.workType)?? && (thisWeek.workType == '03'||thisWeek.workType == '04')>
+            <#list devAndTestList as thisWeek>
+                <#if (thisWeek.workType)?? && (thisWeek.nextWorkPlan!='') >
             <Row ss:AutoFitHeight="0" Height="${thisWeek.planLineNumber * 14}">
                 <Cell ss:StyleID="s30"><Data ss:Type="Number">${thisWeek_index + 1}</Data></Cell>
                 <Cell ss:StyleID="s29"><Data ss:Type="String">${thisWeek.nextWorkPlan?if_exists}</Data></Cell>
-                <Cell ss:StyleID="s30"><Data ss:Type="String">${thisWeek.planManager?if_exists}</Data></Cell>
-                <Cell ss:StyleID="s33"><Data ss:Type="String"><#if thisWeek.planDoneDate??>${thisWeek.planDoneDate?string('yyyy-MM-dd')}</#if></Data></Cell>
-                <Cell ss:StyleID="s30"><Data ss:Type="String"><#if thisWeek.planDailyPercent??>${thisWeek.planDailyPercent?string('#')}</#if>%</Data></Cell>
+                <Cell ss:StyleID="s30"><Data ss:Type="String">${thisWeek.userName?if_exists}</Data></Cell>
+                <Cell ss:StyleID="s33"><Data ss:Type="String"></Data></Cell>
+                <Cell ss:StyleID="s30"><Data ss:Type="String"></Data></Cell>
             </Row>
                 </#if>
             </#list>
@@ -1023,14 +1023,14 @@
                 <Cell ss:StyleID="s23"><Data ss:Type="String">负责人</Data></Cell>
                 <Cell ss:StyleID="s24"><Data ss:Type="String">发布日期</Data></Cell>
             </Row>
-            <#list thisWeekList as thisWeek>
-                <#if (thisWeek.workType)?? && thisWeek.workType == '05' >
+            <#list versionList as thisWeek>
+                <#if (thisWeek.workType)?? && (thisWeek.dailyContent)?? >
             <Row ss:AutoFitHeight="0" Height="${thisWeek.lineNumber * 14}">
                 <Cell ss:StyleID="s30"><Data ss:Type="Number">${thisWeek_index + 1}</Data></Cell>
                 <Cell ss:StyleID="s29"/>
                 <Cell ss:StyleID="s38"><Data ss:Type="String">${thisWeek.dailyContent?if_exists}</Data></Cell>
                 <Cell ss:StyleID="s38"><Data ss:Type="String">${thisWeek.problem?if_exists}</Data></Cell>
-                <Cell ss:StyleID="s30"><Data ss:Type="String">${thisWeek.manager?if_exists}</Data></Cell>
+                <Cell ss:StyleID="s30"><Data ss:Type="String">${thisWeek.userName?if_exists}</Data></Cell>
                 <Cell ss:StyleID="s33"><Data ss:Type="String"><#if thisWeek.doneDate??>${thisWeek.doneDate?string('yyyy-MM-dd')}</#if></Data></Cell>
             </Row>
                 </#if>
@@ -1059,7 +1059,7 @@
                 <Cell ss:StyleID="s30"/>
                 <Cell ss:StyleID="s33"/>
             </Row>
-            <Row ss:Index="${thisWeekList?size}" ss:StyleID="s16">
+            <Row ss:Index="${versionList?size+8}" ss:StyleID="s16">
                 <Cell ss:MergeAcross="5" ss:StyleID="s93"><Data ss:Type="String">下周工作计划</Data></Cell>
             </Row>
             <Row ss:Height="16.5" ss:StyleID="s16">
@@ -1071,15 +1071,15 @@
                 <Cell ss:StyleID="s26"><Data ss:Type="String">完成进度</Data></Cell>
                 <Cell ss:StyleID="s28"/>
             </Row>
-            <#list thisWeekList as thisWeek>
-                <#if (thisWeek.workType)?? && thisWeek.workType == '05' >
+            <#list versionList as thisWeek>
+                <#if (thisWeek.workType)?? && (thisWeek.nextWorkPlan!='') >
             <Row ss:AutoFitHeight="0" Height="${thisWeek.planLineNumber * 14}">
                 <Cell ss:StyleID="s30"><Data ss:Type="Number">${thisWeek_index + 1}</Data></Cell>
                 <Cell ss:StyleID="s29"/>
                 <Cell ss:StyleID="s147"><Data ss:Type="String">${thisWeek.nextWorkPlan?if_exists}</Data></Cell>
-                <Cell ss:StyleID="s33"><Data ss:Type="String"><#if thisWeek.planDoneDate??>${thisWeek.planDoneDate?string('yyyy-MM-dd')}</#if></Data></Cell>
-                <Cell ss:StyleID="s30"><Data ss:Type="String">${thisWeek.planManager?if_exists}</Data></Cell>
-                <Cell ss:StyleID="s31"><Data ss:Type="String"><#if thisWeek.planDailyPercent??>${thisWeek.planDailyPercent?string('#')}</#if>%</Data></Cell>
+                <Cell ss:StyleID="s33"><Data ss:Type="String"></Data></Cell>
+                <Cell ss:StyleID="s30"><Data ss:Type="String">${thisWeek.userName?if_exists}</Data></Cell>
+                <Cell ss:StyleID="s31"><Data ss:Type="String"></Data></Cell>
             </Row>
                 </#if>
             </#list>
@@ -1149,17 +1149,17 @@
                 <Cell ss:StyleID="s24"><Data ss:Type="String">完成日期</Data></Cell>
                 <Cell ss:StyleID="s23"><Data ss:Type="String">完成进度</Data></Cell>
             </Row>
-            <#list thisWeekList as thisWeek>
-                <#if (thisWeek.workType)?? && thisWeek.workType == '06' >
+            <#list operationList as thisWeek>
+                <#if (thisWeek.workType)?? && (thisWeek.dailyContent)?? >
             <Row ss:AutoFitHeight="0" Height="${thisWeek.lineNumber * 14}">
                 <Cell ss:StyleID="s30"><Data ss:Type="Number">${thisWeek_index + 1}</Data></Cell>
                 <Cell ss:StyleID="s29"><Data ss:Type="String">${thisWeek.dailyContent?if_exists}</Data></Cell>
                 <Cell ss:StyleID="s32"><Data ss:Type="String">${thisWeek.progress?if_exists}</Data></Cell>
                 <Cell ss:StyleID="s30"><Data ss:Type="String">${thisWeek.deptName?if_exists}</Data></Cell>
                 <Cell ss:StyleID="s30"><Data ss:Type="String">${thisWeek.introducer?if_exists}</Data></Cell>
-                <Cell ss:StyleID="s30"><Data ss:Type="String">${thisWeek.manager?if_exists}</Data></Cell>
+                <Cell ss:StyleID="s30"><Data ss:Type="String">${thisWeek.userName?if_exists}</Data></Cell>
                 <Cell ss:StyleID="s33"><Data ss:Type="String"><#if thisWeek.doneDate??>${thisWeek.doneDate?string('yyyy-MM-dd')}</#if></Data></Cell>
-                <Cell ss:StyleID="s31"><Data ss:Type="String"><#if thisWeek.dailyPercent??>${thisWeek.dailyPercent?string('#')}</#if>%</Data></Cell>
+                <Cell ss:StyleID="s31"><Data ss:Type="String">${thisWeek.executionShow?if_exists}</Data></Cell>
             </Row>
                 </#if>
             </#list>
@@ -1237,15 +1237,15 @@
                 <Cell ss:StyleID="s24"><Data ss:Type="String">完成日期</Data></Cell>
                 <Cell ss:StyleID="s23"><Data ss:Type="String">完成进度</Data></Cell>
             </Row>
-            <#list thisWeekList as thisWeek>
-                <#if (thisWeek.workType)?? && thisWeek.workType == '08' >
+            <#list manageList as thisWeek>
+                <#if (thisWeek.workType)?? && (thisWeek.dailyContent)??  >
             <Row ss:AutoFitHeight="0" Height="${thisWeek.lineNumber * 14}">
                 <Cell ss:StyleID="s30"><Data ss:Type="Number">${thisWeek_index + 1}</Data></Cell>
                 <Cell ss:StyleID="s38"><Data ss:Type="String">${thisWeek.dailyContent?if_exists}</Data></Cell>
                 <Cell ss:StyleID="s38"><Data ss:Type="String">${thisWeek.progress?if_exists}</Data></Cell>
-                <Cell ss:StyleID="s30"><Data ss:Type="String">${thisWeek.manager?if_exists}</Data></Cell>
+                <Cell ss:StyleID="s30"><Data ss:Type="String">${thisWeek.userName?if_exists}</Data></Cell>
                 <Cell ss:StyleID="s33"><Data ss:Type="String"><#if thisWeek.doneDate??>${thisWeek.doneDate?string('yyyy-MM-dd')}</#if></Data></Cell>
-                <Cell ss:StyleID="s31"><Data ss:Type="String"><#if thisWeek.dailyPercent??>${thisWeek.dailyPercent?string('#')}</#if>%</Data></Cell>
+                <Cell ss:StyleID="s31"><Data ss:Type="String">${thisWeek.executionShow?if_exists}</Data></Cell>
             </Row>
                 </#if>
             </#list>

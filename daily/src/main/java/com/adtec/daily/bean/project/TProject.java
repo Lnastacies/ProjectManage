@@ -47,6 +47,12 @@ public class TProject {
     // 用户编号
     private String userId;
 
+    // 日报ID
+    private String dailyId;
+
+    // 日报日期
+    private Date dailyDate;
+
     public String getUserName() {
         return userName;
     }
@@ -213,5 +219,21 @@ public class TProject {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getDailyId() {
+        return dailyId;
+    }
+
+    public void setDailyId(String dailyId) {
+        this.dailyId = dailyId;
+    }
+
+    public Date getDailyDate() {
+        return dailyDate;
+    }
+
+    public void setDailyDate(Date dailyDate) {
+        this.dailyDate = dailyDate;
     }
 }

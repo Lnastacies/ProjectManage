@@ -11,8 +11,8 @@ import com.adtec.daily.service.user.TUserService;
 import com.adtec.daily.util.DateUtil;
 import com.adtec.daily.util.TemplateParseUtil;
 import com.adtec.daily.util.ToolUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +32,9 @@ import java.util.*;
  */
 @Controller
 public class TOverWorkController {
-    private static Logger logger = LoggerFactory.getLogger(TOverWorkController.class);
+
+    private Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
+
     @Autowired
     TUserService tUserService;
 

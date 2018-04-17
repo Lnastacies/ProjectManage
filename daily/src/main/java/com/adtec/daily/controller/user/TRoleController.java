@@ -17,14 +17,17 @@ import javax.validation.Valid;
 import java.util.*;
 
 /**
- * 处理角色CRUD请求
+ * @version V1.0
+ * @Description: 角色管理
+ * @author: 张琪
+ * @date: 2018/4/8
+ * @Copyright: 北京先进数通信息技术股份公司 http://www.adtec.com.cn
  */
 @Controller
 public class TRoleController {
 
     @Autowired
     TRoleService tRoleService;
-
 
     /**
      * 检查角色名是否可用
@@ -33,7 +36,7 @@ public class TRoleController {
      * @return
      */
     @ResponseBody
-    @RequestMapping("/roleCheck")
+    @RequestMapping("/role/roleCheck")
     public Msg userCheck(@RequestParam("roleName") String roleName) {
         //先判断角色名是否是合法的表达式;
         String regx = "(^[a-zA-Z0-9_-]{6,16}$)|(^[\u2E80-\u9FFF]{2,10})";
@@ -57,7 +60,7 @@ public class TRoleController {
      *
      * @return
      */
-    @RequestMapping(value = "/role", method = RequestMethod.POST)
+    @RequestMapping(value = "/role/save", method = RequestMethod.POST)
     @ResponseBody
     public Msg saveRole(@Valid TRole tRole, BindingResult result) {
             if (result.hasErrors()) {
@@ -87,7 +90,7 @@ public class TRoleController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/role/{ids}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/role/delete/{ids}", method = RequestMethod.DELETE)
     public Msg updateRole(@PathVariable("ids") String ids) {
         //批量删除
         if (ids.contains("-")) {
@@ -112,7 +115,7 @@ public class TRoleController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/role/{roleId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/role/update/{roleId}", method = RequestMethod.PUT)
     public Msg updateUser(TRole tRole, HttpServletRequest request) {
         System.out.println("请求体中的值：" + request.getParameter("roleId"));
         tRole.setUpdateTime(new Date());
@@ -126,7 +129,7 @@ public class TRoleController {
      * @param id
      * @return
      */
-    @RequestMapping(value = "/role/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/role/getRoleById/{id}", method = RequestMethod.GET)
     @ResponseBody
     public Msg getUser(@PathVariable("id") Integer id) {
         TRole tRole = tRoleService.getRole(id);
@@ -140,19 +143,14 @@ public class TRoleController {
      * @param pn
      * @return
      */
-    @RequestMapping("/roles")
+    @RequestMapping("/role/getRoles")
     @ResponseBody
     public Msg getRoleWithJson(@RequestParam(value = "pn", defaultValue = "1") Integer pn) {
-        // 这不是一个分页查询
-        // 引入PageHelper分页插件
-        // 在查询之前只需要调用，传入页码，以及每页的大小
         PageHelper.startPage(pn, 5);
-     // startPage后面紧跟的这个查询就是一个分页查询
+
         TRoleExample example = new TRoleExample();
         example.setOrderByClause("create_time asc");
         List<TRole> pros = tRoleService.getAll(example);
-        // 使用pageInfo包装查询后的结果，只需要将pageInfo交给页面就行了。
-        // 封装了详细的分页信息,包括有我们查询出来的数据，传入连续显示的页数
         PageInfo page = new PageInfo(pros, 5);
         return Msg.success().add("pageInfo", page);
     }

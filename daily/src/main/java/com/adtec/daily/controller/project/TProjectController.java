@@ -9,6 +9,8 @@ import com.adtec.daily.service.project.TProjectService;
 import com.adtec.daily.service.user.TUserService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,6 +28,8 @@ import java.util.*;
 @Controller
 public class TProjectController {
 
+    private Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
+
     @Autowired
     TProjectService tProjectService;
     @Autowired
@@ -38,7 +42,7 @@ public class TProjectController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/pro/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/project/update/{id}", method = RequestMethod.PUT)
     public Msg updateProject(TProject tProject, HttpServletRequest request) {
         tProject.setUpdateTime(new Date());
         tProjectService.updateProject(tProject);
@@ -46,12 +50,12 @@ public class TProjectController {
     }
 
     /**
-     * 根据id查询员工
+     * 根据id查询项目
      *
      * @param id
      * @return
      */
-    @RequestMapping(value = "/pro/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/project/getProjectById/{id}", method = RequestMethod.GET)
     @ResponseBody
     public Msg getProject(@PathVariable("id") Integer id) {
         TProject tProject = tProjectService.getProject(id);
@@ -81,7 +85,7 @@ public class TProjectController {
      *
      * @return
      */
-    @RequestMapping(value = "/addProject", method = RequestMethod.POST)
+    @RequestMapping(value = "/project/addProject", method = RequestMethod.POST)
     @ResponseBody
     public Msg saveProject(@Valid TProject tProject, BindingResult result) {
         if (result.hasErrors()) {
@@ -135,10 +139,10 @@ public class TProjectController {
      *
      * @return
      */
-    @RequestMapping("/TProject/getProjectNameList")
+    @RequestMapping(value = "/project/getProjectNameList", method = RequestMethod.POST)
     @ResponseBody
-    public Msg getPros() {
-        List<TProject> list = tProjectService.getAll();
+    public Msg getPros(String userId) {
+        List<TProject> list = tProjectService.getProjectByUser(userId);
         return Msg.success().add("pros", list);
     }
 
@@ -166,7 +170,7 @@ public class TProjectController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/projectUser/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "project/deleteProjectUser/{id}", method = RequestMethod.DELETE)
     public Msg updateUser(@PathVariable("id") String userId) {
 
             tUserService.deleteByUserId(userId);

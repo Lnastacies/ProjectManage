@@ -71,4 +71,12 @@ public interface TProjectService {
      * @return
      */
     public TProject selectByUserId(String userId);
+
+    /**
+     * 根据添加的日报信息获取项目下班时间
+     *
+     * @param dailyId
+     * @return
+     */
+    public TProject getProjectByDailyId(String dailyId);
 }

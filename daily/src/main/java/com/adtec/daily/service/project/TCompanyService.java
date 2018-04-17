@@ -2,6 +2,8 @@ package com.adtec.daily.service.project;
 
 import com.adtec.daily.bean.project.TCompany;
 
+import java.util.List;
+
 /**
  * @version V1.0
  * @Description: 类名
@@ -18,4 +20,12 @@ public interface TCompanyService {
      * @return
      */
     public TCompany selectByDeptId(int dept);
+
+    /**
+     * 查出所有的公司信息
+     *
+     *
+     * @return
+     */
+    public List<TCompany> getAllCompany();
 }

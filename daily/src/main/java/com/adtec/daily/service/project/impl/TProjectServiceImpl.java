@@ -83,4 +83,12 @@ public class TProjectServiceImpl implements TProjectService{
         TProject project = tProjectMapper.selectByUserId(userId);
         return  project;
     }
+
+    /**
+     * 根据添加的日报信息获取项目下班时间
+     */
+    public TProject getProjectByDailyId(String dailyId) {
+        TProject project = tProjectMapper.selectProjectByDailyId(dailyId);
+        return  project;
+    }
 }

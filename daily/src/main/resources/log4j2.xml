@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="OFF" monitorInterval="1800">
     <properties>
-        <property name="LOG_HOME">/WEB-INF/logs</property>
-        <property name="FILE_NAME">daily</property>
+        <!--<property name="LOG_HOME">/WEB-INF/logs</property>
+        <property name="FILE_NAME">daily</property>-->
     </properties>
 
 
@@ -30,7 +30,7 @@
 
         <Root level="info">
             <!-- 这里是输入到文件，很重要-->
-            <AppenderRef ref="running-log" />
+            <!--<AppenderRef ref="running-log" />-->
             <!-- 这里是输入到控制台-->
             <AppenderRef ref="Console" />
         </Root>

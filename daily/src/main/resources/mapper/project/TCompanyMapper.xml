@@ -284,4 +284,14 @@
     LEFT JOIN  t_department t3 on t3.dept_id = t2.dept_id
     where t2.dept_id = #{userId,jdbcType=INTEGER}
   </select>
+
+  <!--获取所有的公司信息-->
+  <select id="selectAllCompany" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM t_company t1
+    WHERE 1=1
+    order by t1.create_time asc
+
+  </select>
 </mapper>

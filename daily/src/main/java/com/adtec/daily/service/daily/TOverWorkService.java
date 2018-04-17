@@ -30,6 +30,13 @@ public interface TOverWorkService {
     public void saveOverWork(TOverWork tOverWork);
 
     /**
+     * 更新加班数据
+     *
+     * @param tOverWork
+     */
+    public void updateByDailyId(TOverWork tOverWork);
+
+    /**
      * 根据用户id及上班日期查询加班明细列表
      *
      * @param userId

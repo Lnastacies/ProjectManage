@@ -23,7 +23,11 @@ import javax.validation.Valid;
 import java.util.*;
 
 /**
- * 处理用户CRUD请求
+ * @version V1.0
+ * @Description: 用户管理
+ * @author: 张琪
+ * @date: 2018/4/8
+ * @Copyright: 北京先进数通信息技术股份公司 http://www.adtec.com.cn
  */
 @Controller
 public class TUserController {
@@ -39,26 +43,21 @@ public class TUserController {
 
 
     /**
-     * 检查用户名是否可用
+     * 检查邮箱是否可用
      *
-     * @param userName
+     * @param email
      * @return
      */
     @ResponseBody
-    @RequestMapping("/userCheck")
-    public Msg userCheck(@RequestParam("userName") String userName) {
-        //先判断用户名是否是合法的表达式;
-        String regx = "(^[a-zA-Z0-9_-]{6,16}$)|(^[\u2E80-\u9FFF]{2,5})";
-        if (!userName.matches(regx)) {
-            return Msg.fail().add("va_msg", "用户名必须是6-16位数字和字母的组合或者2-5位中文");
-        }
+    @RequestMapping("/user/userCheck")
+    public Msg userCheck(@RequestParam("email") String email) {
 
-        //数据库用户名重复校验
-        boolean b = tUserService.userCheck(userName);
+        //数据库邮箱重复校验
+        boolean b = tUserService.userCheck(email);
         if (b) {
             return Msg.success();
         } else {
-            return Msg.fail().add("va_msg", "用户名不可用");
+            return Msg.fail().add("va_msg", "邮箱不可用");
         }
     }
 
@@ -69,10 +68,10 @@ public class TUserController {
      *
      * @return
      */
-    @RequestMapping(value = "/user", method = RequestMethod.POST)
+    @RequestMapping(value = "/user/save", method = RequestMethod.POST)
     @ResponseBody
     public Msg saveUser(@Valid TUser tUser, BindingResult result) {
-            if (result.hasErrors()) {
+        if (result.hasErrors()) {
             //校验失败，应该返回失败，在模态框中显示校验失败的错误信息
             Map<String, Object> map = new HashMap<String, Object>();
             List<FieldError> errors = result.getFieldErrors();
@@ -100,7 +99,7 @@ public class TUserController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/user/{ids}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/user/delete/{ids}", method = RequestMethod.DELETE)
     public Msg updateUser(@PathVariable("ids") String ids) {
         //批量删除
         if (ids.contains("-")) {
@@ -125,7 +124,7 @@ public class TUserController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/user/{userId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/user/update/{userId}", method = RequestMethod.PUT)
     public Msg updateUser(TUser tUser, HttpServletRequest request) {
         System.out.println("请求体中的值：" + request.getParameter("userId"));
         tUser.setUpdateTime(new Date());
@@ -140,7 +139,7 @@ public class TUserController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/selectUserById/{id}", method = RequestMethod.GET)
     public Msg getUser(@PathVariable("id") String id) {
         TUser tUser = tUserService.getUser(id);
         return Msg.success().add("user", tUser);
@@ -153,17 +152,12 @@ public class TUserController {
      * @param pn
      * @return
      */
-    @RequestMapping("/users")
+    @RequestMapping("/user/getUsers")
     @ResponseBody
     public Msg getUserWithJson(@RequestParam(value = "pn", defaultValue = "1") Integer pn) {
-        // 这不是一个分页查询
-        // 引入PageHelper分页插件
-        // 在查询之前只需要调用，传入页码，以及每页的大小
+
         PageHelper.startPage(pn, 5);
-     // startPage后面紧跟的这个查询就是一个分页查询
         List<TUser> pros = tUserService.getAll();
-        // 使用pageInfo包装查询后的结果，只需要将pageInfo交给页面就行了。
-        // 封装了详细的分页信息,包括有我们查询出来的数据，传入连续显示的页数
         PageInfo page = new PageInfo(pros, 5);
         return Msg.success().add("pageInfo", page);
     }
@@ -177,7 +171,7 @@ public class TUserController {
      */
     @RequestMapping("/user/getUserInfoByUserName")
     @ResponseBody
-    public Msg getUserWithJson(@RequestParam(value = "pn", defaultValue = "1") Integer pn,@RequestParam String userName) {
+    public Msg getUserWithJson(@RequestParam(value = "pn", defaultValue = "1") Integer pn, @RequestParam String userName) {
 
         PageHelper.startPage(pn, 5);
         List<TUser> pros = tUserService.getUserInfoByUserName(userName);
@@ -191,25 +185,25 @@ public class TUserController {
      * @param user
      * @return
      */
-    @RequestMapping(value ="/userLogin", method = RequestMethod.POST)
+    @RequestMapping(value = "/user/userLogin", method = RequestMethod.POST)
     @ResponseBody
-    public Msg getLoginUser( HttpServletRequest request , TUser user ,@RequestParam(value = "password") String pp) {
+    public Msg getLoginUser(HttpServletRequest request, TUser user, @RequestParam(value = "password") String pp) {
         List<TUser> list = tUserService.getLoginUser(user);
         if (list != null && list.size() > 0) {
             TUser resultUser = list.get(0);
             Integer roleId = resultUser.getRoleId();
             List<TRolePrivilege> rolePrivileges = tRolePrivilegeService.getPrivilegesByRoleId(roleId);
             List privilegeList = new ArrayList<String>();
-            for(TRolePrivilege rolePrivilege : rolePrivileges){
+            for (TRolePrivilege rolePrivilege : rolePrivileges) {
                 privilegeList.add(rolePrivilege.getPrivilegeId());
             }
             resultUser.setPrivilegeList(privilegeList);
-            request.getSession().setAttribute("user",resultUser);
+            request.getSession().setAttribute("user", resultUser);
             String userId = resultUser.getUserId();
             TProject project = tProjectService.selectByUserId(userId);
-            request.getSession().setAttribute("project",project);
+            request.getSession().setAttribute("project", project);
             TDepartment department = tDepartmentService.selectByUserId(userId);
-            request.getSession().setAttribute("department",department);
+            request.getSession().setAttribute("department", department);
             return Msg.success();
         }
         return Msg.fail();
@@ -221,17 +215,30 @@ public class TUserController {
      * @param request
      * @return
      */
-    @RequestMapping(value ="/userExit", method = RequestMethod.POST)
+    @RequestMapping(value = "/user/userExit", method = RequestMethod.POST)
     @ResponseBody
-    public Msg userExit( HttpServletRequest request) {
+    public Msg userExit(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        if(session == null){
+        if (session == null) {
             return Msg.fail();
-        }else{
+        } else {
             request.getSession().removeAttribute("user");
             request.getSession().removeAttribute("project");
             request.getSession().removeAttribute("department");
             return Msg.success();
         }
+    }
+
+    /**
+     * 用户修改密码
+     *
+     * @param tUser
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/user/updatePasswprd", method = RequestMethod.POST)
+    public Msg updatePasswprd(TUser tUser, HttpServletRequest request) {
+        tUserService.updateUser(tUser);
+        return Msg.success();
     }
 }

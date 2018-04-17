@@ -11,17 +11,16 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>日报管理系统</title>
-    <script type="text/javascript"
-            src="${APP_PATH }/static/js/jquery-1.12.4.min.js"></script>
-    <link rel="stylesheet" href="static/layui/css/layui.css">
-    <script type="text/javascript"
-            src="${APP_PATH }/static/js/jquery-1.12.4.min.js"></script>
+    <title>项目管理系统</title>
+    <jsp:include page="/html/default/pub.jsp" />
+    <style type="text/css">
+        a:link {text-decoration: none;}  a:visited {text-decoration: none;}  a:hover {text-decoration: none;}  a:active {text-decoration: none;}
+    </style>
 </head>
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header">
-        <div class="layui-logo">EAI-日报管理系统</div>
+        <div class="layui-logo">项目管理系统</div>
         <!-- 头部区域（可配合layui已有的水平导航） -->
         <ul class="layui-nav layui-layout-right" lay-filter="menu">
             <li class="layui-nav-item">
@@ -30,7 +29,8 @@
                     ${user.userName}
                 </a>
                 <dl class="layui-nav-child">
-                    <dd id="S00106" name="daily/loginUser.jsp"><a href="javascript:void(0);">基本资料</a></dd>
+                    <dd id="S00106" name="html/user/loginUser.jsp" style="line-height: 36px"><a href="javascript:;">基本资料</a></dd>
+                    <dd id="S00107" name="/html/user/changePassword.jsp" style="line-height: 36px"><a href="javascript:;">修改密码</a></dd>
                 </dl>
             </li>
             <li class="layui-nav-item" id="exit"><a href="">退出</a></li>
@@ -41,33 +41,32 @@
         <div class="layui-side-scroll">
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree " lay-filter="menu">
-                <!--<li class="layui-nav-item layui-nav-itemed">-->
-                <li id="S000" name="daily/home.jsp" class="layui-nav-item">
+                <li id="S000" name="html/about/home.jsp" class="layui-nav-item">
                     <a  class="" href="javascript:;" >首页</a>
                 </li>
                 <li class="layui-nav-item" id="userMana">
                     <a id="S001" class="" href="javascript:;" >用户管理</a>
                     <dl class="layui-nav-child">
-                        <dd id="S00101" name="daily/user.jsp" ><a href="javascript:;">用户信息管理维护</a></dd>
-                        <dd id="S00102" name="daily/role.jsp" ><a href="javascript:;">角色信息管理维护</a></dd>
+                        <dd id="S00101" name="html/user/user.jsp" ><a href="javascript:;">用户信息管理维护</a></dd>
+                        <dd id="S00102" name="html/user/role.jsp" ><a href="javascript:;">角色信息管理维护</a></dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item " id="projectMana">
                     <a id="S002" href="javascript:;" >项目管理</a>
                     <dl class="layui-nav-child">
-                        <dd id="S00201" name="daily/project.jsp" ><a href="javascript:;">项目信息管理维护</a>
+                        <dd id="S00201" name="html/project/project.jsp" ><a href="javascript:;">项目信息管理维护</a>
                         </dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item" id="dailyMana">
                     <a id="S003" href="javascript:;" >日报管理</a>
                     <d1 class="layui-nav-child">
-                        <dd id="S00301" name="daily/daily.jsp" ><a href="javascript:;">日报信息管理维护</a>
+                        <dd id="S00301" name="html/daily/daily.jsp" ><a href="javascript:;">日报信息管理维护</a>
                         </dd>
                     </d1>
                 </li>
 
-                <li id="S999" name="daily/aboutWe.jsp" class="layui-nav-item">
+                <li id="S999" name="html/about/aboutWe.jsp" class="layui-nav-item">
                     <a  class="" href="javascript:;" style="width:160px;height:45px;position:fixed;top:93%;overflow:hidden;">关于我们</a>
                 </li>
             </ul>
@@ -94,7 +93,7 @@
 
 </div>
 
-<script src="static/layui/layui.all.js"></script>
+<script src="/js/layui/layui.all.js"></script>
 <script type="text/javascript">
     var element;
     var $;
@@ -116,16 +115,22 @@
         element.tabAdd('tab-switch', {
             title: "首页"
             ,
-            content: '<iframe src=' + "daily/home.jsp" + ' width="100%" style="min-height: 500px;" frameborder="0" scrolling="auto" onload="setIframeHeight(this)"></iframe>' // 选项卡内容，支持传入html
+            content: '<iframe src=' + "" + 'html/about/home.jsp width="100%" style="min-height: 500px;" frameborder="0" scrolling="auto" onload="setIframeHeight(this)"></iframe>' // 选项卡内容，支持传入html
             ,
             id: "S000" //选项卡标题的lay-id属性值
         });
         element.tabChange('tab-switch', "S000"); //切换到新增的tab上
 
-        //监听左侧菜单点击
+        //监听菜单点击
         element.on('nav(menu)', function (elem) {
             if(elem[0].id!="exit") {
                 addTab(elem[0].innerText, elem[0].attributes[1].nodeValue, elem[0].id);
+                $("#S999").removeClass( "layui-this");
+                $("#S000").removeClass( "layui-this");
+                layui.each($(".layui-nav-child"), function () {
+                    $(this).find("dd").removeClass("layui-this");
+                });
+                $("#" + elem[0].id).addClass( "layui-this");
             }
         });
         //监听tab选项卡切换
@@ -143,7 +148,7 @@
         //注销返回登录界面
         $(document).on("click","#exit",function () {
                 $.ajax({
-                    url: "${APP_PATH}/userExit",
+                    url: "${APP_PATH}/user/userExit",
                     type: "POST",
                     dataType:"json",
                     success: function (result) {
@@ -204,6 +209,22 @@
             }
         }
     };
+    function open() {
+        layer.open({
+            title: ['温馨提示'],
+            content: '<div style="color:#767676">修改密码成功，您需重新登陆!</div>',
+            btn: ['确定'],
+            shadeClose: false,
+            shade: [0.8, '#393D49'],
+            //回调函数
+            yes: function(index, layero){
+                parent.location.href = "/login.jsp";//立即确定按钮
+            },
+            cancel: function(index,layero){ //按右上角“X”按钮
+                parent.location.href = "/login.jsp";
+            }})
+    }
+
 </script>
 </body>
 </html>

@@ -22,7 +22,7 @@ public class TDepartmentServiceImpl implements TDepartmentService{
     private TDepartmentMapper tDepartmentMapper;
 
     /**
-     * 查询部门信
+     * 查询部门信息
      */
     public List<TDepartment> getDepts() {
         List<TDepartment> list = tDepartmentMapper.selectByExample(null);
@@ -35,5 +35,13 @@ public class TDepartmentServiceImpl implements TDepartmentService{
     public TDepartment selectByUserId(String userId) {
         TDepartment dept = tDepartmentMapper.selectByUserId(userId);
         return  dept;
+    }
+
+    /**
+     * 查询所属公司的部门信息
+     */
+    public List<TDepartment> getDepartmentsByCompanyId(Integer companyId) {
+        List<TDepartment> list = tDepartmentMapper.getDepartmentsByCompanyId(companyId);
+        return list;
     }
 }

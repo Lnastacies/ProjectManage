@@ -14,6 +14,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+/**
+ * @version V1.0
+ * @Description: 日报信息实现类
+ * @author: 胡浪
+ * @date: 2018/4/13
+ * @Copyright: 北京先进数通信息技术股份公司 http://www.adtec.com.cn
+ */
 @Service
 public class TDailyServiceImpl implements TDailyService {
 
@@ -203,7 +210,8 @@ public class TDailyServiceImpl implements TDailyService {
 	/**
 	 * 导出长安信托项目周报
 	 */
-	public List<TDaily> caitcProjectWeeklyExport(List<TUser> users,String startDate,String endDate){
+	public Map<String, Object> caitcProjectWeeklyExport(List<TUser> users,String startDate,String endDate){
+		Map<String, Object> sheetMap = new HashMap<>();
 		List<TDaily> thisWeekList = new ArrayList<>();
 		List<TDaily> list = new ArrayList<>();
 		//1.获取项目周报数据
@@ -212,13 +220,44 @@ public class TDailyServiceImpl implements TDailyService {
 			list.addAll(dailyList);
 		}
 		//2.组装项目周报数据
+		List<TDaily> analysisList = new ArrayList<>();
+		List<TDaily> designList = new ArrayList<>();
+		List<TDaily> devAndTestList = new ArrayList<>();
+		List<TDaily> versionList = new ArrayList<>();
+		List<TDaily> operationList = new ArrayList<>();
+		List<TDaily> manageList = new ArrayList<>();
 		for(int i=0;i<list.size();i++){
 			TDaily weekly = list.get(i);
 			int[] lineNumberArray = {26,26,26};
-			dailyToProjectWeekly(weekly,lineNumberArray);
-			thisWeekList.add(weekly);
+			if(Constants.WORK_TYPE_ANALYSIS.equals(weekly.getWorkType())){//需求分析
+				dailyToProjectWeekly(weekly,lineNumberArray);
+				analysisList.add(weekly);
+			}else if(Constants.WORK_TYPE_DESIGN.equals(weekly.getWorkType())){//设计
+				dailyToProjectWeekly(weekly,lineNumberArray);
+				designList.add(weekly);
+			}else if(Constants.WORK_TYPE_DEVELOPMENT.equals(weekly.getWorkType())||Constants.WORK_TYPE_TEST.equals(weekly.getWorkType())){//开发及测试
+				dailyToProjectWeekly(weekly,lineNumberArray);
+				devAndTestList.add(weekly);
+			}else if(Constants.WORK_TYPE_VERSION.equals(weekly.getWorkType())){//版本发布
+				dailyToProjectWeekly(weekly,lineNumberArray);
+				versionList.add(weekly);
+			}else if(Constants.WORK_TYPE_OPERATION.equals(weekly.getWorkType())){//运维支持
+				dailyToProjectWeekly(weekly,lineNumberArray);
+				operationList.add(weekly);
+			}else if(Constants.WORK_TYPE_MEETING.equals(weekly.getWorkType())||Constants.WORK_TYPE_OTHER.equals(weekly.getWorkType())){//项目管理
+				dailyToProjectWeekly(weekly,lineNumberArray);
+				manageList.add(weekly);
+			}
 		}
-		return thisWeekList;
+		sheetMap.put("startDate", startDate);
+		sheetMap.put("endDate", endDate);
+		sheetMap.put("analysisList", analysisList);
+		sheetMap.put("designList", designList);
+		sheetMap.put("devAndTestList", devAndTestList);
+		sheetMap.put("versionList", versionList);
+		sheetMap.put("operationList", operationList);
+		sheetMap.put("manageList", manageList);
+		return sheetMap;
 	}
 
 	/**

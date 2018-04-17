@@ -1,45 +1,46 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.adtec.daily.dao.user.TUserMapper" >
-    <resultMap id="BaseResultMap" type="com.adtec.daily.bean.user.TUser" >
-        <id column="user_id" property="userId" jdbcType="VARCHAR" />
-        <result column="user_name" property="userName" jdbcType="VARCHAR" />
-        <result column="role_id" property="roleId" jdbcType="INTEGER" />
-        <result column="password" property="password" jdbcType="VARCHAR" />
-        <result column="gender" property="gender" jdbcType="VARCHAR" />
-        <result column="email" property="email" jdbcType="VARCHAR" />
-        <result column="identity_no" property="identityNo" jdbcType="VARCHAR" />
-        <result column="mobile" property="mobile" jdbcType="VARCHAR" />
-        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-        <result column="create_user_id" property="createUserId" jdbcType="VARCHAR" />
-        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
-        <result column="update_user_id" property="updateUserId" jdbcType="VARCHAR" />
-        <result column="remark1" property="remark1" jdbcType="VARCHAR" />
-        <result column="remark2" property="remark2" jdbcType="VARCHAR" />
-        <result column="remark3" property="remark3" jdbcType="VARCHAR" />
+<mapper namespace="com.adtec.daily.dao.user.TUserMapper">
+    <resultMap id="BaseResultMap" type="com.adtec.daily.bean.user.TUser">
+        <id column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="role_id" property="roleId" jdbcType="INTEGER"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="gender" property="gender" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="identity_no" property="identityNo" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="create_user_id" property="createUserId" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="update_user_id" property="updateUserId" jdbcType="VARCHAR"/>
+        <result column="remark1" property="remark1" jdbcType="VARCHAR"/>
+        <result column="remark2" property="remark2" jdbcType="VARCHAR"/>
+        <result column="remark3" property="remark3" jdbcType="VARCHAR"/>
 
         <!--关联查询的属性-->
-        <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+        <result column="role_name" property="roleName" jdbcType="VARCHAR"/>
     </resultMap>
-    <sql id="Example_Where_Clause" >
-        <where >
-            <foreach collection="oredCriteria" item="criteria" separator="or" >
-                <if test="criteria.valid" >
-                    <trim prefix="(" suffix=")" prefixOverrides="and" >
-                        <foreach collection="criteria.criteria" item="criterion" >
-                            <choose >
-                                <when test="criterion.noValue" >
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
                                     and ${criterion.condition}
                                 </when>
-                                <when test="criterion.singleValue" >
+                                <when test="criterion.singleValue">
                                     and ${criterion.condition} #{criterion.value}
                                 </when>
-                                <when test="criterion.betweenValue" >
+                                <when test="criterion.betweenValue">
                                     and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                                 </when>
-                                <when test="criterion.listValue" >
+                                <when test="criterion.listValue">
                                     and ${criterion.condition}
-                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
                                         #{listItem}
                                     </foreach>
                                 </when>
@@ -50,25 +51,26 @@
             </foreach>
         </where>
     </sql>
-    <sql id="Update_By_Example_Where_Clause" >
-        <where >
-            <foreach collection="example.oredCriteria" item="criteria" separator="or" >
-                <if test="criteria.valid" >
-                    <trim prefix="(" suffix=")" prefixOverrides="and" >
-                        <foreach collection="criteria.criteria" item="criterion" >
-                            <choose >
-                                <when test="criterion.noValue" >
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
                                     and ${criterion.condition}
                                 </when>
-                                <when test="criterion.singleValue" >
+                                <when test="criterion.singleValue">
                                     and ${criterion.condition} #{criterion.value}
                                 </when>
-                                <when test="criterion.betweenValue" >
+                                <when test="criterion.betweenValue">
                                     and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                                 </when>
-                                <when test="criterion.listValue" >
+                                <when test="criterion.listValue">
                                     and ${criterion.condition}
-                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
                                         #{listItem}
                                     </foreach>
                                 </when>
@@ -79,41 +81,41 @@
             </foreach>
         </where>
     </sql>
-    <sql id="Base_Column_List" >
+    <sql id="Base_Column_List">
         user_id, user_name, role_id, password, gender, email, identity_no, mobile, create_time,
         create_user_id, update_time, update_user_id, remark1, remark2, remark3
     </sql>
-    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.adtec.daily.bean.user.TUserExample" >
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.adtec.daily.bean.user.TUserExample">
         select
-        <if test="distinct" >
+        <if test="distinct">
             distinct
         </if>
-        <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         from t_user
-        <if test="_parameter != null" >
-            <include refid="Example_Where_Clause" />
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
         </if>
-        <if test="orderByClause != null" >
+        <if test="orderByClause != null">
             order by ${orderByClause}
         </if>
     </select>
-    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
         select
-        <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         from t_user
         where user_id = #{userId,jdbcType=VARCHAR}
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
         delete from t_user
         where user_id = #{userId,jdbcType=VARCHAR}
     </delete>
-    <delete id="deleteByExample" parameterType="com.adtec.daily.bean.user.TUserExample" >
+    <delete id="deleteByExample" parameterType="com.adtec.daily.bean.user.TUserExample">
         delete from t_user
-        <if test="_parameter != null" >
-            <include refid="Example_Where_Clause" />
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
         </if>
     </delete>
-    <insert id="insert" parameterType="com.adtec.daily.bean.user.TUser" >
+    <insert id="insert" parameterType="com.adtec.daily.bean.user.TUser">
         insert into t_user (user_id, user_name, role_id,
         password, gender, email,
         identity_no, mobile, create_time,
@@ -127,163 +129,163 @@
         #{remark1,jdbcType=VARCHAR}, #{remark2,jdbcType=VARCHAR}, #{remark3,jdbcType=VARCHAR}
         )
     </insert>
-    <insert id="insertSelective" parameterType="com.adtec.daily.bean.user.TUser" >
+    <insert id="insertSelective" parameterType="com.adtec.daily.bean.user.TUser">
         insert into t_user
-        <trim prefix="(" suffix=")" suffixOverrides="," >
-            <if test="userId != null" >
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
                 user_id,
             </if>
-            <if test="userName != null" >
+            <if test="userName != null">
                 user_name,
             </if>
-            <if test="roleId != null" >
+            <if test="roleId != null">
                 role_id,
             </if>
-            <if test="password != null" >
+            <if test="password != null">
                 password,
             </if>
-            <if test="gender != null" >
+            <if test="gender != null">
                 gender,
             </if>
-            <if test="email != null" >
+            <if test="email != null">
                 email,
             </if>
-            <if test="identityNo != null" >
+            <if test="identityNo != null">
                 identity_no,
             </if>
-            <if test="mobile != null" >
+            <if test="mobile != null">
                 mobile,
             </if>
-            <if test="createTime != null" >
+            <if test="createTime != null">
                 create_time,
             </if>
-            <if test="createUserId != null" >
+            <if test="createUserId != null">
                 create_user_id,
             </if>
-            <if test="updateTime != null" >
+            <if test="updateTime != null">
                 update_time,
             </if>
-            <if test="updateUserId != null" >
+            <if test="updateUserId != null">
                 update_user_id,
             </if>
-            <if test="remark1 != null" >
+            <if test="remark1 != null">
                 remark1,
             </if>
-            <if test="remark2 != null" >
+            <if test="remark2 != null">
                 remark2,
             </if>
-            <if test="remark3 != null" >
+            <if test="remark3 != null">
                 remark3,
             </if>
         </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides="," >
-            <if test="userId != null" >
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
                 #{userId,jdbcType=VARCHAR},
             </if>
-            <if test="userName != null" >
+            <if test="userName != null">
                 #{userName,jdbcType=VARCHAR},
             </if>
-            <if test="roleId != null" >
+            <if test="roleId != null">
                 #{roleId,jdbcType=INTEGER},
             </if>
-            <if test="password != null" >
+            <if test="password != null">
                 #{password,jdbcType=VARCHAR},
             </if>
-            <if test="gender != null" >
+            <if test="gender != null">
                 #{gender,jdbcType=VARCHAR},
             </if>
-            <if test="email != null" >
+            <if test="email != null">
                 #{email,jdbcType=VARCHAR},
             </if>
-            <if test="identityNo != null" >
+            <if test="identityNo != null">
                 #{identityNo,jdbcType=VARCHAR},
             </if>
-            <if test="mobile != null" >
+            <if test="mobile != null">
                 #{mobile,jdbcType=VARCHAR},
             </if>
-            <if test="createTime != null" >
+            <if test="createTime != null">
                 #{createTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="createUserId != null" >
+            <if test="createUserId != null">
                 #{createUserId,jdbcType=VARCHAR},
             </if>
-            <if test="updateTime != null" >
+            <if test="updateTime != null">
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="updateUserId != null" >
+            <if test="updateUserId != null">
                 #{updateUserId,jdbcType=VARCHAR},
             </if>
-            <if test="remark1 != null" >
+            <if test="remark1 != null">
                 #{remark1,jdbcType=VARCHAR},
             </if>
-            <if test="remark2 != null" >
+            <if test="remark2 != null">
                 #{remark2,jdbcType=VARCHAR},
             </if>
-            <if test="remark3 != null" >
+            <if test="remark3 != null">
                 #{remark3,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
-    <select id="countByExample" parameterType="com.adtec.daily.bean.user.TUserExample" resultType="java.lang.Integer" >
+    <select id="countByExample" parameterType="com.adtec.daily.bean.user.TUserExample" resultType="java.lang.Integer">
         select count(*) from t_user
-        <if test="_parameter != null" >
-            <include refid="Example_Where_Clause" />
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
         </if>
     </select>
-    <update id="updateByExampleSelective" parameterType="map" >
+    <update id="updateByExampleSelective" parameterType="map">
         update t_user
-        <set >
-            <if test="record.userId != null" >
+        <set>
+            <if test="record.userId != null">
                 user_id = #{record.userId,jdbcType=VARCHAR},
             </if>
-            <if test="record.userName != null" >
+            <if test="record.userName != null">
                 user_name = #{record.userName,jdbcType=VARCHAR},
             </if>
-            <if test="record.roleId != null" >
+            <if test="record.roleId != null">
                 role_id = #{record.roleId,jdbcType=INTEGER},
             </if>
-            <if test="record.password != null" >
+            <if test="record.password != null">
                 password = #{record.password,jdbcType=VARCHAR},
             </if>
-            <if test="record.gender != null" >
+            <if test="record.gender != null">
                 gender = #{record.gender,jdbcType=VARCHAR},
             </if>
-            <if test="record.email != null" >
+            <if test="record.email != null">
                 email = #{record.email,jdbcType=VARCHAR},
             </if>
-            <if test="record.identityNo != null" >
+            <if test="record.identityNo != null">
                 identity_no = #{record.identityNo,jdbcType=VARCHAR},
             </if>
-            <if test="record.mobile != null" >
+            <if test="record.mobile != null">
                 mobile = #{record.mobile,jdbcType=VARCHAR},
             </if>
-            <if test="record.createTime != null" >
+            <if test="record.createTime != null">
                 create_time = #{record.createTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="record.createUserId != null" >
+            <if test="record.createUserId != null">
                 create_user_id = #{record.createUserId,jdbcType=VARCHAR},
             </if>
-            <if test="record.updateTime != null" >
+            <if test="record.updateTime != null">
                 update_time = #{record.updateTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="record.updateUserId != null" >
+            <if test="record.updateUserId != null">
                 update_user_id = #{record.updateUserId,jdbcType=VARCHAR},
             </if>
-            <if test="record.remark1 != null" >
+            <if test="record.remark1 != null">
                 remark1 = #{record.remark1,jdbcType=VARCHAR},
             </if>
-            <if test="record.remark2 != null" >
+            <if test="record.remark2 != null">
                 remark2 = #{record.remark2,jdbcType=VARCHAR},
             </if>
-            <if test="record.remark3 != null" >
+            <if test="record.remark3 != null">
                 remark3 = #{record.remark3,jdbcType=VARCHAR},
             </if>
         </set>
-        <if test="_parameter != null" >
-            <include refid="Update_By_Example_Where_Clause" />
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
         </if>
     </update>
-    <update id="updateByExample" parameterType="map" >
+    <update id="updateByExample" parameterType="map">
         update t_user
         set user_id = #{record.userId,jdbcType=VARCHAR},
         user_name = #{record.userName,jdbcType=VARCHAR},
@@ -300,59 +302,59 @@
         remark1 = #{record.remark1,jdbcType=VARCHAR},
         remark2 = #{record.remark2,jdbcType=VARCHAR},
         remark3 = #{record.remark3,jdbcType=VARCHAR}
-        <if test="_parameter != null" >
-            <include refid="Update_By_Example_Where_Clause" />
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
         </if>
     </update>
-    <update id="updateByPrimaryKeySelective" parameterType="com.adtec.daily.bean.user.TUser" >
+    <update id="updateByPrimaryKeySelective" parameterType="com.adtec.daily.bean.user.TUser">
         update t_user
-        <set >
-            <if test="userName != null" >
+        <set>
+            <if test="userName != null">
                 user_name = #{userName,jdbcType=VARCHAR},
             </if>
-            <if test="roleId != null" >
+            <if test="roleId != null">
                 role_id = #{roleId,jdbcType=INTEGER},
             </if>
-            <if test="password != null" >
+            <if test="password != null">
                 password = #{password,jdbcType=VARCHAR},
             </if>
-            <if test="gender != null" >
+            <if test="gender != null">
                 gender = #{gender,jdbcType=VARCHAR},
             </if>
-            <if test="email != null" >
+            <if test="email != null">
                 email = #{email,jdbcType=VARCHAR},
             </if>
-            <if test="identityNo != null" >
+            <if test="identityNo != null">
                 identity_no = #{identityNo,jdbcType=VARCHAR},
             </if>
-            <if test="mobile != null" >
+            <if test="mobile != null">
                 mobile = #{mobile,jdbcType=VARCHAR},
             </if>
-            <if test="createTime != null" >
+            <if test="createTime != null">
                 create_time = #{createTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="createUserId != null" >
+            <if test="createUserId != null">
                 create_user_id = #{createUserId,jdbcType=VARCHAR},
             </if>
-            <if test="updateTime != null" >
+            <if test="updateTime != null">
                 update_time = #{updateTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="updateUserId != null" >
+            <if test="updateUserId != null">
                 update_user_id = #{updateUserId,jdbcType=VARCHAR},
             </if>
-            <if test="remark1 != null" >
+            <if test="remark1 != null">
                 remark1 = #{remark1,jdbcType=VARCHAR},
             </if>
-            <if test="remark2 != null" >
+            <if test="remark2 != null">
                 remark2 = #{remark2,jdbcType=VARCHAR},
             </if>
-            <if test="remark3 != null" >
+            <if test="remark3 != null">
                 remark3 = #{remark3,jdbcType=VARCHAR},
             </if>
         </set>
         where user_id = #{userId,jdbcType=VARCHAR}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.adtec.daily.bean.user.TUser" >
+    <update id="updateByPrimaryKey" parameterType="com.adtec.daily.bean.user.TUser">
         update t_user
         set user_name = #{userName,jdbcType=VARCHAR},
         role_id = #{roleId,jdbcType=INTEGER},
@@ -374,15 +376,20 @@
     <select id="selectByUserId" parameterType="com.adtec.daily.bean.user.TUser" resultMap="BaseResultMap">
         SELECT t1.user_id, t1.user_name,t1.role_id, t1.password, t1.gender, t1.email, t1.mobile, t1.create_time,
         t1.create_user_id, t1.update_time, t1.update_user_id, t1.remark1, t1.remark2, t1.remark3,
-        t4.role_name
+        t4.role_name,t3.dept_name deptName,t3.dept_id deptId,t6.company_name companyName,t6.company_id companyId
         FROM t_user t1
         LEFT JOIN  t_role t4 on t4.role_id = t1.role_id
+        LEFT JOIN  t_user_department t2 on t2.user_id = t1.user_id
+        LEFT JOIN  t_department t3 on t3.dept_id = t2.dept_id
+        LEFT JOIN  t_department_company t5 on t5.dept_id = t2.dept_id
+        LEFT JOIN  t_company t6 on t6.company_id = t5.company_id
         WHERE
         <![CDATA[
               t1.user_id = #{userId,jdbcType=VARCHAR}
-            ]]>
-    </select>
 
+        ]]>
+    </select>
+    <!--查询用户的基本信息带角色信息-->
     <select id="selectAllUser" resultMap="BaseResultMap">
         SELECT t1.user_id, t1.user_name,t1.role_id, t1.password, t1.gender, t1.email, t1.mobile, t1.create_time,
         t1.create_user_id, t1.update_time, t1.update_user_id, t1.remark1, t1.remark2, t1.remark3,
@@ -392,14 +399,16 @@
         WHERE 1=1
         <![CDATA[
               order by t1.create_time asc
-            ]]>
+
+        ]]>
     </select>
 
     <!--根据日期及用户id查询日报明细列表-->
     <select id="selectAllUserByProjectIdAndCompanyId" parameterType="map" resultMap="BaseResultMap">
         SELECT
-		 t1.user_id,t1.user_name,t1.identity_no,t1.email,t1.gender,t1.password,t1.mobile,t3.project_code projectCode, t3.project_name projectName,
-		 t4.dept_name deptName,t7.company_name companyName,t8.role_name
+        t1.user_id,t1.user_name,t1.identity_no,t1.email,t1.gender,t1.password,t1.mobile,t3.project_code projectCode,
+        t3.project_name projectName,
+        t4.dept_name deptName,t7.company_name companyName,t8.role_name
         FROM t_user t1
         LEFT JOIN t_user_project t2 on t2.user_id = t1.user_id
         LEFT JOIN t_project t3 on t3.id = t2.project_id
@@ -407,7 +416,7 @@
         LEFT JOIN t_department t4 on t4.dept_id = t6.dept_id
         LEFT JOIN t_department_company t5 on t5.dept_id = t4.dept_id
         LEFT JOIN t_company t7 on t7.company_id = t5.company_id
-        LEFT JOIN  t_role t8 ON t8.role_id = t1.role_id
+        LEFT JOIN t_role t8 ON t8.role_id = t1.role_id
         WHERE 1=1
         <if test="projectId != 0">
             AND t2.project_id = #{projectId,jdbcType=INTEGER}

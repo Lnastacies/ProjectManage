@@ -30,4 +30,6 @@ public interface TCompanyMapper {
     int updateByPrimaryKey(TCompany record);
 
     TCompany selectByDeptId(int deptId);
+
+    List<TCompany> selectAllCompany();
 }

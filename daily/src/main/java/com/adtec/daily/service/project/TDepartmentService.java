@@ -27,4 +27,11 @@ public interface TDepartmentService {
      * @return
      */
     public TDepartment selectByUserId(String userId);
+
+    /**
+     * 查询所属公司的所有部门信息
+     *
+     * @return
+     */
+    public List<TDepartment> getDepartmentsByCompanyId(Integer companyId);
 }
