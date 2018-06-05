@@ -48,7 +48,7 @@ public class DateUtil {
      * @param Str
      * @return
      */
-    public static Date getTimeShort(String Str) {
+    public static Date StrToTime(String Str) {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         sdf.setLenient(false);
         Date ddate = null;
@@ -97,5 +97,26 @@ public class DateUtil {
             list.add(aDate);
         }
         return list;
+    }
+
+    /**
+     * 校验工作日，周末，节假日
+     * @param date 需要校验的日期
+     * @return String 0-工作日，1-周末，2-节假日
+     */
+    public static String checkHoliday(Date date){
+        SimpleDateFormat f=new SimpleDateFormat("yyyyMMdd");
+        String dateStr = f.format(date);
+        Map<String,Object> m = new HashMap<>();
+        m.put("date",dateStr);
+        String str = HttpClientUtil.sendPost("http://api.goseek.cn/Tools/holiday", m);
+        JsonMapper json = new JsonMapper();
+        Map<String,Object> map = json.fromJson(str, Map.class);
+        return map.get("data").toString();
+    }
+
+    public static void main(String[] args) {
+        checkHoliday(DateUtil.StrToDate("2018-04-22"));
+        checkHoliday(new Date());
     }
 }

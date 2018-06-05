@@ -112,7 +112,7 @@
                                                                                                                                                                                                                                                                                                                                                                                 <Interior ss:Color="#FFC000" ss:Pattern="Solid"/>
         </Style>
         <Style ss:ID="s23" ss:Parent="s16">
-            <Alignment ss:Horizontal="Left" ss:Vertical="Center"/>
+            <Alignment ss:Vertical="Bottom"/>
                                                                  <Borders>
                                                                  <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
                                                                                                                                       <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
@@ -120,7 +120,7 @@
                                                                                                                                                                                                                                                                              <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
                                                                                                                                                                                                                                                                                                                                                </Borders>
                                                                                                                                                                                                                                                                                                                                                  <Font ss:FontName="宋体" x:CharSet="134" ss:Color="#000000"/>
-                                                                                                                                                                                                                                                                                                                                                                                                           <Interior ss:Color="#FFC000" ss:Pattern="Solid"/>
+                                                                                                                                                                                                                                                                                                                                                                                                           <Interior ss:Color="#FFFF00" ss:Pattern="Solid"/>
         </Style>
         <Style ss:ID="s24">
             <Alignment ss:Vertical="Bottom"/>
@@ -512,7 +512,7 @@
    <Row ss:Height="14.25">
        <Cell ss:StyleID="s51"><Data ss:Type="Number">${overWork_index + 1}</Data></Cell>
        <Cell ss:StyleID="s52"><Data ss:Type="String">${overWork.userName?if_exists}</Data></Cell>
-       <Cell ss:StyleID="s53"><Data ss:Type="Number">${overWork.sumOverWork*10?if_exists}</Data></Cell>
+       <Cell ss:StyleID="s53"><Data ss:Type="Number">${overWork.sumOvertimePay?if_exists}</Data></Cell>
        <Cell ss:StyleID="s54"><Data ss:Type="String">${overWork.identityNo?if_exists}</Data></Cell>
        <Cell ss:StyleID="s55"><Data ss:Type="String" x:Ticked="1">${overWork.projectCode?if_exists}</Data></Cell>
        <Cell ss:StyleID="s56"><Data ss:Type="String">${overWork.projectName?if_exists}</Data></Cell>
@@ -524,7 +524,7 @@
             <Row ss:Height="14.25">
                 <Cell ss:StyleID="s51"/>
                 <Cell ss:StyleID="s59"><Data ss:Type="String">合计：</Data></Cell>
-                <Cell ss:StyleID="s60"><Data ss:Type="Number">${sumOverWork*10?if_exists}</Data></Cell>
+                <Cell ss:StyleID="s60"><Data ss:Type="Number">${sumOvertimePay?if_exists}</Data></Cell>
                 <Cell ss:StyleID="s55"/>
                 <Cell ss:StyleID="s55"/>
                 <Cell ss:StyleID="s56"/>
@@ -625,12 +625,16 @@
            <#if (overWorkDetail_index = 0) >
            <Row ss:StyleID="s25">
                <Cell ss:StyleID="s22"><Data ss:Type="Number">${overWorkDetail_index + 1}</Data></Cell>
-               <Cell ss:StyleID="s23"><Data ss:Type="String">${overWorkDetail.userName?if_exists}</Data></Cell>
+               <Cell ss:StyleID="s22"><Data ss:Type="String">${overWorkDetail.userName?if_exists}</Data></Cell>
                 <#list overWorkDetail.overWorkList as overWork>
-                <Cell ss:StyleID="s23"><Data ss:Type="Number">${overWork.overWork?if_exists}</Data></Cell>
+                    <#if overWork.holidayFlag == '1'||overWork.holidayFlag == '2' >
+                    <Cell ss:StyleID="s23"><Data ss:Type="Number">${overWork.overWork?if_exists}</Data></Cell>
+                    <#else>
+                    <Cell ss:StyleID="s26"><Data ss:Type="Number">${overWork.overWork?if_exists}</Data></Cell>
+                    </#if>
                 </#list>
                <Cell ss:StyleID="s24"><Data ss:Type="Number">${overWorkDetail.sumOverWork?if_exists}</Data></Cell>
-               <Cell ss:StyleID="s24"><Data ss:Type="Number">${overWorkDetail.sumOverWork*10?if_exists}</Data></Cell>
+               <Cell ss:StyleID="s24"><Data ss:Type="Number">${overWorkDetail.sumOvertimePay?if_exists}</Data></Cell>
            </Row>
            </#if>
            </#list>
@@ -640,10 +644,14 @@
                <Cell ss:StyleID="s26"><Data ss:Type="Number">${overWorkDetail_index + 1}</Data></Cell>
                <Cell ss:StyleID="s27"><Data ss:Type="String">${overWorkDetail.userName?if_exists}</Data></Cell>
                 <#list overWorkDetail.overWorkList as overWork>
-                <Cell ss:StyleID="s26"><Data ss:Type="Number">${overWork.overWork?if_exists}</Data></Cell>
+                    <#if overWork.holidayFlag == '1'||overWork.holidayFlag == '2' >
+                    <Cell ss:StyleID="s23"><Data ss:Type="Number">${overWork.overWork?if_exists}</Data></Cell>
+                    <#else>
+                    <Cell ss:StyleID="s26"><Data ss:Type="Number">${overWork.overWork?if_exists}</Data></Cell>
+                    </#if>
                 </#list>
                 <Cell ss:StyleID="s28"><Data ss:Type="Number">${overWorkDetail.sumOverWork?if_exists}</Data></Cell>
-                <Cell ss:StyleID="s28"><Data ss:Type="Number">${overWorkDetail.sumOverWork*10?if_exists}</Data></Cell>
+                <Cell ss:StyleID="s28"><Data ss:Type="Number">${overWorkDetail.sumOvertimePay?if_exists}</Data></Cell>
            </Row>
            </#if>
            </#list>
@@ -663,7 +671,7 @@
                 <Cell ss:StyleID="s26"><Data ss:Type="String"></Data></Cell>
                 </#list>
                 <Cell ss:StyleID="s28"><Data ss:Type="Number">${sumOverWork?if_exists}</Data></Cell>
-                <Cell ss:StyleID="s28"><Data ss:Type="Number">${sumOverWork*10?if_exists}</Data></Cell>
+                <Cell ss:StyleID="s28"><Data ss:Type="Number">${sumOvertimePay?if_exists}</Data></Cell>
             </Row>
         </Table>
         <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">

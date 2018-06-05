@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="OFF" monitorInterval="1800">
     <properties>
-        <!--<property name="LOG_HOME">/WEB-INF/logs</property>
+        <!--本地环境-->
+        <property name="LOG_HOME">C:/temp</property>
+        <property name="FILE_NAME">daily</property>
+
+        <!--生产环境-->
+        <!--<property name="LOG_HOME">/home/hulang/logs</property>
         <property name="FILE_NAME">daily</property>-->
     </properties>
 
@@ -24,9 +29,6 @@
         </RollingFile>
     </Appenders>
     <Loggers>
-
-        <!-- <Logger name="com.cssweb.test.app" level="trace" additivity="true">
-            <AppenderRef ref="running-log" /> </Logger> -->
 
         <Root level="info">
             <!-- 这里是输入到文件，很重要-->

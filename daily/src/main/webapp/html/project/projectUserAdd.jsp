@@ -5,9 +5,12 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>项目成员列表</title>
-    <jsp:include page="/html/default/pub.jsp" />
+    <jsp:include page="/html/default/pub.jsp"/>
     <link href="/js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <script src="/js/bootstrap/js/bootstrap.min.js"></script>
+    <style type="text/css">
+        .selectShow{width: 200px;height: 27px;border: 1px solid #ccc;border-radius: 4px;}
+    </style>
 </head>
 <body>
 <!-- 搭建显示页面 -->
@@ -37,6 +40,7 @@
                     <th>性别</th>
                     <th>邮箱</th>
                     <th>手机号</th>
+                    <th>项目角色</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -61,6 +65,28 @@
     var projectId = (window.location.search).split("=")[1];
     layer = layui.layer //弹层
     var totalRecord, currentPage;
+    var selectRoles = $("<select id='selectRoles' ></select>");
+        $(function () {
+            //查询角色列表
+            getProjectRoles(selectRoles);
+        });
+
+    function getProjectRoles(ele) {
+        $.ajax({
+            url: "/role/getSpecificRoles",
+            data: {roleType: "00"},
+            type: "POST",
+            async: false,
+            success: function (result) {
+                //显示角色信息在下拉列表中
+                $.each(result.extend.roleList, function () {
+                    var optionEle = $("<option></option>").append(this.roleName).attr("value", this.roleId);
+                    optionEle.appendTo(ele);
+                });
+                ele.appendTo($("#user_save_btn")).hide();
+            }
+        });
+    }
 
     //点击搜索，查询用户列表
     $(document).on("click", "#user_search_btn", function () {
@@ -70,8 +96,12 @@
 
     function to_page(pn, userName) {
         params = "userName=" + userName + "&pn=" + pn;
+        var index = layer.msg('拼命加载中', {
+            icon: 16
+            ,shade: 0.01
+        });
         $.ajax({
-            url: "${APP_PATH}/user/getUserInfoByUserName",
+            url: "/user/getUserInfoByUserName",
             data: params,
             type: "POST",
             success: function (result) {
@@ -81,6 +111,7 @@
                 build_page_info(result);
                 //3、解析显示分页条数据
                 build_page_nav(result);
+                layer.close(index);
             }
         });
     }
@@ -96,6 +127,7 @@
             var email = $("<td></td>").append(item.email);
             var mobile = $("<td></td>").append(item.mobile);
             var userId = $("<td></td>").append(item.userId).hide();
+            var selectProjectRoles = $("<td></td>").append($("#selectRoles").clone().removeAttr("style").addClass("selectShow"));
 
             //var delBtn =
             //append方法执行完成以后还是返回原来的元素
@@ -106,6 +138,7 @@
                 .append(email)
                 .append(mobile)
                 .append(userId)
+                .append(selectProjectRoles)
                 .appendTo("#users_table tbody");
         });
     }
@@ -135,12 +168,10 @@
         } else {
             //为元素添加点击翻页的事件
             firstPageLi.click(function () {
-                console.info(result.extend.pageInfo.list[0].userName);
-                to_page(1, result.extend.pageInfo.list[0].userName);
+                to_page(1, $("#user-name").val());
             });
             prePageLi.click(function () {
-                console.info(result.extend.pageInfo.list[0].userName);
-                to_page(result.extend.pageInfo.pageNum - 1, result.extend.pageInfo.list[0].userName);
+                to_page(result.extend.pageInfo.pageNum - 1, $("#user-name").val());
             });
         }
 
@@ -152,10 +183,10 @@
             lastPageLi.addClass("disabled");
         } else {
             nextPageLi.click(function () {
-                to_page(result.extend.pageInfo.pageNum + 1, result.extend.pageInfo.list[0].userName);
+                to_page(result.extend.pageInfo.pageNum + 1, $("#user-name").val());
             });
             lastPageLi.click(function () {
-                to_page(result.extend.pageInfo.pages, result.extend.pageInfo.list[0].userName);
+                to_page(result.extend.pageInfo.pages, $("#user-name").val());
             });
         }
 
@@ -170,7 +201,7 @@
                 numLi.addClass("active");
             }
             numLi.click(function () {
-                to_page(item, result.extend.pageInfo.list[0].userName);
+                to_page(item, $("#user-name").val());
             });
             ul.append(numLi);
         });
@@ -195,26 +226,31 @@
         //1、弹出是否确认保存对话框
         var userNames = "";
         var save_idstr = "";
+        var save_roleIds = "";
         $.each($(".check_item:checked"), function () {
             //this
             userNames += $(this).parents("tr").find("td:eq(1)").text() + ",";
             //组装员工id字符串
             save_idstr += $(this).parents("tr").find("td:eq(5)").text() + "-";
+            //组装角色类型字符串
+            save_roleIds += $(this).parents("tr").find("td:eq(6)").children("select").val() + "-";
         });
         //去除userNames多余的,
         userNames = userNames.substring(0, userNames.length - 1);
         //去除save_idstr多余的-
         save_idstr = save_idstr.substring(0, save_idstr.length - 1);
+        //去除save_roleTypes多余的-
+        save_roleIds = save_roleIds.substring(0, save_roleIds.length - 1);
         if (userNames.length > 0) {
             layer.confirm('确定添加吗？', {icon: 3, title: '确认信息'}, function (index) {
                 //确认，发送ajax请求删除即可
                 $.ajax({
-                    url: "${APP_PATH}/project/projectUserSave",
+                    url: "/project/projectUserSave",
                     type: "GET",
-                    data: "ids=" + save_idstr + "&projectId=" + projectId,
+                    data: "ids=" + save_idstr + "&projectId=" + projectId+"&roleIds=" + save_roleIds,
                     success: function (result) {
                         if (result.length > 0) {
-                            layer.msg(result[0].userName + " 邮箱:" + result[0].email + "已经在项目中！");
+                            layer.msg(result[0].currentUserName + " 邮箱:" + result[0].currentUserEmail + "已经在"+result[0].projectName+"！");
                         } else {
                             //回到项目详情页
                             window.history.go(-1);

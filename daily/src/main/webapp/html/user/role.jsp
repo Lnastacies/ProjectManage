@@ -5,7 +5,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>用户列表</title>
-    <jsp:include page="/html/default/pub.jsp" />
+    <jsp:include page="/html/default/pub.jsp"/>
     <link href="/js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <script src="/js/bootstrap/js/bootstrap.min.js"></script>
     <link href="/js/jquery/tree/jquery.treeview.css" rel="stylesheet">
@@ -23,6 +23,16 @@
             </div>
             <div class="modal-body">
                 <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">角色类型</label>
+                        <div class="col-sm-10">
+                            <select id="roleTypeSelectUpdate" class="form-control" name="roleType">
+                                <option value="00">项目角色</option>
+                                <option value="01">部门角色</option>
+                            </select>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">角色名称</label>
                         <div class="col-sm-10">
@@ -59,6 +69,16 @@
             </div>
             <div class="modal-body">
                 <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">角色类型</label>
+                        <div class="col-sm-10">
+                            <select id="roleTypeSelectAdd" class="form-control" name="roleType">
+                                <option value="00">项目角色</option>
+                                <option value="01">部门角色</option>
+                            </select>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">角色名称</label>
                         <div class="col-sm-10">
@@ -129,6 +149,7 @@
                 <tr>
                     <th>角色名称</th>
                     <th>角色描述</th>
+                    <th>角色类型</th>
                     <th>创建日期</th>
                     <th>修改日期</th>
                 </tr>
@@ -160,9 +181,6 @@
     if (privilegeList.indexOf(6) == -1) {
         $("#role_add_modal_btn").hide();
     }
-    if (privilegeList.indexOf(8) == -1) {
-        $("#role_delete_all_btn").hide();
-    }
     //1、页面加载完成以后，直接去发送ajax请求,要到分页数据
     $(function () {
         //去首页
@@ -170,8 +188,12 @@
     });
 
     function to_page(pn) {
+        var index = layer.msg('拼命加载中', {
+            icon: 16
+            ,shade: 0.01
+        });
         $.ajax({
-            url: "${APP_PATH}/role/getRoles",
+            url: "/role/getRoles",
             data: "pn=" + pn,
             type: "GET",
             success: function (result) {
@@ -181,6 +203,7 @@
                 build_page_info(result);
                 //3、解析显示分页条数据
                 build_page_nav(result);
+                layer.close(index);
             }
         });
     }
@@ -192,6 +215,7 @@
         $.each(roles, function (index, item) {
             var roleName = $("<td></td>").append(item.roleName);
             var description = $("<td></td>").append(item.description);
+            var roleType = $("<td></td>").append(item.roleType == '00'? "项目角色":"部门角色");
             var createTime = $("<td></td>").append(item.createTime == null ? "" : new Date(item.createTime).Format("yyyy-MM-dd"));
             var updateTime = $("<td></td>").append(item.updateTime == null ? "" : new Date(item.updateTime).Format("yyyy-MM-dd"));
             var roleId = $("<td></td>").append(item.roleId).hide();
@@ -206,11 +230,7 @@
             //为编辑按钮添加一个自定义的属性，来表示当前角色id
             editBtn.attr("edit-id", item.roleId);
             //添加属性权限ID
-            // delBtn.attr("privilege-id",7);
-            //根据权限判断是否显示
-            // if(delBtn.attr("privilege-id") == '3'){
-            //     delBtn.hide();
-            // }
+            editBtn.attr("privilege-id",7);
             //根据权限列表判断是否显示
             if (privilegeList.indexOf(7) == -1) {
                 editBtn.hide();
@@ -220,11 +240,7 @@
             //为删除按钮添加一个自定义的属性来表示当前删除的角色id
             delBtn.attr("del-id", item.roleId);
             //添加属性权限ID
-            // delBtn.attr("privilege-id",8);
-            //根据权限判断是否显示
-            // if(delBtn.attr("privilege-id") == '3'){
-            //     delBtn.hide();
-            // }
+            delBtn.attr("privilege-id",8);
             //根据权限列表判断是否显示
             if (privilegeList.indexOf(8) == -1) {
                 delBtn.hide();
@@ -234,21 +250,17 @@
             //为权限按钮添加一个自定义的属性来表示当前设置权限的角色id
             priviBtn.attr("privi-id", item.roleId);
             //添加属性权限ID
-            // delBtn.attr("privilege-id",9);
-            //根据权限判断是否显示
-            //     if(delBtn.attr("privilege-id") == '3'){
-            //     delBtn.hide();
-            // }
+            priviBtn.attr("privilege-id",9);
             //根据权限列表判断是否显示
             if (privilegeList.indexOf(9) == -1) {
                 priviBtn.hide();
             }
             var btnTd = $("<td></td>").append(editBtn).append(" ").append(delBtn).append(" ").append(priviBtn);
-            //var delBtn =
             //append方法执行完成以后还是返回原来的元素
             $("<tr></tr>")
                 .append(roleName)
                 .append(description)
+                .append(roleType)
                 .append(createTime)
                 .append(updateTime)
                 .append(updateTime)
@@ -380,11 +392,11 @@
         //发送ajax请求校验角色名是否可用
         var roleName = this.value;
         $.ajax({
-            url: "${APP_PATH}/role/roleCheck",
+            url: "/role/roleCheck",
             data: "roleName=" + roleName,
             type: "POST",
             success: function (result) {
-                if (result.code == 100) {
+                if (result.code == "100") {
                     show_validate_msg("#roleName_add_input", "success", "角色名可用");
                     $("#role_save_btn").attr("ajax-va", "success");
                 } else {
@@ -399,24 +411,30 @@
     $("#roleName_update_input").change(function () {
         //发送ajax请求校验角色名是否可用
         var roleName = this.value;
+        var hideName = $("#hideName").html();
         $.ajax({
-            url: "${APP_PATH}/role/roleCheck",
+            url: "/role/roleCheck",
             data: "roleName=" + roleName,
             type: "POST",
             async: false,
             success: function (result) {
-                if (result.code == 100) {
+                if (result.code == "100") {
                     show_validate_msg("#roleName_update_input", "success", "角色名可用");
                     $("#role_update_btn").attr("ajax-va", "success");
                 } else {
-                    show_validate_msg("#roleName_update_input", "error", result.extend.va_msg);
-                    $("#role_update_btn").attr("ajax-va", "error");
+                    if(hideName == roleName){
+                        show_validate_msg("#roleName_update_input", "success", "角色名可用");
+                        $("#role_update_btn").attr("ajax-va", "success");
+                    }else {
+                        show_validate_msg("#roleName_update_input", "error", result.extend.va_msg);
+                        $("#role_update_btn").attr("ajax-va", "error");
+                    }
                 }
             }
         });
     });
 
-    //点击保存，保存员工。
+    //点击保存，保存角色。
     $("#role_save_btn").click(function () {
         // 1、先对要提交给服务器的数据进行校验
         if (!validate_add_form()) {
@@ -424,17 +442,19 @@
         }
         //1、判断之前的ajax用户名校验是否成功。如果成功。
         if ($(this).attr("ajax-va") == "error") {
+            show_validate_msg("#roleName_add_input", "error", "角色名不可用");
+            $("#role_save_btn").attr("ajax-va", "error");
             return false;
         }
 
         //2、发送ajax请求保存员工
         $.ajax({
-            url: "${APP_PATH}/role/save",
+            url: "/role/save",
             type: "POST",
             data: $("#roleAddModal form").serialize(),
             success: function (result) {
                 //alert(result.msg);
-                if (result.code == 100) {
+                if (result.code == "100") {
                     //用户保存成功；
                     //1、关闭模态框
                     $("#roleAddModal").modal('hide');
@@ -472,13 +492,17 @@
 
     function getRole(id) {
         $.ajax({
-            url: "${APP_PATH}/role/getRoleById/" + id,
+            url: "/role/getRoleById/" + id,
             type: "GET",
             success: function (result) {
                 //console.log(result);
                 var roleData = result.extend.role;
                 $("#roleName_update_input").val(roleData.roleName);
                 $("#description_update_input").val([roleData.description]);
+                $("#roleTypeSelectUpdate").val(roleData.roleType);
+                $("#hideName").remove();
+                $("#roleTypeSelectUpdate").after($("<span></span>").attr("id","hideName").html(roleData.roleName));
+                $("#hideName").hide();
             }
         });
     }
@@ -503,13 +527,13 @@
 
         //2、发送ajax请求保存更新的角色数据
         $.ajax({
-            url: "${APP_PATH}/role/update/" + $(this).attr("edit-id"),
+            url: "/role/update/" + $(this).attr("edit-id"),
             type: "PUT",
             data: $("#roleUpdateModal form").serialize(),
             success: function (result) {
-                //alert(result.msg);
                 //1、关闭对话框
                 $("#roleUpdateModal").modal("hide");
+                layer.msg("更新成功!");
                 //2、回到本页面
                 to_page(currentPage);
             }
@@ -524,7 +548,7 @@
         layer.confirm("确认删除【" + roleName + "】吗？", {icon: 3, title: '确认信息'}, function (index) {
             //确认，发送ajax请求删除即可
             $.ajax({
-                url: "${APP_PATH}/role/delete/" + roleId,
+                url: "/role/delete/" + roleId,
                 type: "DELETE",
                 success: function (result) {
                     layer.msg(result.msg);
@@ -552,7 +576,7 @@
     //查出所有的部门信息并显示在下拉列表中
     function getPrivilege(roleId) {
         $.ajax({
-            url: "${APP_PATH}/privilege/getPrivileges",
+            url: "/privilege/getPrivileges",
             type: "GET",
             success: function (result) {
                 var privileges = result.extend.resultList;
@@ -564,7 +588,7 @@
     //查询角色的权限信息
     function getPrivilegeByRoleId(roleId) {
         $.ajax({
-            url: "${APP_PATH}/rolePrivilege/getPrivileges",
+            url: "/rolePrivilege/getPrivileges",
             type: "GET",
             data: {roleId: roleId},
             success: function (data) {
@@ -647,12 +671,12 @@
         console.info(privileges);
         //2、发送ajax请求保存权限数据
         $.ajax({
-            url: "${APP_PATH}/rolePrivilege/savePrivilege",
+            url: "/rolePrivilege/savePrivilege",
             type: "POST",
             data: {roleId: $("#privilege_save_btn").attr("role-id"), privilegeList: privileges, aa: 'eeee'},
             traditional: true,
             success: function (result) {
-                alert(result.msg);
+                layer.msg(result.msg);
                 // 1、关闭对话框
                 $("#privilegeModal").modal("hide");
                 //2、回到本页面

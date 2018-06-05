@@ -1,7 +1,7 @@
 package com.adtec;
 
-import com.adtec.daily.bean.project.TProject;
-import com.adtec.daily.service.project.TProjectService;
+import com.adtec.daily.bean.project.Project;
+import com.adtec.daily.service.project.ProjectService;
 import com.alibaba.fastjson.JSON;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,12 +33,12 @@ public class TestMyBatis {
     static Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
 
     @Resource
-    private TProjectService tProjectService;
+    private ProjectService projectService;
 
     @Test
     public void test1(){
-        TProject tProject = tProjectService.getProject(25);
-        logger.info(JSON.toJSONString(tProject));
+        Project project = projectService.getProject(25);
+        logger.info(JSON.toJSONString(project));
     }
 
 

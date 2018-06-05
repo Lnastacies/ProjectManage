@@ -12,6 +12,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>项目管理系统</title>
+    <link rel="icon" href="/static/image/favicon.ico" type="image/x-icon"/>
+    <link rel="shortcut icon" href="/static/image/favicon.ico" type="image/x-icon"/>
     <jsp:include page="/html/default/pub.jsp" />
     <style type="text/css">
         a:link {text-decoration: none;}  a:visited {text-decoration: none;}  a:hover {text-decoration: none;}  a:active {text-decoration: none;}
@@ -54,20 +56,28 @@
                 <li class="layui-nav-item " id="projectMana">
                     <a id="S002" href="javascript:;" >项目管理</a>
                     <dl class="layui-nav-child">
-                        <dd id="S00201" name="html/project/project.jsp" ><a href="javascript:;">项目信息管理维护</a>
-                        </dd>
+                        <dd id="S00201" name="html/project/project.jsp" ><a href="javascript:;">项目信息管理维护</a></dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item" id="dailyMana">
                     <a id="S003" href="javascript:;" >日报管理</a>
                     <d1 class="layui-nav-child">
-                        <dd id="S00301" name="html/daily/daily.jsp" ><a href="javascript:;">日报信息管理维护</a>
-                        </dd>
+                        <dd id="S00301" name="html/daily/daily.jsp" ><a href="javascript:;">日报信息管理维护</a></dd>
+                        <dd id="S00302" name="" ><a href="javascript:;">日报信息</a></dd>
                     </d1>
                 </li>
-
-                <li id="S999" name="html/about/aboutWe.jsp" class="layui-nav-item">
-                    <a  class="" href="javascript:;" style="width:160px;height:45px;position:fixed;top:93%;overflow:hidden;">关于我们</a>
+                <li class="layui-nav-item " id="demandtMana">
+                    <a id="S004" href="javascript:;" >需求管理</a>
+                    <dl class="layui-nav-child">
+                        <dd id="S00401" name="" ><a href="javascript:;">需求信息管理维护</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item" id="aboutMeMana">
+                    <a id="S999" href="javascript:;" >关于我们</a>
+                    <d1 class="layui-nav-child">
+                        <dd id="S99901" name="html/about/aboutWe.jsp" ><a href="javascript:;">我们</a></dd>
+                        <dd id="S99902" name="html/about/feedBack.jsp" ><a href="javascript:;">意见反馈</a></dd>
+                    </d1>
                 </li>
             </ul>
         </div>
@@ -124,6 +134,7 @@
         //监听菜单点击
         element.on('nav(menu)', function (elem) {
             if(elem[0].id!="exit") {
+                debugger
                 addTab(elem[0].innerText, elem[0].attributes[1].nodeValue, elem[0].id);
                 $("#S999").removeClass( "layui-this");
                 $("#S000").removeClass( "layui-this");
@@ -148,14 +159,13 @@
         //注销返回登录界面
         $(document).on("click","#exit",function () {
                 $.ajax({
-                    url: "${APP_PATH}/user/userExit",
+                    url: "/user/userExit",
                     type: "POST",
                     dataType:"json",
                     success: function (result) {
-                        if (result.code == 100) {
+                        if (result.code == "100") {
                             window.location.href="/login.jsp";
                         } else {
-                            alert("注销失败");
                             window.location.href="/login.jsp";
                         }
                     }
@@ -189,7 +199,7 @@
             element.tabAdd('tab-switch', {
                 title: tabTitle
                 ,
-                content: '<iframe src=' + tabUrl + ' width="100%" style="min-height: 500px;" frameborder="0" scrolling="auto" onload="setIframeHeight(this)"></iframe>' // 选项卡内容，支持传入html
+                content: '<iframe src=' + tabUrl + ' width="100%" style="min-height: 600px;" frameborder="0" scrolling="auto" onload="setIframeHeight(this)"></iframe>' // 选项卡内容，支持传入html
                 ,
                 id: tabId //选项卡标题的lay-id属性值
             });

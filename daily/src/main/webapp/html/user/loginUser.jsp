@@ -17,7 +17,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title">用户修改</h4>
+                <h4 class="modal-title">资料修改</h4>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal">
@@ -41,34 +41,10 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">邮箱</label>
+                        <label class="col-sm-2 control-label">身份证:</label>
                         <div class="col-sm-10">
-                            <input type="text" name="email" class="form-control" id="email_update_input"
-                                   placeholder="email@adtect.com.cn">
+                            <input type="text" name="identityNo" class="form-control" id="identityNo_update_input">
                             <span class="help-block"></span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">项目</label>
-                        <div class="col-sm-6">
-                            <select id="proSelectUpdate" class="form-control" name="projectId">
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">部门</label>
-                        <div class="col-sm-4">
-                            <!-- 部门提交部门id即可 -->
-                            <select id="deptSelectUpdate" class="form-control" name="deptId">
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">角色</label>
-                        <div class="col-sm-4">
-                            <!-- 角色提交角色id即可 -->
-                            <select id="roleSelectUpdate" class="form-control" name="roleId">
-                            </select>
                         </div>
                     </div>
                     <div class="form-group">
@@ -78,13 +54,7 @@
                             <span class="help-block"></span>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">密码</label>
-                        <div class="col-sm-10">
-                            <input type="text" name="password" class="form-control" id="password_update_input">
-                            <span class="help-block"></span>
-                        </div>
-                    </div>
+
                 </form>
             </div>
             <div class="modal-footer">
@@ -100,42 +70,52 @@
     <!-- 标题 -->
     <div class="row">
         <div class="col-md-12">
-            <!--  登录员工修改页面-->
+            <!--  登录员工资料页面-->
             <div class="modal-dialog" role="document">
                 <div>
                     <div>
                         <form class="form-horizontal">
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">姓名:</label>
-                                <div class="col-sm-10" style="padding-top: 7px">
+                                <label class="col-sm-5 control-label">姓名:</label>
+                                <div class="col-sm-7" style="padding-top: 7px">
                                     <span name="userName" id="userName_input"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">性别:</label>
-                                <div class="col-sm-10" style="padding-top: 7px">
+                                <label class="col-sm-5 control-label">性别:</label>
+                                <div class="col-sm-7" style="padding-top: 7px">
                                     <span name="gender" id="gender_input"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">邮箱:</label>
-                                <div class="col-sm-10" style="padding-top: 7px">
+                                <label class="col-sm-5 control-label">邮箱:</label>
+                                <div class="col-sm-7" style="padding-top: 7px">
                                     <span name="email" id="email_input"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">角色:</label>
-                                <div class="col-sm-10" style="padding-top: 7px">
+                                <label class="col-sm-5 control-label">身份证:</label>
+                                <div class="col-sm-7" style="padding-top: 7px">
+                                    <span name="identityNo" id="identityNo_input"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">部门角色:</label>
+                                <div class="col-sm-7" style="padding-top: 7px">
                                     <span name="role" id="role_input"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">手机号:</label>
-                                <div class="col-sm-10" style="padding-top: 7px">
+                                <label class="col-sm-5 control-label">手机号:</label>
+                                <div class="col-sm-7" style="padding-top: 7px">
                                     <span name="mobile" id="mobile_input"></span>
                                 </div>
                             </div>
+
                         </form>
+                        <div style="text-align: center">
+                        <button class="btn btn-primary"  id="user_update_modal_btn" >修改资料</button>
+                        </div>
                     </div>
 
                 </div>
@@ -153,8 +133,9 @@
 
     function getUser(id) {
         $.ajax({
-            url: "${APP_PATH}/user/selectUserById/" + id,
-            type: "GET",
+            url: "/user/selectUserById",
+            data:{id:id,roleType:"01"},
+            type: "POST",
             success: function (result) {
                 var userData = result.extend.user;
                 $("#userName_input").html(userData.userName);
@@ -162,8 +143,89 @@
                 $("#gender_input").text([userData.gender == '1' ? "男" : "女"]);
                 $("#mobile_input").html([userData.mobile]);
                 $("#role_input").html([userData.roleName]);
+                $("#identityNo_input").html([userData.identityNo]);
+
             }
         });
+    }
+
+    //获取用户信息，用于修改页面
+    function getUserInfo(id) {
+        $.ajax({
+            url: "/user/selectUserById",
+            data:{id:id,roleType:"01"},
+            type: "POST",
+            success: function (result) {
+                var userData = result.extend.user;
+                $("#userName_update_input").val(userData.userName);
+                $("#userUpdateModal input[name=gender]").val([userData.gender]);
+                $("#mobile_update_input").val([userData.mobile]);
+                $("#identityNo_update_input").val([userData.identityNo]);
+                //把员工的id传递给模态框的更新按钮
+                $("#user_update_btn").attr("edit-id", id);
+            }
+        });
+    }
+
+    //点击修改按钮弹出模态框。
+    $("#user_update_modal_btn").click(function () {
+        //清除表单数据（表单完整重置（表单的数据，表单的样式））
+        reset_form("#userUpdateModal form");
+        getUserInfo("${user.userId}");
+        //弹出模态框
+        $("#userUpdateModal").modal({
+            backdrop: "static"
+        });
+    });
+
+    //清空表单样式及内容
+    function reset_form(ele) {
+        $(ele)[0].reset();
+        //清空表单样式
+        $(ele).find("*").removeClass("has-error has-success");
+        $(ele).find(".help-block").text("");
+    }
+
+    //点击更新，更新员工信息
+    $("#user_update_btn").click(function () {
+        //1、拿到要校验的数据，使用正则表达式
+        var userName = $("#userName_update_input").val();
+        var regName = /(^[a-zA-Z0-9_-]{6,16}$)|(^[\u2E80-\u9FFF]{2,5})/;
+        if (!regName.test(userName)) {
+            //alert("用户名可以是2-10位中文或者6-10位英文和数字的组合");
+            show_validate_msg("#userName_update_input", "error", "用户名可以是2-10位中文或者6-10位英文和数字的组合");
+            return false;
+        } else {
+            show_validate_msg("#userName_update_input", "success", "");
+        }
+
+        //2、发送ajax请求保存更新的员工数据
+        $.ajax({
+            url: "/user/update/" + $(this).attr("edit-id")+"/"+ "-1",
+            type: "PUT",
+            data: $("#userUpdateModal form").serialize(),
+            success: function (result) {
+                //1、关闭对话框
+                $("#userUpdateModal").modal("hide");
+                //2、刷新页面
+                getUser("${user.userId}");
+
+            }
+        });
+    });
+
+    //显示校验结果的提示信息
+    function show_validate_msg(ele, status, msg) {
+        //清除当前元素的校验状态
+        $(ele).parent().removeClass("has-success has-error");
+        $(ele).next("span").text("");
+        if ("success" == status) {
+            $(ele).parent().addClass("has-success");
+            $(ele).next("span").text(msg);
+        } else if ("error" == status) {
+            $(ele).parent().addClass("has-error");
+            $(ele).next("span").text(msg);
+        }
     }
 </script>
 </body>

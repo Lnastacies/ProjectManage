@@ -14,6 +14,7 @@
         .suggest-item {padding: 3px 5px;}
         .suggest-active {background: #33CCFF;font-size: 16px;color: #050406;padding: 3px 5px;}
     </style>
+    <script src="https://cdn.bootcss.com/jsencrypt/2.3.1/jsencrypt.min.js"></script>
 </head>
 <body>
 <!-- 员工修改的模态框 -->
@@ -31,6 +32,13 @@
                         <label class="col-sm-2 control-label">姓名</label>
                         <div class="col-sm-10">
                             <input type="text" name="userName" class="form-control" id="userName_update_input">
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">身份证</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="identityNo" class="form-control" id="identity_update_input">
                             <span class="help-block"></span>
                         </div>
                     </div>
@@ -80,13 +88,6 @@
                         <label class="col-sm-2 control-label">手机号</label>
                         <div class="col-sm-10">
                             <input type="text" name="mobile" class="form-control" id="mobile_update_input">
-                            <span class="help-block"></span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">密码</label>
-                        <div class="col-sm-10">
-                            <input type="text" name="password" class="form-control" id="password_update_input" onkeydown="return noBlank(event)">
                             <span class="help-block"></span>
                         </div>
                     </div>
@@ -177,8 +178,8 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">密码</label>
                         <div class="col-sm-10">
-                            <input type="text" name="password" class="form-control" id="password_add_input" onkeydown="return noBlank(event)">
-                            <span class="help-block"></span>
+                            <input type="password" name="originalPassword" class="form-control" id="password_add_input" onkeydown="return noBlank(event)">
+                            <span class="help-block" id="lastBlock"></span>
                         </div>
                     </div>
                 </form>
@@ -215,9 +216,8 @@
                     <th>姓名</th>
                     <th>性别</th>
                     <th>邮箱</th>
-                    <th>角色</th>
+                    <th>部门角色</th>
                     <th>手机号</th>
-                    <th>密码</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -240,7 +240,6 @@
 </div>
 <script type="text/javascript">
     layer = layui.layer //弹层
-    //console.info(${user.privilegeList});
     //获取当前用户的权限列表
     var privilegeList = ${user.privilegeList};
     //根据权限列表判断是否显示
@@ -264,18 +263,22 @@
     });
 
     function to_page(pn) {
+        var index = layer.msg('拼命加载中', {
+            icon: 16
+            ,shade: 0.01
+        });
         $.ajax({
-            url: "${APP_PATH}/user/getUsers",
-            data: "pn=" + pn,
+            url: "/user/getUsers",
+            data: "pn=" + pn+"&roleType=01",
             type: "GET",
             success: function (result) {
-                //console.log(result);
                 //1、解析并显示员工数据
                 build_users_table(result);
                 //2、解析并显示分页信息
                 build_page_info(result);
                 //3、解析显示分页条数据
                 build_page_nav(result);
+                layer.close(index);
             }
         });
     }
@@ -287,11 +290,10 @@
         $.each(users, function (index, item) {
             var userName = $("<td></td>").append(item.userName);
             var gender = $("<td></td>").append(item.gender == '1' ? "男" : "女");
-            var password = $("<td></td>").append(item.password);
             var email = $("<td></td>").append(item.email);
             var mobile = $("<td></td>").append(item.mobile);
             var roleName = $("<td></td>").append(item.roleName);
-            var userId = $("<td></td>").append(item.userId).hide();
+            var userId = $("<td></td>").append(item.userId).hide().attr("userRoleId",item.userRoleId);
             /**
              <button class="">
              <span class="" aria-hidden="true"></span>
@@ -303,11 +305,7 @@
             //为编辑按钮添加一个自定义的属性，来表示当前用户id
             editBtn.attr("edit-id", item.userId);
             //添加属性权限ID
-            // editBtn.attr("privilege-id",3);
-            //根据权限判断是否显示
-            // if(delBtn.attr("privilege-id") == '3'){
-            //     delBtn.hide();
-            // }
+            editBtn.attr("privilege-id",3);
             //根据权限列表判断是否显示
             if (privilegeList.indexOf(3) == -1) {
                 editBtn.hide();
@@ -317,11 +315,7 @@
             //为删除按钮添加一个自定义的属性来表示当前删除的用户id
             delBtn.attr("del-id", item.userId);
             //添加属性权限ID
-            // delBtn.attr("privilege-id",4);
-            //根据权限判断是否显示
-            // if(delBtn.attr("privilege-id") == '4'){
-            //     delBtn.hide();
-            // }
+            delBtn.attr("privilege-id",4);
             //根据权限列表判断是否显示
             if (privilegeList.indexOf(4) == -1) {
                 delBtn.hide();
@@ -335,7 +329,6 @@
                 .append(email)
                 .append(roleName)
                 .append(mobile)
-                .append(password)
                 .append(userId)
                 .append(btnTd)
                 .appendTo("#users_table tbody");
@@ -426,8 +419,6 @@
         reset_form("#userAddModal form");
         //s$("")[0].reset();
         getEmilEnd();
-        //发送ajax请求，查出部门信息，显示在下拉列表中
-        getRoles("#userAddModal #roleSelectAdd");
         //发送ajax请求，查出角色信息，显示在下拉列表中
         getRoles("#userAddModal #roleSelectAdd");
         //发送ajax请求，查出公司信息，显示在下拉列表中
@@ -446,12 +437,13 @@
         //清空之前下拉列表的值
         $(ele).empty();
         $.ajax({
-            url: "${APP_PATH}/role/getRoles",
-            type: "GET",
+            url: "/role/getSpecificRoles",
+            data:{roleType:"01"},
+            type: "POST",
             async: false,
             success: function (result) {
                 //显示角色信息在下拉列表中
-                $.each(result.extend.pageInfo.list, function () {
+                $.each(result.extend.roleList, function () {
                     var optionEle = $("<option></option>").append(this.roleName).attr("value", this.roleId);
                     optionEle.appendTo(ele);
                 });
@@ -486,7 +478,6 @@
         }else{
             var companyId = $("#companySelectUpdate").val();
         }
-        console.info(companyId);
         $.ajax({
             url: "/department/getDepartmentsByCompanyId",
             data:{companyId:companyId},
@@ -506,7 +497,6 @@
     $("#companySelectAdd").change(function () {
         $("#deptSelectAdd").empty();
         var companyId = $("#companySelectAdd").val();
-        console.info(companyId);
         $.ajax({
             url: "/department/getDepartmentsByCompanyId",
             data:{companyId:companyId},
@@ -582,11 +572,11 @@
         //发送ajax请求校验邮箱是否可用
         var email = this.value;
         $.ajax({
-            url: "${APP_PATH}/user/userCheck",
+            url: "/user/userCheck",
             data: "email=" + email,
             type: "POST",
             success: function (result) {
-                if (result.code == 100) {
+                if (result.code == "100") {
                     show_validate_msg("#email_add_input", "success", "邮箱可用");
                     $("#user_save_btn").attr("ajax-va", "success");
                 } else {
@@ -610,15 +600,15 @@
             show_validate_msg("#email_add_input", "error", "邮箱不可用");
             return false;
         }
-
+        var originalPassword = $("#password_add_input").val();
         //2、发送ajax请求保存员工
         $.ajax({
-            url: "${APP_PATH}/user/save",
+            url: "/user/save",
             type: "POST",
-            data: $("#userAddModal form").serialize(),
+            data: $("#userAddModal form").serialize()+"&password="+originalPassword,
             success: function (result) {
                 //alert(result.msg);
-                if (result.code == 100) {
+                if (result.code == "100") {
                     //用户保存成功；
                     //1、关闭模态框
                     $("#userAddModal").modal('hide');
@@ -666,18 +656,22 @@
 
     function getUser(id) {
         $.ajax({
-            url: "${APP_PATH}/user/selectUserById/" + id,
-            type: "GET",
+            url: "/user/selectUserById",
+            data:{id:id,roleType:"01"},
+            type: "POST",
             success: function (result) {
-                //console.log(result);
-                var userData = result.extend.user;
+                var userData = result.extend.user
+                var hideEmail = result.extend.user.email
                 $("#userName_update_input").val(userData.userName);
                 $("#email_update_input").val(userData.email);
-                $("<span>userData.email</span>").attr("id","hideEmail").hide();
+                $("#hideEmail").remove();
+                $("#roleSelectUpdate").after($("<span></span>").attr("id","hideEmail").html(hideEmail));
+                $("#hideEmail").hide();
+                $("#userUpdateModal input[name=identityNo]").val([userData.identityNo]);
                 $("#userUpdateModal input[name=gender]").val([userData.gender]);
                 $("#userUpdateModal input[name=mobile]").val([userData.mobile]);
                 $("#userUpdateModal input[name=password]").val([userData.password]);
-                $("#userUpdateModal #roleSelectUpdate").val([userData.roleId]);
+                $("#userUpdateModal #roleSelectUpdate").val([userData.roleId]).attr("userRoleId",userData.userRoleId);
                 $("#userUpdateModal #companySelectUpdate").val([userData.companyId]);
                 //根据公司信息，查询出部门信息显示在下拉列表中
                 getDepts("#userUpdateModal #deptSelectUpdate");
@@ -690,9 +684,7 @@
     $("#companySelectUpdate").change(function () {
         $("#deptSelectUpdate").empty();
         var companyId = $("#companySelectUpdate").val();
-        var email = $("#hideEmail").val();
-        console.info(email);
-        console.info(companyId);
+        var email = $("#hideEmail").html();
         $.ajax({
             url: "/department/getDepartmentsByCompanyId",
             data:{companyId:companyId},
@@ -712,17 +704,23 @@
     $("#email_update_input").change(function () {
         //发送ajax请求校验邮箱是否可用
         var email = this.value;
+        var hideEmail = $("#hideEmail").html();
         $.ajax({
-            url: "${APP_PATH}/user/userCheck",
+            url: "/user/userCheck",
             data: "email=" + email,
             type: "POST",
             success: function (result) {
-                if (result.code == 100) {
+                if (result.code == "100") {
                     show_validate_msg("#email_update_input", "success", "邮箱可用");
                     $("#user_update_btn").attr("ajax-va", "success");
                 } else {
-                    show_validate_msg("#email_update_input", "error", result.extend.va_msg);
-                    $("#user_update_btn").attr("ajax-va", "error");
+                    if(hideEmail == email){
+                        show_validate_msg("#email_update_input", "success", "邮箱可用");
+                        $("#user_update_btn").attr("ajax-va", "success");
+                    }else {
+                        show_validate_msg("#email_update_input", "error", result.extend.va_msg);
+                        $("#user_update_btn").attr("ajax-va", "error");
+                    }
                 }
             }
         });
@@ -754,19 +752,6 @@
             show_validate_msg("#email_update_input", "success", "");
         }
 
-        //3、校验密码
-        var password = $("#password_update_input").val();
-        var regPassword = /^[A-Za-z]+[0-9]+[A-Za-z0-9]*|[0-9]+[A-Za-z]+[A-Za-z0-9]*$/g;
-
-        if (!regPassword.test(password)) {
-            //alert("邮箱格式不正确");
-            //应该清空这个元素之前的样式
-            show_validate_msg("#password_update_input", "error", "密码必须由6-16位英文字母和数字的字符串组成!");
-            return false;
-        } else {
-            show_validate_msg("#password_update_input", "success", "");
-        }
-
 
         //1、判断之前的ajax邮箱校验是否成功。如果成功。
         if ($(this).attr("ajax-va") == "error") {
@@ -775,7 +760,7 @@
         }
         //2、发送ajax请求保存更新的员工数据
         $.ajax({
-            url: "${APP_PATH}/user/update/" + $(this).attr("edit-id"),
+            url: "/user/update/" + $(this).attr("edit-id")+"/"+ $("#roleSelectUpdate").attr("userRoleId"),
             type: "PUT",
             data: $("#userUpdateModal form").serialize(),
             success: function (result) {
@@ -792,11 +777,11 @@
         //1、弹出是否确认删除对话框
         var userName = $(this).parents("tr").find("td:eq(0)").text();
         var userId = $(this).attr("del-id");
-        //alert($(this).parents("tr").find("td:eq(1)").text());
+        var userRoleId = $(this).parents("tr").find("td:eq(5)").attr("userRoleId");
         layer.confirm("确认删除【" + userName + "】吗？", {icon: 3, title: '确认信息'}, function (index) {
             //确认，发送ajax请求删除即可
             $.ajax({
-                url: "${APP_PATH}/user/delete/" + userId,
+                url: "/user/delete/" + userId+"/"+userRoleId ,
                 type: "DELETE",
                 success: function (result) {
                     layer.msg(result.msg);

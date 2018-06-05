@@ -52,7 +52,7 @@
     <!-- 按钮 -->
     <div class="row" style="margin-left: -65px;">
         <div class="form-group">
-            <form id="weeklyExport" method="get" enctype="multipart/form-data" action="${APP_PATH}/daily/weeklyExport">
+            <form id="weeklyExport" method="get" enctype="multipart/form-data" action="/daily/weeklyExport">
                 <div class="col-md-1" style="width: 130px; margin: 7px -42px 21px 58px; float: left">
                     <label class="control-label">日报日期：</label>
                 </div>
@@ -121,7 +121,15 @@
     layer = layui.layer //弹层
     var userId = "${user.userId}";
     var totalRecord, currentPage;
-
+    //获取当前用户的权限列表
+    var privilegeList = ${user.privilegeList};
+    //根据权限列表判断是否显示
+    if (privilegeList.indexOf(21) == -1) {
+        $("#add_daily_btn").hide();
+    }
+    if (privilegeList.indexOf(32) == -1) {
+        $("#weeklyExport_btn").hide();
+    }
     //1、页面加载完成以后，直接去发送ajax请求,要到分页数据
     $(function () {
         //去首页
@@ -129,8 +137,12 @@
     });
 
     function to_page(pn) {
+        var index = layer.msg('拼命加载中', {
+            icon: 16
+            ,shade: 0.01
+        });
         $.ajax({
-            url: "${APP_PATH}/daily/getDailyList",
+            url: "/daily/getDailyList",
             data: {"userId": userId, "pn": pn},
             type: "POST",
             success: function (result) {
@@ -140,6 +152,7 @@
                 build_page_info(result);
                 //3、解析显示分页条数据
                 build_page_nav(result);
+                layer.close(index);
             }
         });
     }
@@ -157,7 +170,12 @@
                 .append($("<span></span>").addClass("glyphicon glyphicon-pencil")).append("详情列表");
             //为详情按钮添加一个自定义的属性，来表示当前项目dailyId
             detailBtn.attr("detail-id", item.dailyId);
-
+            //添加属性权限ID
+            detailBtn.attr("privilege-id",23);
+            //根据权限列表判断是否显示
+            if (privilegeList.indexOf(23) == -1) {
+                detailBtn.hide();
+            }
             var btnTd = $("<td></td>").append(detailBtn);
             //append方法执行完成以后还是返回原来的元素
             $("<tr class='layui-colla-item'></tr>")
@@ -281,7 +299,7 @@
         //清空之前下拉列表的值
         $(ele).empty();
         $.ajax({
-            url: "${APP_PATH}/project/getProjectNameList",
+            url: "/project/getProjectNameList",
             data: {"userId": userId},
             type: "POST",
             success: function (result) {
@@ -296,16 +314,16 @@
     //点击保存，添加日报列表信息
     $("#daily_save_btn").click(function () {
         $.ajax({
-            url: "${APP_PATH}/daily/saveDaily/" + userId,
+            url: "/daily/saveDaily/" + userId,
             type: "POST",
             data: $("#proAddModal form").serialize(),
             success: function (result) {
-                if (result.code == 100) {
+                if (result.code == "100") {
                     $("#proAddModal").modal('hide');
                     to_page(1);
-                } else if (result.code == 110) {
+                } else if (result.code == "110") {
                     layer.open({
-                        titel: '确信息',
+                        titel: '确认信息',
                         content: '当天日报已存在'
                     });
                 }

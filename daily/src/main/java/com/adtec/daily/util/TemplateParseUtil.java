@@ -16,32 +16,6 @@ public class TemplateParseUtil {
 
 	public static boolean finishFlag = false;
 
-	public enum Type {
-
-		CaitcDaily("长安信托日报", "caitcDaily.ftl"),
-		CaitcWeekly("长安信托周报-个人", "caitcWeekly.ftl"),
-		CaitcProjectWeekly("长安信托周报-项目汇总", "caitcProjectWeekly.ftl"),
-		Demand("业务需求工作量审核表", "demand.ftl"),
-		OverWork("加班补贴表", "overWork.ftl");
-
-		private final String tile;
-
-		private final String ftlName;
-
-		Type(String tile, String ftlName) {
-			this.tile = tile;
-			this.ftlName = ftlName;
-		}
-
-		public String getTitle() {
-			return tile;
-		}
-
-		public String getFtlName() {
-			return ftlName;
-		}
-	}
-
 	/**
 	 * 解析模板生成Excel
 	 *
@@ -83,18 +57,15 @@ public class TemplateParseUtil {
 	 *
 	 * @param data
 	 * @param fileName
-	 * @param type
+	 * @param templateFileName
 	 * @throws IOException
 	 */
-	public File createExcel(Map<String, Object> data, String fileName, Type type) throws IOException {
+	public File createExcel(Map<String, Object> data, String fileName, String templateFileName) throws IOException {
 
 		File file = null;
 		try {
-			// 统一设置title
-			data.put("title", type.getTitle());
-
 			// 解析模版
-			file = parse(type.getFtlName(), fileName, data);
+			file = parse(templateFileName, fileName, data);
 		} catch (IOException | TemplateException e) {
 			e.printStackTrace();
 		}
@@ -106,18 +77,18 @@ public class TemplateParseUtil {
 	 *
 	 * @param response
 	 * @param data
-	 * @param type
+	 * @param templateFileName
 	 * @param fileName
 	 * @throws IOException
 	 */
-	public void downloadExcel(HttpServletResponse response, Map<String, Object> data, Type type, String fileName) throws IOException {
+	public void downloadExcel(HttpServletResponse response, Map<String, Object> data, String templateFileName, String fileName) throws IOException {
 
 		InputStream inputStream = null;
 		OutputStream out = null;
 		File file = null;
 		try {
 			// 导出EXCEL
-			file = createExcel(data, fileName, type);
+			file = createExcel(data, fileName, templateFileName);
 			inputStream = new FileInputStream(file);
 			String outfileName = new String(fileName.getBytes("GBK"), "ISO8859_1");
 			response.setHeader("Content-disposition", "attachment; filename=" + outfileName + ".xls");

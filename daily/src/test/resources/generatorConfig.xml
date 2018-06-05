@@ -128,7 +128,7 @@
                  <columnOverride column="" javaType=""	jdbcType=""	typeHandler=""	delimitedColumnName="" />
             -->
 
-        <table tableName="t_user" domainObjectName="TUser" enableInsert="true"/>
+        <table tableName="t_user_feedback" domainObjectName="UserFeedBack" enableInsert="true"/>
 
     </context>
 </generatorConfiguration>

@@ -77,14 +77,17 @@
         }
         var userId = "${user.userId}";
         var confirmPassword = $("#confirm_password").val();
+        var oldPassword = $("#old_password").val();
         //发送ajax请求修改密码
         $.ajax({
             url: "/user/updatePasswprd",
             type: "POST",
-            data: {"userId":userId,"password":confirmPassword},
+            data: {"userId":userId,"password":confirmPassword,"oldPassword":oldPassword},
             success: function (result) {
-                if (result.code == 100) {
+                if (result.code == "100") {
                     parent.open();
+                }else if(result.code == 200){
+                    layer.msg("原密码输入错误!");
                 }
             }
         });
@@ -96,7 +99,6 @@
         var oldPassword = $("#old_password").val();
         var newPassword = $("#new_password").val();
         var confirmPassword = $("#confirm_password").val();
-        var password = "${user.password}";
         var regName = /^[A-Za-z]+[0-9]+[A-Za-z0-9]*|[0-9]+[A-Za-z]+[A-Za-z0-9]*$/g;
         if (oldPassword.length < 1) {
             layer.msg("原密码不能为空!");
@@ -108,14 +110,6 @@
         }
         if (newPassword != confirmPassword) {
             layer.msg("两次密码输入不一致!");
-            return false;
-        }
-        if (oldPassword != password) {
-            layer.msg("原密码输入错误!");
-            return false;
-        }
-        if (newPassword == password) {
-            layer.msg("新密码不能和原密码一致!");
             return false;
         }
         return true;

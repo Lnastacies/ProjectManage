@@ -23,11 +23,11 @@
                 <div class="modal-body">
                     <form class="form-horizontal">
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">工作类型</label>
+                            <label class="col-sm-2 control-label"><span style="color: #f00;">*</span>工作类型</label>
                             <div class="col-sm-5">
-                                <select name="workType" class="form-control">
+                                <select name="workType" id="workType_add_select" class="form-control">
                                     <option value="">请选择工作类型</option>
-                                    <option value="01" selected="">需求分析</option>
+                                    <option value="01">需求分析</option>
                                     <option value="02">设计</option>
                                     <option value="03">开发</option>
                                     <option value="04">测试</option>
@@ -37,23 +37,25 @@
                                     <option value="08">其他</option>
                                 </select>
                             </div>
+                            <%--<button type="button" class="btn btn-primary" id="daily_unfinished_btn">未完成任务</button>--%>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">日报内容</label>
+                            <label class="col-sm-2 control-label"><span style="color: #f00;">*</span>日报内容</label>
                             <div class="col-sm-10">
                                 <input type="text" name="dailyContent" class="form-control" id="dailyContent_add_input">
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">完成百分比</label>
+                            <label class= "col-sm-2 control-label"><span style="color: #f00;">*</span>完成百分比</label>
                             <div class="col-sm-2">
-                                <input type="text" name="dailyPercent" class="form-control" id="dailyPercent_add_input" min="0" max="100" maxlength="3">
+                                <input type="text" name="dailyPercent" class="form-control" onblur="checkGreaterHunderd()" id="dailyPercent_add_input" min="0" max="100" maxlength="3" onkeyup="value=value.replace(/[^0-9]/g,'')" onpaste="value=value.replace(/[^0-9]/g,'')" oncontextmenu = "value=value.replace(/[^0-9]/g,'')">
                                 <span class="help-block"></span>
                             </div>
+                            <div class="col-sm-2"><span style="color: #f00;" id="greaterHunderd_add" class="help-block"></span></div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">计划完成时间</label>
+                            <label class="col-sm-2 control-label"><span style="color: #f00;">*</span>计划完成时间</label>
                             <div class="col-sm-2">
                                 <input type="text" name="doneDateStr" class="form-control" placeholder="yyyy-MM-dd" id="doneDate">
                                 <span class="help-block"></span>
@@ -78,7 +80,79 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                     <button type="button" class="btn btn-primary" id="pro_save_btn">保存</button>
-                    <button type="button" class="btn btn-default" id="test_btn">测试</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 日报修改的模态框 -->
+    <div class="modal fade" id="proUpdateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="z-index: 19896; width: 800px; height: 490px; top: 10px; left: -107px;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">日报修改</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span style="color: #f00;">*</span>工作类型</label>
+                            <div class="col-sm-5">
+                                <select name="workType" id="workType_update_select" class="form-control">
+                                    <option value="">请选择工作类型</option>
+                                    <option value="01">需求分析</option>
+                                    <option value="02">设计</option>
+                                    <option value="03">开发</option>
+                                    <option value="04">测试</option>
+                                    <option value="05">版本发布</option>
+                                    <option value="06">运维支持</option>
+                                    <option value="07">会议</option>
+                                    <option value="08">其他</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span style="color: #f00;">*</span>日报内容</label>
+                            <div class="col-sm-10">
+                                <input type="text"  name="dailyContent" class="form-control" id="dailyContent_update_input">
+                                <input type="hidden" name="dailyDetailId" id="dailyDetailIdHidden">
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span style="color: #f00;">*</span>完成百分比</label>
+                            <div class="col-sm-2">
+                                <input type="text" name="dailyPercent" onblur="checkGreaterHunderd()" class="form-control" id="dailyPercent_update_input" min="0" max="100" maxlength="3" onkeyup="value=value.replace(/[^0-9]/g,'')" onpaste="value=value.replace(/[^0-9]/g,'')" oncontextmenu = "value=value.replace(/[^0-9]/g,'')">
+                                <span class="help-block"></span>
+                            </div>
+                            <div class="col-sm-2"><span style="color: #f00;" id="greaterHunderd_update" class="help-block"></span></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span style="color: #f00;">*</span>计划完成时间</label>
+                            <div class="col-sm-2">
+                                <input type="text" name="doneDateStr" class="form-control" placeholder="yyyy-MM-dd" id="doneDate_update_input">
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">工作存在问题</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="problem" class="form-control" id="problem_update_input">
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">下周工作计划</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="nextWorkPlan" class="form-control" id="nextWorkPlan_update_input">
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="daily_update_btn">更新</button>
                 </div>
             </div>
         </div>
@@ -125,7 +199,26 @@
 <script type="text/javascript">
     var dailyId = (window.location.search).split("=")[1];
     layer = layui.layer //弹层
+    var userId = "${user.userId}";
+    //日期标签
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+        //常规用法
+        laydate.render({
+            elem: '#doneDate'
+        });
+        laydate.render({
+            elem: '#doneDate_update_input'
+        });
+    });
+
     var totalRecord, currentPage;
+    //获取当前用户的权限列表
+    var privilegeList = ${user.privilegeList};
+    //根据权限列表判断是否显示
+    if (privilegeList.indexOf(33) == -1) {
+        $("#pro_add_modal_btn").hide();
+    }
     //1、页面加载完成以后，直接去发送ajax请求,要到分页数据
     $(function () {
         //去首页
@@ -134,8 +227,12 @@
 
     function to_page(pn) {
         params = "dailyId=" + dailyId + "&pn=" + pn;
+        var index = layer.msg('拼命加载中', {
+            icon: 16
+            ,shade: 0.01
+        });
         $.ajax({
-            url: "${APP_PATH}/dailyDetail/getDailyDetailList",
+            url: "/dailyDetail/getDailyDetailList",
             data: params,
             type: "POST",
             success: function (result) {
@@ -145,6 +242,7 @@
                 build_page_info(result);
                 //3、解析显示分页条数据
                 build_page_nav(result);
+                layer.close(index);
             }
         });
     }
@@ -183,10 +281,22 @@
                 .append($("<span></span>").addClass("glyphicon glyphicon-pencil")).append("编辑");
             //为编辑按钮添加一个自定义的属性，来表示当前项目dailyId
             editBtn.attr("edit-id", item.dailyDetailId);
+            //添加属性权限ID
+            editBtn.attr("privilege-id",34);
+            //根据权限列表判断是否显示
+            if (privilegeList.indexOf(34) == -1) {
+                editBtn.hide();
+            }
             var delBtn = $("<button></button>").addClass("btn btn-danger btn-sm delete_btn")
                 .append($("<span></span>").addClass("glyphicon glyphicon-trash")).append("删除");
             //为删除按钮添加一个自定义的属性来表示当前删除的项目dailyId
             delBtn.attr("del-id", item.dailyDetailId);
+            //添加属性权限ID
+            delBtn.attr("privilege-id",35);
+            //根据权限列表判断是否显示
+            if (privilegeList.indexOf(35) == -1) {
+                delBtn.hide();
+            }
             var btnTd = $("<td></td>").append(editBtn).append(" ").append(delBtn);
             //append方法执行完成以后还是返回原来的元素
             $("<tr class='layui-colla-item'></tr>")
@@ -279,9 +389,6 @@
     $("#pro_add_modal_btn").click(function(){
         //清除表单数据（表单完整重置（表单的数据，表单的样式））
         reset_form("#proAddModal form");
-        //s$("")[0].reset();
-        //发送ajax请求，查出部门信息，显示在下拉列表中
-        //getDepts("#proAddModal select");
         //弹出模态框
         $("#proAddModal").modal({
             backdrop:"static"
@@ -289,35 +396,115 @@
         $("#doneDate").val((new Date()).Format('yyyy-MM-dd'));
     });
 
-    layui.use('laydate', function(){
-        var laydate = layui.laydate;
-        //常规用法
-        laydate.render({
-            elem: '#doneDate'
+    //点击编辑
+    $(document).on("click", ".edit_btn", function () {
+        //1、查出日报信息，显示日报信息
+        getDailyDetailInfo($(this).attr("edit-id"));
+        //2、把日报的id传递给模态框的更新按钮
+        $("#pro_update_btn").attr("edit-id", $(this).attr("edit-id"));
+        $("#proUpdateModal").modal({
+            backdrop: "static"
         });
     });
 
-    //点击添加保存
-    $("#pro_save_btn").click(function () {
-        var params = $("#proAddModal form").serialize() + "&dailyId=" + dailyId
-        $.ajax({
-            url:"${APP_PATH}/dailyDetail/saveDailyDateil",
-            type:"POST",
-            data:params,
-            success:function(result){
-                if(result.code == 100){
-                    $("#proAddModal").modal('hide');
-                    to_page(1);
-                }else{
+    //点击未完成按钮弹出模态框。
+    /*$("#daily_unfinished_btn").click(function(){
+        //查询未完成日报信息列表
+        //弹出模态框
+        $("#proUnfinishedModal").modal({
+            backdrop:"static"
+        });
+        $("#doneDate").val((new Date()).Format('yyyy-MM-dd'));
+    });*/
 
+    //获取项目信息
+    function getDailyDetailInfo(id) {
+        $.ajax({
+            url: "/dailyDetail/getDailyDetailInfo/" + id,
+            type: "GET",
+            success: function (result) {
+                var proData = result.extend.tDailyDetail;
+                var proId = proData.dailyDetailId;
+                $("#dailyDetailIdHidden").val(proId);
+                $("#workType_update_select").val(proData.workType);
+                $("#dailyContent_update_input").val(proData.dailyContent);
+                $("#dailyPercent_update_input").val(proData.dailyPercent);
+                $("#doneDate_update_input").val(proData.doneDate == null ? "" : new Date(proData.doneDate).Format("yyyy-MM-dd"));
+                $("#problem_update_input").val(proData.problem);
+                $("#nextWorkPlan_update_input").val(proData.nextWorkPlan);
+            }
+        });
+    };
+
+    //点击更新，更新日报内容信息
+    $("#daily_update_btn").click(function () {
+        var workTypeUpdate = $("#workType_update_select").val()
+            ,dailyContentUpdate = $("#dailyContent_update_input").val()
+            ,dailyPercentUpdate = $("#dailyPercent_update_input").val()
+            ,doneDateUpdate = $("#doneDate_update_input").val();
+        if (!workTypeUpdate) {
+            layer.alert("工作类型不能为空！");
+            return false;
+        } else if (!dailyContentUpdate) {
+            layer.alert("日报内容不能为空！");
+            return false;
+        } else if (!dailyPercentUpdate) {
+            layer.alert("完成百分比不能为空！");
+            return false;
+        } else if (!doneDateUpdate) {
+            layer.alert("计划完成时间不能为空！");
+            return false;
+        }
+        //最后还需要校验完成百分比不能大于100
+        checkGreaterHunderd();
+        var params = $("#proUpdateModal form").serialize() + "&userId=" + userId + "&dailyId=" + dailyId;
+        $.ajax({
+            url: "/dailyDetail/updateDailyDetail",
+            type: "POST",
+            data: params,
+            success:function(result){
+                if(result.code == "100"){
+                    $("#proUpdateModal").modal('hide');
+                    to_page(1);
                 }
             }
         });
     });
 
-    //点击按钮测试
-    $("#test_btn").click(function () {
-        alert($("#proAddModal form").serialize());
+    //点击添加保存
+    $("#pro_save_btn").click(function () {
+        //必输项校验
+        var workTypeAdd = $("#workType_add_select").val()
+            ,dailyContentAdd = $("#dailyContent_add_input").val()
+            ,dailyPercentAdd = $("#dailyPercent_add_input").val()
+            ,doneDateAdd = $("#doneDate").val();
+        //alert("workType:"+workType+"。" + "dailyContent:"+dailyContent+"。" + "dailyPercent:"+dailyPercent+"。"+ "doneDate:"+doneDate);
+        if (!workTypeAdd) {
+            layer.alert("工作类型不能为空！");
+            return false;
+        } else if (!dailyContentAdd) {
+            layer.alert("日报内容不能为空！");
+            return false;
+        } else if (!dailyPercentAdd) {
+            layer.alert("完成百分比不能为空！");
+            return false;
+        } else if (!doneDateAdd) {
+            layer.alert("计划完成时间不能为空！");
+            return false;
+        }
+        checkGreaterHunderd();
+        var params = $("#proAddModal form").serialize() + "&dailyId=" + dailyId;
+        $.ajax({
+            url:"/dailyDetail/saveDailyDetail",
+            type:"POST",
+            data:params,
+            success:function(result){
+                if(result.code == "100"){
+                    $("#proAddModal").modal('hide');
+                    to_page(1);
+                }
+            }
+        });
     });
 
     //单个删除
@@ -328,7 +515,7 @@
         layer.confirm('确定删除【' + dailyContent + '】吗？', {icon: 3, title: '确认信息'}, function (index) {
             //确认，发送ajax请求删除即可
             $.ajax({
-                url: "${APP_PATH}/dailyDetail/deleteDailyDetail/" + dailyDetailId,
+                url: "/dailyDetail/deleteDailyDetail/" + dailyDetailId,
                 type: "DELETE",
                 success: function (result) {
                     layer.msg(result.msg);
@@ -339,6 +526,21 @@
         });
     });
 
+    //校验输入的数据不能大于100
+    function checkGreaterHunderd() {
+        var precentUpdate = $("#dailyPercent_update_input").val();
+        if (precentUpdate > 100) {
+            $("#greaterHunderd_update").text("不能大于100");
+        } else {
+            $("#greaterHunderd_update").text("");
+        }
+        var precentAdd = $("#dailyPercent_add_input").val();
+        if (precentAdd > 100) {
+            $("#greaterHunderd_add").text("不能大于100");
+        } else {
+            $("#greaterHunderd_add").text("");
+        }
+    }
 </script>
 </body>
 </html>

@@ -9,7 +9,7 @@
     <script src="/js/bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
-<!-- 员工修改的模态框 -->
+<!-- 项目修改的模态框 -->
 <div class="modal fade" id="proUpdateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -35,28 +35,33 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">项目经理</label>
                         <div class="col-sm-10">
-                            <input type="text"  class="form-control"
-                                   id="projectUserId_update_input" readonly>
+                            <input type="text"  class="form-control" id="projectUserId_update_input" readonly>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">上班时间</label>
-                        <div class="col-sm-10">
-                            <input type="text" name="workStartTime" class="form-control"
-                                   id="workStartTimeStr_update_input">
+                        <div class="col-sm-3">
+                            <input type="text" name="workStartTimeStr" class="form-control" id="workStartTimeStr_update_input">
+                        </div>
+                        <label class="col-sm-4 control-label">上午下班时间</label>
+                        <div class="col-sm-3">
+                            <input type="text" name="morningEndTimeStr" class="form-control" id="morningEndTimeStr_update_input">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">下班时间</label>
-                        <div class="col-sm-10">
-                            <input type="text" name="workEndTime" class="form-control" id="workEndTimeStr_update_input">
+                        <label class="col-sm-2 control-label">下午开始上班时间</label>
+                        <div class="col-sm-3">
+                            <input type="text" name="afterStartTimeStr" class="form-control" id="afterStartTimeStr_update_input">
+                        </div>
+                        <label class="col-sm-4 control-label">下班时间</label>
+                        <div class="col-sm-3">
+                            <input type="text" name="workEndTimeStr" class="form-control" id="workEndTimeStr_update_input">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">加班开始时间</label>
                         <div class="col-sm-10">
-                            <input type="text" name="overworkStartTime" class="form-control"
-                                   id="overWorkStartTimeStr_update_input">
+                            <input type="text" name="overworkStartTimeStr" class="form-control" id="overWorkStartTimeStr_update_input">
                         </div>
                     </div>
                 </form>
@@ -69,7 +74,7 @@
     </div>
 </div>
 
-<!-- 员工添加的模态框 -->
+<!-- 项目添加的模态框 -->
 <div class="modal fade" id="proAddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -97,21 +102,28 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">项目经理</label>
                         <div class="col-sm-10">
-                            <input type="text" name="projectUserId" class="form-control" id="projectUserId_add_input">
-                            <span class="help-block"></span>
+                            <select class="form-control" name="projectUserId">
+                            </select>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">上班时间</label>
-                        <div class="col-sm-10">
-                            <input type="text" name="workStartTimeStr" class="form-control"
-                                   id="workStartTimeStr_add_input">
+                        <div class="col-sm-3">
+                            <input type="text" name="workStartTimeStr" class="form-control" id="workStartTimeStr_add_input">
                             <span class="help-block"></span>
+                        </div>
+                        <label class="col-sm-4 control-label">上午下班时间</label>
+                        <div class="col-sm-3">
+                            <input type="text" name="morningEndTimeStr" class="form-control" id="morningEndTimeStr_add_input">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">下班时间</label>
-                        <div class="col-sm-10">
+                        <label class="col-sm-2 control-label">下午开始上班时间</label>
+                        <div class="col-sm-3">
+                            <input type="text" name="afterStartTimeStr" class="form-control" id="afterStartTimeStr_add_input">
+                        </div>
+                        <label class="col-sm-4 control-label">下班时间</label>
+                        <div class="col-sm-3">
                             <input type="text" name="workEndTimeStr" class="form-control" id="workEndTimeStr_add_input">
                             <span class="help-block"></span>
                         </div>
@@ -119,8 +131,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">加班开始时间</label>
                         <div class="col-sm-10">
-                            <input type="text" name="overworkStartTimeStr" class="form-control"
-                                   id="overWorkStartTimeStr_add_input">
+                            <input type="text" name="overworkStartTimeStr" class="form-control" id="overWorkStartTimeStr_add_input">
                             <span class="help-block"></span>
                         </div>
                     </div>
@@ -138,7 +149,7 @@
 <div class="modal fade" id="overWorkAddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form class="form-horizontal" id="overWorkExport" method="get" enctype="multipart/form-data" action="${APP_PATH}/overWork/overWorkExport">
+            <form class="form-horizontal" id="overWorkExport" method="get" enctype="multipart/form-data" action="/overWork/overWorkExport">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="myOverWorkAddModal">导出加班补贴表</h4>
@@ -166,7 +177,7 @@
 <div class="modal fade" id="projectWeekModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form class="form-horizontal" id="projectWeekExport" method="get" enctype="multipart/form-data" action="${APP_PATH}/daily/projectWeeklyExport">
+            <form class="form-horizontal" id="projectWeekExport" method="get" enctype="multipart/form-data" action="/daily/projectWeeklyExport">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="myProjectWeekModal">导出项目周报表</h4>
@@ -220,6 +231,8 @@
                     <th>项目名称</th>
                     <th>项目经理</th>
                     <th>上班时间</th>
+                    <th>上午下班时间</th>
+                    <th>下午上班时间</th>
                     <th>下班时间</th>
                     <th>加班开始时间</th>
                 </tr>
@@ -245,6 +258,18 @@
 <script type="text/javascript">
     layer = layui.layer //弹层
     var totalRecord, currentPage;
+    //获取当前用户的权限列表
+    var privilegeList = ${user.privilegeList};
+    //根据权限列表判断是否显示
+    if (privilegeList.indexOf(12) == -1) {
+        $("#pro_add_modal_btn").hide();
+    }
+    if (privilegeList.indexOf(30) == -1) {
+        $("#overWorkExport_btn").hide();
+    }
+    if (privilegeList.indexOf(31) == -1) {
+        $("#projectWeekExport_btn").hide();
+    }
     //1、页面加载完成以后，直接去发送ajax请求,要到分页数据
     $(function () {
         //去首页
@@ -264,11 +289,27 @@
             type: 'time'
         });
         laydate.render({
+            elem: '#morningEndTimeStr_add_input',
+            type: 'time'
+        });
+        laydate.render({
+            elem: '#afterStartTimeStr_add_input',
+            type: 'time'
+        });
+        laydate.render({
             elem: '#overWorkStartTimeStr_add_input',
             type: 'time'
         });
         laydate.render({
             elem: '#workStartTimeStr_update_input',
+            type: 'time'
+        });
+        laydate.render({
+            elem: '#morningEndTimeStr_update_input',
+            type: 'time'
+        });
+        laydate.render({
+            elem: '#afterStartTimeStr_update_input',
             type: 'time'
         });
         laydate.render({
@@ -292,6 +333,10 @@
     });
     //分页查询处理
     function to_page(pn) {
+        var index = layer.msg('拼命加载中', {
+            icon: 16
+            ,shade: 0.01
+        });
         $.ajax({
             url: "/project/getProjectByUser",
             data: "pn=" + pn + "&userId=" + userId,
@@ -303,6 +348,7 @@
                 build_page_info(result);
                 //3、解析显示分页条数据
                 build_page_nav(result);
+                layer.close(index);
             }
         });
     }
@@ -316,6 +362,8 @@
             var projectName = $("<td></td>").append(item.projectName);
             var projectUserId = $("<td></td>").append(item.userName);
             var workStartTime = $("<td></td>").append(item.workStartTime == null ? "" : new Date(item.workStartTime).Format("hh:mm:ss"));
+            var morningEndTime = $("<td></td>").append(item.morningEndTime == null ? "" : new Date(item.morningEndTime).Format("hh:mm:ss"));
+            var afterStartTime = $("<td></td>").append(item.afterStartTime == null ? "" : new Date(item.afterStartTime).Format("hh:mm:ss"));
             var workEndTime = $("<td></td>").append(item.workEndTime == null ? "" : new Date(item.workEndTime).Format("hh:mm:ss"));
             var overworkStartTime = $("<td></td>").append(item.overworkStartTime == null ? "" : new Date(item.overworkStartTime).Format("hh:mm:ss"));
             var proId = $("<td></td>").append(item.id).hide();
@@ -324,14 +372,32 @@
                 .append($("<span></span>").addClass("glyphicon glyphicon-pencil")).append("编辑");
             //为编辑按钮添加一个自定义的属性，来表示当前项目id
             editBtn.attr("edit-id", item.id);
+            //添加属性权限ID
+            editBtn.attr("privilege-id",13);
+            //根据权限列表判断是否显示
+            if (privilegeList.indexOf(13) == -1) {
+                editBtn.hide();
+            }
             var delBtn = $("<button></button>").addClass("btn btn-danger btn-sm delete_btn")
                 .append($("<span></span>").addClass("glyphicon glyphicon-trash")).append("删除");
             //为删除按钮添加一个自定义的属性来表示当前删除的项目id
             delBtn.attr("del-id", item.id);
+            //添加属性权限ID
+            delBtn.attr("privilege-id",14);
+            //根据权限列表判断是否显示
+            if (privilegeList.indexOf(14) == -1) {
+                delBtn.hide();
+            }
             var detailBtn = $("<button></button>").addClass("btn btn-info btn-sm detail_btn")
                 .append($("<span></span>").addClass("glyphicon glyphicon-pencil")).append("项目详情");
             //为详情按钮添加一个自定义的属性来表示当前项目id
             detailBtn.attr("detail-id", item.id);
+            //添加属性权限ID
+            detailBtn.attr("privilege-id",27);
+            //根据权限列表判断是否显示
+            if (privilegeList.indexOf(27) == -1) {
+                detailBtn.hide();
+            }
             var btnTd = $("<td></td>").append(editBtn).append(" ").append(delBtn).append(" ").append(detailBtn);
             //append方法执行完成以后还是返回原来的元素
             $("<tr></tr>")
@@ -339,6 +405,8 @@
                 .append(projectName)
                 .append(projectUserId)
                 .append(workStartTime)
+                .append(morningEndTime)
+                .append(afterStartTime)
                 .append(workEndTime)
                 .append(overworkStartTime)
                 .append(proId)
@@ -426,11 +494,29 @@
     $("#pro_add_modal_btn").click(function () {
         //清除表单数据（表单完整重置（表单的数据，表单的样式））
         reset_form("#proAddModal form");;
+        //发送ajax请求，查出部门信息，显示在下拉列表中
+        getProjectUserNameList("#proAddModal select");
         //弹出模态框
         $("#proAddModal").modal({
             backdrop: "static"
         });
     });
+    
+    //查询项目经理下拉列表
+    function getProjectUserNameList(ele) {
+        //清空之前下拉列表的值
+        $(ele).empty();
+        $.ajax({
+            url: "/user/queryUserByRoleIdForProjectUser",
+            type: "POST",
+            success: function (result) {
+                $.each(result.extend.pros, function () {
+                    var optionEle = $("<option></option>").append(this.userName + "（" + this.email + "）").attr("value", this.userId);
+                    optionEle.appendTo(ele);
+                });
+            }
+        });
+    }
 
     //显示校验结果的提示信息
     function show_validate_msg(ele, status, msg) {
@@ -455,7 +541,7 @@
             data: "projectCode=" + projectCode,
             type: "POST",
             success: function (result) {
-                if (result.code == 100) {
+                if (result.code == "100") {
                     show_validate_msg("#projectCode_add_input", "success", "项目编号可用");
                     $("#pro_save_btn").attr("ajax-va", "success");
                 } else {
@@ -475,23 +561,29 @@
         }
         //2、发送ajax请求保存员工
         $.ajax({
-            url: "${APP_PATH}/project/addProject",
+            url: "/project/addProject",
             type: "POST",
             data: $("#proAddModal form").serialize(),
             success: function (result) {
                 //alert(result.msg);
-                if (result.code == 100) {
+                if (result.code == "100") {
                     //员工保存成功；
                     //1、关闭模态框
                     $("#proAddModal").modal('hide');
                     //2、来到最后一页，显示刚才保存的数据
                     //发送ajax请求显示最后一页数据即可
                     to_page(totalRecord);
+                } else if (result.code == "110") {
+                    layer.open({
+                        titel: '确认信息',
+                        content: '项目已存在'
+                    });
                 }
             }
         });
     });
 
+    //点击编辑，弹出编辑项目信息框
     $(document).on("click", ".edit_btn", function () {
         //2、查出项目信息，显示项目信息
         getProject($(this).attr("edit-id"));
@@ -505,34 +597,37 @@
     //获取项目信息
     function getProject(id) {
         $.ajax({
-            url: "/project/getProjectById" + id,
+            url: "/project/getProjectById/" + id,
             type: "GET",
             success: function (result) {
                 var proData = result.extend.id;
                 var proId = proData.id;
-                $("#projectCode_update_input").val(proData.projectCode)
+                $("#projectCode_update_input").val(proData.projectCode);
                 $("#projectName_update_input").val(proData.projectName);
-                $("#projectUserId_update_input").val(proData.userName);
+                $("#projectUserId_update_input").val(proData.userName + "（" + proData.email + "）");
                 $("#workStartTimeStr_update_input").val(proData.workStartTime == null ? "" : new Date(proData.workStartTime).Format("hh:mm:ss"));
+                $("#morningEndTimeStr_update_input").val(proData.morningEndTime == null ? "" : new Date(proData.morningEndTime).Format("hh:mm:ss"));
+                $("#afterStartTimeStr_update_input").val(proData.afterStartTime == null ? "" : new Date(proData.afterStartTime).Format("hh:mm:ss"));
                 $("#workEndTimeStr_update_input").val(proData.workEndTime == null ? "" : new Date(proData.workEndTime).Format("hh:mm:ss"));
                 $("#overWorkStartTimeStr_update_input").val(proData.overworkStartTime == null ? "" : new Date(proData.overworkStartTime).Format("hh:mm:ss"));
             }
         });
     }
 
-    //点击更新，更新员工信息
+    //点击更新，更新项目信息信息
     $("#pro_update_btn").click(function () {
-        //2、发送ajax请求保存更新的员工数据
+        var projectId = $(this).attr("edit-id");
+        var params = $("#proUpdateModal form").serialize() + "&id=" + projectId;
         $.ajax({
-            url: "/project/update/" + $(this).attr("edit-id"),
-            type: "PUT",
-            data: $("#proUpdateModal form").serialize(),
+            url: "/project/updateProjectInfo",
+            type: "POST",
+            data: params,
             success: function (result) {
                 //alert(result.msg);
                 //1、关闭对话框
                 $("#proUpdateModal").modal("hide");
                 //2、回到本页面
-                to_page(currentPage);
+                to_page(1);
             }
         });
     });
@@ -542,11 +637,13 @@
         //1、弹出是否确认删除对话框
         var projectName = $(this).parents("tr").find("td:eq(1)").text();
         var proId = $(this).attr("del-id");
+        var params = "proId=" + proId + "&userId=" + userId;
         layer.confirm('确定删除【' + projectName + '】吗？', {icon: 3, title: '确认信息'}, function (index) {
             //确认，发送ajax请求删除即可
             $.ajax({
-                url: "/pro/" + proId,
-                type: "DELETE",
+                url: "/project/delProjectInfo",
+                data: params,
+                type: "POST",
                 success: function (result) {
                     layer.msg(result.msg);
                     //回到本页
@@ -567,6 +664,7 @@
         var flag = $(".check_item:checked").length == $(".check_item").length;
         $("#check_all").prop("checked", flag);
     });
+
     //加班补贴表
     $("#overWorkExport_btn").click(function(){
         reset_form("#overWorkAddModal form");
@@ -575,6 +673,7 @@
         });
         $("#monthStr").val((new Date()).Format('yyyy-MM'));
     });
+
     //点击保存，导出加班补贴表
     $("#overWork_save_btn").click(function () {
         if($("#monthStr").val()==""){
@@ -585,6 +684,7 @@
         reset_form("#overWorkAddModal form");
         $("#overWorkAddModal").modal('hide');
     });
+
     //项目周报表
     $("#projectWeekExport_btn").click(function(){
         reset_form("#projectWeekModal form");
@@ -592,6 +692,7 @@
             backdrop:"static"
         });
     });
+
     //点击保存，导出加班补贴表
     $("#projectWeek_save_btn").click(function () {
         if ($("#dailyStartDateStr").val() == "" || $("#dailyEndDateStr").val() == "") {
@@ -608,6 +709,7 @@
         var id = this.getAttribute("detail-id");
         window.location.href = "/html/project/projectDetail.jsp?projectId=" + id;
     });
+
 </script>
 </body>
 </html>

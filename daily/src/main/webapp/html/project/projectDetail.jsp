@@ -34,9 +34,8 @@
                     <th>姓名</th>
                     <th>性别</th>
                     <th>邮箱</th>
-                    <th>角色</th>
+                    <th>项目角色</th>
                     <th>手机号</th>
-                    <th>密码</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -63,6 +62,12 @@
     console.info(projectId);
     layer = layui.layer //弹层
     var totalRecord, currentPage;
+    //获取当前用户的权限列表
+    var privilegeList = ${user.privilegeList};
+    //根据权限列表判断是否显示
+    if (privilegeList.indexOf(28) == -1) {
+        $("#proUser_add_btn").hide();
+    }
     //1、页面加载完成以后，直接去发送ajax请求,要到分页数据
     $(function () {
         //去首页
@@ -70,9 +75,13 @@
     });
 
     function to_page(pn) {
-        params = "projectId=" + projectId + "&pn=" + pn;
+        params = "projectId=" + projectId + "&pn=" + pn+"&roleType=00";
+        var index = layer.msg('拼命加载中', {
+            icon: 16
+            ,shade: 0.01
+        });
         $.ajax({
-            url: "${APP_PATH}/project/getProjectUserByProjectId",
+            url: "/project/getProjectUserByProjectId",
             data: params,
             type: "POST",
             success: function (result) {
@@ -84,6 +93,7 @@
                 build_page_info(result);
                 //3、解析显示分页条数据
                 build_page_nav(result);
+                layer.close(index);
             }
         });
     }
@@ -95,26 +105,22 @@
         $.each(users, function (index, item) {
             var userName = $("<td></td>").append(item.userName);
             var gender = $("<td></td>").append(item.gender == '1' ? "男" : "女");
-            var password = $("<td></td>").append(item.password);
             var email = $("<td></td>").append(item.email);
             var mobile = $("<td></td>").append(item.mobile);
             var roleName = $("<td></td>").append(item.roleName);
             var userId = $("<td></td>").append(item.userId).hide();
+            var userRoleId = $("<td></td>").append(item.userRoleId).hide();
 
             var delBtn = $("<button></button>").addClass("btn btn-danger btn-sm delete_btn")
                 .append($("<span></span>").addClass("glyphicon glyphicon-trash")).append("删除");
             //为删除按钮添加一个自定义的属性来表示当前删除的用户id
             delBtn.attr("user-id", item.userId);
             //添加属性权限ID
-            // delBtn.attr("privilege-id",4);
-            //根据权限判断是否显示
-            // if(delBtn.attr("privilege-id") == '4'){
-            //     delBtn.hide();
-            // }
+            delBtn.attr("privilege-id",29);
             //根据权限列表判断是否显示
-            // if(privilegeList.indexOf(4)== -1){
-            //     delBtn.hide();
-            // }
+            if(privilegeList.indexOf(29)== -1){
+                delBtn.hide();
+            }
             var btnTd = $("<td></td>").append(" ").append(delBtn);
             //var delBtn =
             //append方法执行完成以后还是返回原来的元素
@@ -124,8 +130,8 @@
                 .append(email)
                 .append(roleName)
                 .append(mobile)
-                .append(password)
                 .append(userId)
+                .append(userRoleId)
                 .append(btnTd)
                 .appendTo("#users_table tbody");
         });
@@ -211,10 +217,11 @@
         //1、弹出是否确认删除对话框
         var userName = $(this).parents("tr").find("td:eq(0)").text();
         var userId = $(this).attr("user-id");
+        var userRoleId = $(this).parents("tr").find("td:eq(6)").text();
         layer.confirm('确定删除【' + userName + '】吗？', {icon: 3, title: '确认信息'}, function (index) {
             //确认，发送ajax请求删除即可
             $.ajax({
-                url: "${APP_PATH}/project/deleteProjectUser/" + userId,
+                url: "/project/deleteProjectUser/" + userId+"/"+userRoleId,
                 type: "DELETE",
                 success: function (result) {
                     layer.msg(result.msg);
@@ -228,7 +235,7 @@
     //点击新增，跳转到项目成员新增页面
     $(document).on("click", "#proUser_add_btn", function () {
         var id = this.getAttribute("project-id");
-        window.location.href = "/daily/projectUserAdd.jsp?projectId=" + id;
+        window.location.href = "/html/project/projectUserAdd.jsp?projectId=" + id;
 
     });
 </script>

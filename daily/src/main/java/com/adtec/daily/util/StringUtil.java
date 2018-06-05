@@ -15,6 +15,23 @@ public class StringUtil {
     }
 
     /**
+     * excel导出时计算字符串转换为字节占用几行
+     * @param str 内容
+     * @param num 每行的字数
+     * @return
+     */
+    public static int stringByteRowNum(String str,int num) {
+        double a = 0;
+        try {
+             a = Math.ceil((double)str.getBytes("GBK").length/(double)num);
+
+        }catch (Exception e){
+            e.getStackTrace();
+        }
+        return (int)a;
+    }
+
+    /**
      * excel导出时计算日报内容占用几行
      * @param str 内容
      * @param num 每行的字数

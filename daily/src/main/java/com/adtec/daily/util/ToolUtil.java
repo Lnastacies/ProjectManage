@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -232,6 +233,33 @@ public class ToolUtil {
             e.printStackTrace();
             return outStr;
         }
+    }
+
+    /**
+     * 计算加班时间
+     *
+     * @param bigDecimal 加班实际时间
+     * @return
+     */
+    public static BigDecimal getOverWorkTime(BigDecimal bigDecimal) {
+        //0.5为最小单位，不满0.5的不要；不满1的记为0.5。使用ROUND_HALF_DOWN有点问题，这里硬写
+        DecimalFormat oneMit = new DecimalFormat("0.0");
+        String overWorkTimeOneMitFirst = oneMit.format(bigDecimal).split("\\.")[0];
+        String overWorkTimeOneMitSecond = oneMit.format(bigDecimal).split("\\.")[1];
+        BigDecimal mixOverWorkTime = new BigDecimal("0.5");
+        BigDecimal overWorkTimeOneMitFirstDouble = new BigDecimal(overWorkTimeOneMitFirst);
+        if (overWorkTimeOneMitFirst.compareTo("0") == 0) {
+            if (overWorkTimeOneMitSecond.compareTo("5") >= 0) {
+                return mixOverWorkTime;
+            }
+        } else if(overWorkTimeOneMitFirst.compareTo("0") > 0) {
+            if (overWorkTimeOneMitSecond.compareTo("5") >= 0) {
+                return overWorkTimeOneMitFirstDouble.add(mixOverWorkTime);
+            } else {
+                return overWorkTimeOneMitFirstDouble;
+            }
+        }
+        return new BigDecimal("");
     }
 
 }
